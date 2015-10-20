@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimaData.Dal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,7 +34,7 @@ namespace SimaDat.Bll
             {
                 if (_locationBll == null)
                 {
-                    _locationBll = new LocationBll();
+                    _locationBll = new LocationBll(DalFactory.Current.LocationDal);
                 }
                 return _locationBll;
             }

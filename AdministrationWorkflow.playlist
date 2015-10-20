@@ -1,0 +1,1 @@
+<Playlist Version="1.0"><Add Test="SimaDat.UnitTests.AdministrationWorkflowTests.Test_Create_Simple_Map" /><Add Test="SimaDat.UnitTests.AdministrationWorkflowTests.Test_Walk_Simple_Map" /></Playlist>

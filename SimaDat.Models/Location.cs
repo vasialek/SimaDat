@@ -25,7 +25,19 @@ namespace SimaDat.Models
         public IList<Door> Doors { get; set; }
 
         public Location()
+            : this(-1, String.Empty)
         {
+        }
+
+        public Location(string name)
+            : this(-1, name)
+        {
+        }
+
+        public Location(int locationId, string name)
+        {
+            LocationId = locationId;
+            Name = name;
             Doors = new List<Door>();
         }
 
