@@ -16,5 +16,16 @@ namespace SimaDat.Models.Characters
         /// Where are am I
         /// </summary>
         public int CurrentLocationId { get; set; }
+
+        /// <summary>
+        /// How many hours could operate
+        /// </summary>
+        public int Ttl { get; private set; }
+
+        public int Strength { get; private set; }
+
+        public int Iq { get; private set; }
+
+        public int Charm { get; private set; }
     }
 }
