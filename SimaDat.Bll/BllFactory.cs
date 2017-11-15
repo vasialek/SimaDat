@@ -1,4 +1,5 @@
-﻿using SimaData.Dal;
+﻿using SimaDat.Models.Interfaces;
+using SimaData.Dal;
 using System;
 using System.Collections.Generic;
 using System.Linq;

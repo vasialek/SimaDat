@@ -4,6 +4,7 @@ using SimaDat.Bll;
 using SimaDat.Models;
 using SimaDat.Models.Characters;
 using SimaDat.Models.Exceptions;
+using SimaDat.Models.Interfaces;
 
 namespace SimaDat.UnitTests
 {

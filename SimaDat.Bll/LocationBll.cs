@@ -1,33 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SimaDat.Models;
-using SimaDat.Models.Characters;
 using SimaDat.Models.Enums;
 using SimaDat.Models.Exceptions;
 using SimaData.Dal;
+using SimaDat.Models.Interfaces;
 
 namespace SimaDat.Bll
 {
-
-    public interface ILocationBll
-    {
-        bool CouldMoveTo(Location from, Location to);
-
-        // Should return Directions.South if Directions.North is passed
-        Directions GetOppositeDirection(Directions d);
-
-        // Modification of location
-
-        void CreateLocation(Location location);
-
-        void CreateDoorInLocation(Location from, Location to, Directions doorsAt);
-
-        // Navigation/search
-        IList<Location> GetAllLocations();
-    }
 
     public class LocationBll : ILocationBll
     {

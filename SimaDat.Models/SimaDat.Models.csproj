@@ -44,6 +44,8 @@
     <Compile Include="Exceptions\CouldNotMoveException.cs" />
     <Compile Include="Exceptions\DirectionInUseException.cs" />
     <Compile Include="Exceptions\ObjectNotHereException.cs" />
+    <Compile Include="Interfaces\IHeroBll.cs" />
+    <Compile Include="Interfaces\ILocationBll.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

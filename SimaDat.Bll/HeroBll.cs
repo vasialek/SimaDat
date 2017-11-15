@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SimaDat.Models;
 using SimaDat.Models.Characters;
 using SimaDat.Models.Exceptions;
+using SimaDat.Models.Interfaces;
 
 namespace SimaDat.Bll
 {
-
-    public interface IHeroBll
-    {
-        void MoveTo(Hero h, Location from, Location to);
-    }
 
     public class HeroBll : IHeroBll
     {

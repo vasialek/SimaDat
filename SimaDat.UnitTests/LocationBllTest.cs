@@ -5,6 +5,7 @@ using SimaDat.Models;
 using SimaDat.Models.Exceptions;
 using SimaData.Dal;
 using SimaDat.Models.Enums;
+using SimaDat.Models.Interfaces;
 
 namespace SimaDat.UnitTests
 {
