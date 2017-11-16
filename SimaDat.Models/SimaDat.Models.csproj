@@ -46,6 +46,7 @@
     <Compile Include="Exceptions\ObjectNotHereException.cs" />
     <Compile Include="Interfaces\IHeroBll.cs" />
     <Compile Include="Interfaces\ILocationBll.cs" />
+    <Compile Include="Interfaces\ISerializer.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
