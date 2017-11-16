@@ -20,6 +20,10 @@ namespace SimaData.Dal
 
         public void CreateLocation(Location location)
         {
+            if (location.LocationId < 1)
+            {
+                location.LocationId = _locations.Max(x => x.LocationId) + 1;
+            }
             _locations.Add(location);
         }
 
