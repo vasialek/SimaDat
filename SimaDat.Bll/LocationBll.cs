@@ -90,9 +90,29 @@ namespace SimaDat.Bll
             _locationDal.CreateLocation(location);
         }
 
+        public Location GetLocationById(int locationId)
+        {
+            return _locationDal.GetAllLocations().First(x => x.LocationId == locationId);
+        }
+
         public IList<Location> GetAllLocations()
         {
             return _locationDal.GetAllLocations();
+        }
+
+        public IList<string> GetAbilitiesToImprove(Location location)
+        {
+            switch (location.Name.ToLower())
+            {
+                case "gym":
+                    return new string[] { HeroSkills.Strength.ToString() };
+                case "school":
+                    return new string[] { HeroSkills.Iq.ToString() };
+                case "pub":
+                    return new string[] { HeroSkills.Charm.ToString() };
+
+            }
+            return null;
         }
     }
 }

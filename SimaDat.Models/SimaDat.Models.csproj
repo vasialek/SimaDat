@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Characters\Hero.cs" />
     <Compile Include="Enums\Directions.cs" />
+    <Compile Include="Enums\HeroSkills.cs" />
     <Compile Include="Exceptions\CouldNotMoveException.cs" />
     <Compile Include="Exceptions\DirectionInUseException.cs" />
     <Compile Include="Exceptions\ObjectNotHereException.cs" />
@@ -49,6 +50,9 @@
     <Compile Include="Interfaces\ISerializer.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Skills\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

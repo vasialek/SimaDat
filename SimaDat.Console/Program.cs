@@ -1,6 +1,7 @@
 ﻿using AvUtils;
 using SimaDat.Bll;
 using SimaDat.Models;
+using SimaDat.Models.Characters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,8 @@ namespace SimaDat.Console
             bool isRunning = true;
             var menu = new Menu();
             var locationBll = BllFactory.Current.LocationBll;
+            var heroBll = BllFactory.Current.HeroBll;
+
 
             var home = new Location(100, "Home");
             locationBll.CreateLocation(home);
@@ -38,10 +41,17 @@ namespace SimaDat.Console
             locationBll.CreateDoorInLocation(square, school, Models.Enums.Directions.West);
 
 
-            var console = new SdConsole(locationBll);
+            var me = new Hero();
+            me.Name = "Lekha";
+            me.CurrentLocationId = home.LocationId;
+            
+            var console = new SdConsole(me, locationBll);
 
 
             menu.Add("Exit", () => { isRunning = false; }, ConsoleColor.Red);
+            menu.Add("Hero", () => { console.DisplayHero(); }, ConsoleColor.Yellow);
+            menu.Add("Move hero", () => { console.MoveHero(); });
+            menu.Add("Improve hero", () => { console.ImproveHero(); });
             menu.Add("Display locations", () => { console.DisplayLocations(); });
 
             do

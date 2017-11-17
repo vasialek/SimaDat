@@ -17,6 +17,11 @@ namespace SimaDat.Models.Interfaces
         void CreateDoorInLocation(Location from, Location to, Directions doorsAt);
 
         // Navigation/search
+        Location GetLocationById(int locationId);
+
         IList<Location> GetAllLocations();
+
+        // Actions / Characters / Items for location
+        IList<string> GetAbilitiesToImprove(Location location);
     }
 }
