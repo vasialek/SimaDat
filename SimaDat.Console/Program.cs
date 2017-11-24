@@ -18,6 +18,7 @@ namespace SimaDat.Console
             var menu = new Menu();
             var locationBll = BllFactory.Current.LocationBll;
             var heroBll = BllFactory.Current.HeroBll;
+            var charactersBll = BllFactory.Current.CharactersBll;
 
 
             var home = new Location(100, "Home");
@@ -40,12 +41,20 @@ namespace SimaDat.Console
             // Square <-> School
             locationBll.CreateDoorInLocation(square, school, Models.Enums.Directions.West);
 
+            // Girls
+            Girl laura = new Girl
+            {
+                Name = "Laura",
+                Appearance = new Appearance(165, 80, 60, 95) { Hair = Models.Enums.Hairs.Black },
+                CurrentLocationId = pub.LocationId,
+            };
+            charactersBll.CreateGirl(laura);
 
             var me = new Hero();
             me.Name = "Lekha";
             me.CurrentLocationId = home.LocationId;
             
-            var console = new SdConsole(me, locationBll);
+            var console = new SdConsole(me, locationBll, charactersBll);
 
 
             menu.Add("Exit", () => { isRunning = false; }, ConsoleColor.Red);
@@ -53,6 +62,7 @@ namespace SimaDat.Console
             menu.Add("Move hero", () => { console.MoveHero(); });
             menu.Add("Improve hero", () => { console.ImproveHero(); });
             menu.Add("Display locations", () => { console.DisplayLocations(); });
+            menu.Add("Display girls", () => { console.DisplayGirls(); });
 
             do
             {

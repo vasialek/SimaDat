@@ -3,6 +3,7 @@ using SimaDat.Models;
 using SimaDat.Models.Characters;
 using SimaDat.Models.Exceptions;
 using SimaDat.Models.Interfaces;
+using SimaDat.Models.Skills;
 
 namespace SimaDat.Bll
 {
@@ -21,6 +22,16 @@ namespace SimaDat.Bll
             _locationBll = locationBll;
         }
 
+        public void Improve(Hero h, SkillImprovement skill)
+        {
+            if (h.Ttl < skill.TtlToUse)
+            {
+                throw new NoTtlException($"Could not improve {skill.Skill} - not enough TTL {h.Ttl} of {skill.TtlToUse}");
+            }
+
+            h.UseTtl(skill.TtlToUse);
+        }
+
         public void MoveTo(Hero h, Location from, Location to)
         {
             if (h.CurrentLocationId != from.LocationId)
@@ -34,6 +45,11 @@ namespace SimaDat.Bll
             }
 
             h.CurrentLocationId = to.LocationId;
+        }
+
+        public void Sleep(Hero h)
+        {
+            h.ResetTtl();
         }
     }
 }

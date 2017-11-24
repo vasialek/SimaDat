@@ -27,5 +27,15 @@ namespace SimaDat.Models.Characters
         public int Iq { get; private set; }
 
         public int Charm { get; private set; }
+
+        public void ResetTtl()
+        {
+            Ttl = MySettings.MaxTtlForHero;
+        }
+
+        public void UseTtl(int ttlToUse)
+        {
+            Ttl -= ttlToUse;
+        }
     }
 }

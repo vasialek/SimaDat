@@ -39,21 +39,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Characters\Appearance.cs" />
+    <Compile Include="Characters\Girl.cs" />
     <Compile Include="Characters\Hero.cs" />
     <Compile Include="Enums\Directions.cs" />
+    <Compile Include="Enums\Hairs.cs" />
     <Compile Include="Enums\HeroSkills.cs" />
+    <Compile Include="Enums\Relations.cs" />
     <Compile Include="Exceptions\CouldNotMoveException.cs" />
     <Compile Include="Exceptions\DirectionInUseException.cs" />
+    <Compile Include="Exceptions\NoTtlException.cs" />
     <Compile Include="Exceptions\ObjectNotHereException.cs" />
+    <Compile Include="Interfaces\ICharactersBll.cs" />
     <Compile Include="Interfaces\IHeroBll.cs" />
     <Compile Include="Interfaces\ILocationBll.cs" />
     <Compile Include="Interfaces\ISerializer.cs" />
     <Compile Include="Location.cs" />
+    <Compile Include="MySettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Skills\SkillImprovement.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Skills\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

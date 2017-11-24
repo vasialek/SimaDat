@@ -22,7 +22,7 @@ namespace SimaData.Dal
         {
             if (location.LocationId < 1)
             {
-                location.LocationId = _locations.Max(x => x.LocationId) + 1;
+                location.LocationId = _locations?.Count > 0 ? _locations.Max(x => x.LocationId) + 1 : 1;
             }
             _locations.Add(location);
         }

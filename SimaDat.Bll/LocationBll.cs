@@ -6,6 +6,7 @@ using SimaDat.Models.Enums;
 using SimaDat.Models.Exceptions;
 using SimaData.Dal;
 using SimaDat.Models.Interfaces;
+using SimaDat.Models.Skills;
 
 namespace SimaDat.Bll
 {
@@ -100,16 +101,16 @@ namespace SimaDat.Bll
             return _locationDal.GetAllLocations();
         }
 
-        public IList<string> GetAbilitiesToImprove(Location location)
+        public IList<SkillImprovement> GetSkillsToImprove(Location location)
         {
             switch (location.Name.ToLower())
             {
                 case "gym":
-                    return new string[] { HeroSkills.Strength.ToString() };
+                    return new SkillImprovement[] { new SkillImprovement { Skill = HeroSkills.Strength, ImprovementPoints = 5, TtlToUse = 20 } };
                 case "school":
-                    return new string[] { HeroSkills.Iq.ToString() };
+                    return new SkillImprovement[] { new SkillImprovement { Skill = HeroSkills.Iq, ImprovementPoints = 1, TtlToUse = 40 } };
                 case "pub":
-                    return new string[] { HeroSkills.Charm.ToString() };
+                    return new SkillImprovement[] { new SkillImprovement { Skill = HeroSkills.Charm, ImprovementPoints = 2, TtlToUse = 40 } };
 
             }
             return null;

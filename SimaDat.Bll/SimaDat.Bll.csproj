@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="AutoMapperInitializer.cs" />
     <Compile Include="BllFactory.cs" />
+    <Compile Include="CharactersBll.cs" />
     <Compile Include="HeroBll.cs" />
     <Compile Include="LocationBll.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

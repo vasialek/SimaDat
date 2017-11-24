@@ -63,6 +63,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AdministrationWorkflowTests.cs" />
+    <Compile Include="CharactersBllTest.cs" />
+    <Compile Include="HeroBllTest.cs" />
     <Compile Include="LocationBllTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MovementTests.cs" />

@@ -17,6 +17,8 @@ namespace SimaDat.Bll
 
         private IHeroBll _heroBll = null;
 
+        private ICharactersBll _charactersBll = null;
+
         public static BllFactory Current
         {
             get
@@ -50,6 +52,18 @@ namespace SimaDat.Bll
                     _heroBll = new HeroBll(LocationBll);
                 }
                 return _heroBll;
+            }
+        }
+
+        public ICharactersBll CharactersBll
+        {
+            get
+            {
+                if (_charactersBll == null)
+                {
+                    _charactersBll = new CharactersBll();
+                }
+                return _charactersBll;
             }
         }
     }

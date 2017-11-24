@@ -13,9 +13,10 @@ namespace SimaDat.Console
     {
         private Hero _hero = null;
         private ILocationBll _locationBll = null;
+        private ICharactersBll _charsBll = null;
         private Dumper _dumper = new Dumper();
 
-        public SdConsole(Hero hero, ILocationBll locationBll)
+        public SdConsole(Hero hero, ILocationBll locationBll, ICharactersBll charsBll)
         {
             if (hero == null)
             {
@@ -25,9 +26,14 @@ namespace SimaDat.Console
             {
                 throw new ArgumentNullException(nameof(locationBll));
             }
+            if (charsBll == null)
+            {
+                throw new ArgumentNullException(nameof(charsBll));
+            }
 
             _hero = hero;
             _locationBll = locationBll;
+            _charsBll = charsBll;
         }
 
         public void DisplayHero()
@@ -52,6 +58,15 @@ namespace SimaDat.Console
             else
             {
                 Output.WriteLine(ConsoleColor.Red, "No locations to display");
+            }
+        }
+
+        public void DisplayGirls()
+        {
+            var girls = _charsBll.GetAll();
+            for (int i = 0; i < girls?.Count; i++)
+            {
+                Output.WriteLine(_dumper.Dump(girls[i]));
             }
         }
 
@@ -97,7 +112,7 @@ namespace SimaDat.Console
                 {
                     var currentLocation = _locationBll.GetLocationById(_hero.CurrentLocationId);
                     Output.WriteLine(ConsoleColor.Green, "You are at Location {0} (#{1})", currentLocation.Name, _hero.CurrentLocationId);
-                    var improvementsAvailable = _locationBll.GetAbilitiesToImprove(currentLocation);
+                    var improvementsAvailable = _locationBll.GetSkillsToImprove(currentLocation);
 
                     var menu = new Menu();
 
@@ -106,7 +121,7 @@ namespace SimaDat.Console
                     {
                         foreach (var improve in improvementsAvailable)
                         {
-                            menu.Add($"Improve your {improve}", () => { Output.WriteLine(ConsoleColor.Green, "You have improved {0}", improve); });
+                            menu.Add($"Improve your {improve.Skill} using {improve.TtlToUse} hours", () => { Output.WriteLine(ConsoleColor.Green, "You have improved {0}", improve); });
                         }
                     }
                     else
