@@ -28,6 +28,7 @@ namespace SimaDat.UnitTests
             _locationBll = new LocationBll(new LocationDal());
             _heroBll = new HeroBll(_locationBll);
             _hero = new Hero();
+            _hero.ResetTtl();
 
             /*
             *       Hope to get such map

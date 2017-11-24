@@ -20,7 +20,7 @@ namespace SimaDat.Models.Characters
         /// <summary>
         /// How many hours could operate
         /// </summary>
-        public int Ttl { get; private set; }
+        public int Ttl { get; protected set; }
 
         public int Strength { get; private set; }
 
