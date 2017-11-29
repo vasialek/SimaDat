@@ -1,4 +1,5 @@
-﻿using SimaDat.Models.Enums;
+﻿using SimaDat.Models.Actions;
+using SimaDat.Models.Enums;
 using SimaDat.Models.Skills;
 using System.Collections.Generic;
 
@@ -24,5 +25,13 @@ namespace SimaDat.Models.Interfaces
 
         // Actions / Characters / Items for location
         IList<SkillImprovement> GetSkillsToImprove(Location location);
+
+        IList<ActionToDo> GetPossibleActions(Location location);
+
+        /*
+         * Maintain
+         */
+        // Clear all locations
+        void Clear();
     }
 }

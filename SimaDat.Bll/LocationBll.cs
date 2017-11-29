@@ -7,6 +7,7 @@ using SimaDat.Models.Exceptions;
 using SimaData.Dal;
 using SimaDat.Models.Interfaces;
 using SimaDat.Models.Skills;
+using SimaDat.Models.Actions;
 
 namespace SimaDat.Bll
 {
@@ -24,6 +25,17 @@ namespace SimaDat.Bll
             }
 
             _locationDal = locationDal;
+        }
+
+        public IList<ActionToDo> GetPossibleActions(Location location)
+        {
+            var actions = new List<ActionToDo>();
+
+            var moves = location.Doors.Select(x => new ActionToMove($"Move to {x.Direction} for {x.LocationToGoId}", x.LocationToGoId));
+
+            actions.AddRange(moves);
+
+            return actions;
         }
 
         public bool CouldMoveTo(Location from, Location to)
@@ -93,7 +105,12 @@ namespace SimaDat.Bll
 
         public Location GetLocationById(int locationId)
         {
-            return _locationDal.GetAllLocations().First(x => x.LocationId == locationId);
+            var location = _locationDal.GetAllLocations().FirstOrDefault(x => x.LocationId == locationId);
+            if (location == null)
+            {
+                throw new ObjectDoesNotExistException("Location is not found by #" + locationId, locationId);
+            }
+            return location;
         }
 
         public IList<Location> GetAllLocations()
@@ -114,6 +131,11 @@ namespace SimaDat.Bll
 
             }
             return null;
+        }
+
+        public void Clear()
+        {
+            _locationDal.Clear();
         }
     }
 }

@@ -8,6 +8,9 @@ using SimaDat.Models;
 using SimaDat.Bll;
 using SimaData.Dal;
 using SimaDat.UnitTests.FakeClasses;
+using SimaDat.Models.Actions;
+using System.Linq;
+using SimaDat.Models.Enums;
 
 namespace SimaDat.UnitTests
 {
@@ -25,6 +28,8 @@ namespace SimaDat.UnitTests
         private Location _to = new Location();
 
         private SkillImprovement _improveIq = null;
+        private SkillImprovement _improveStrength = null;
+        private SkillImprovement _improveCharm = null;
 
         [TestInitialize]
         public void TestInit()
@@ -36,10 +41,14 @@ namespace SimaDat.UnitTests
             _hero.ResetTtl();
 
             _improveIq = new SkillImprovement { Skill = Models.Enums.HeroSkills.Iq, ImprovementPoints = 1, TtlToUse = 4 };
+            _improveStrength = new SkillImprovement { Skill = HeroSkills.Strength, ImprovementPoints = 2, TtlToUse = 5 };
+            _improveCharm = new SkillImprovement { Skill = HeroSkills.Charm, ImprovementPoints = 3, TtlToUse = 6 };
 
             _from.LocationId = 1;
             _to.LocationId = 2;
             _locationBll.CreateDoorInLocation(_from, _to, Models.Enums.Directions.North);
+            _locationBll.CreateLocation(_from);
+            _locationBll.CreateLocation(_to);
 
             // Set Hero in from
             _hero.CurrentLocationId = _from.LocationId;
@@ -92,6 +101,40 @@ namespace SimaDat.UnitTests
             _heroBll.MoveTo(_hero, _from, _to);
         }
 
+        [TestMethod]
+        public void MoveTo_BadLocationIdFrom()
+        {
+            bool isOk = false;
+
+            try
+            {
+                _heroBll.MoveTo(_hero, 666666, _to.LocationId);
+            }
+            catch (ObjectDoesNotExistException odnex) when (odnex.ObjectId == 666666)
+            {
+                isOk = true;
+            }
+
+            isOk.Should().BeTrue("should be error that location to move from is incorrect.");
+        }
+
+        [TestMethod]
+        public void MoveTo_BadLocationIdTo()
+        {
+            bool isOk = false;
+
+            try
+            {
+                _heroBll.MoveTo(_hero, _from.LocationId, 777777);
+            }
+            catch (ObjectDoesNotExistException odnex) when (odnex.ObjectId == 777777)
+            {
+                isOk = true;
+            }
+
+            isOk.Should().BeTrue("should be error that location to move to is incorrect.");
+        }
+
         #endregion
 
         #region Improvement
@@ -118,8 +161,44 @@ namespace SimaDat.UnitTests
             _hero.Ttl.Should().Be(MySettings.MaxTtlForHero - _improveIq.TtlToUse);
         }
 
+        [TestMethod]
+        public void Improve_IqShouldIncrease()
+        {
+            // Restore TTL
+            _heroBll.Sleep(_hero);
+            int v = _hero.Iq;
+
+            _heroBll.Improve(_hero, _improveIq);
+
+            _hero.Iq.Should().Be(v + _improveIq.ImprovementPoints);
+        }
+
+        [TestMethod]
+        public void Improve_StrengthShouldIncrease()
+        {
+            // Restore TTL
+            _heroBll.Sleep(_hero);
+            int v = _hero.Strength;
+
+            _heroBll.Improve(_hero, _improveStrength);
+
+            _hero.Strength.Should().Be(v + _improveStrength.ImprovementPoints);
+        }
+
+        [TestMethod]
+        public void Improve_CharmShouldIncrease()
+        {
+            // Restore TTL
+            _heroBll.Sleep(_hero);
+            int v = _hero.Charm;
+
+            _heroBll.Improve(_hero, _improveCharm);
+
+            _hero.Charm.Should().Be(v + _improveCharm.ImprovementPoints);
+        }
+
         #endregion
-        
+
         #region Sleep
 
         [TestMethod]
@@ -128,6 +207,29 @@ namespace SimaDat.UnitTests
             _heroBll.Sleep(_hero);
 
             _hero.Ttl.Should().Be(MySettings.MaxTtlForHero);
+        }
+
+        #endregion
+
+        #region Actions
+
+        [TestMethod]
+        public void ApplyAction_MoveHero()
+        {
+            Location.Door d = _from.Doors.First();
+            var a = new ActionToMove($"Move to {d.Direction} for {d.LocationToGoId}", d.LocationToGoId);
+
+            _heroBll.ApplyAction(_hero, a);
+
+            _hero.CurrentLocationId.Should().Be(d.LocationToGoId);
+        }
+
+        [TestMethod]
+        public void ApplyAction_ImproveCharm_Ok()
+        {
+            var a = new ActionToImprove("Improve charm", HeroSkills.Charm, 4, 10);
+
+            _heroBll.ApplyAction(_hero, a);
         }
 
         #endregion

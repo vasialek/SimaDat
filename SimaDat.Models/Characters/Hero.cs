@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SimaDat.Models.Enums;
 
 namespace SimaDat.Models.Characters
 {
@@ -28,6 +29,9 @@ namespace SimaDat.Models.Characters
 
         public int Charm { get; private set; }
 
+        /// <summary>
+        /// Resets TTL to max
+        /// </summary>
         public void ResetTtl()
         {
             Ttl = MySettings.MaxTtlForHero;
@@ -36,6 +40,26 @@ namespace SimaDat.Models.Characters
         public void UseTtl(int ttlToUse)
         {
             Ttl -= ttlToUse;
+        }
+
+        public void ModifySkill(HeroSkills skill, int improvementPoints)
+        {
+            switch (skill)
+            {
+                case HeroSkills.None:
+                    break;
+                case HeroSkills.Iq:
+                    Iq += improvementPoints;
+                    break;
+                case HeroSkills.Strength:
+                    Strength += improvementPoints;
+                    break;
+                case HeroSkills.Charm:
+                    Charm += improvementPoints;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

@@ -6,13 +6,21 @@ using SimaDat.Models.Exceptions;
 using SimaData.Dal;
 using SimaDat.Models.Enums;
 using SimaDat.Models.Interfaces;
+using FluentAssertions;
+using System.Linq;
 
 namespace SimaDat.UnitTests
 {
     [TestClass]
     public class LocationBllTest
     {
-        private ILocationBll _bll = new LocationBll(DalFactory.Current.LocationDal);
+        private ILocationBll _bll = null;
+
+        [TestInitialize]
+        public void TestInit()
+        {
+            _bll = new LocationBll(DalFactory.Current.LocationDal);
+        }
 
         [TestMethod]
         public void Test_CouldNot_Move_At_All()
@@ -79,10 +87,10 @@ namespace SimaDat.UnitTests
         }
 
         [TestMethod]
-        public void Test_Create_First_Location_Ok()
+        public void CreateLocation_FirstLocation()
         {
-            var location = new Location();
-            _bll.CreateLocation(location);
+            _bll.Clear();
+            _bll.CreateLocation(new Location());
 
             var locations = _bll.GetAllLocations();
 
@@ -91,8 +99,51 @@ namespace SimaDat.UnitTests
 
         #endregion
 
+        #region Actions tests
+
         [TestMethod]
-        public void Test_Opposite_Direction()
+        public void GetPossibleActions_GetOneMove()
+        {
+            Location from = new Location();
+            Location to = new Location();
+            _bll.CreateDoorInLocation(from, to, Directions.North);
+
+            var actions = _bll.GetPossibleActions(from);
+
+            // Should be just 1 action - to move
+            actions.Should().HaveCount(1);
+        }
+
+        [TestMethod]
+        public void GetPossibleActions_GetMoveToTtl0()
+        {
+            Location from = new Location();
+            Location to = new Location();
+            _bll.CreateDoorInLocation(from, to, Directions.North);
+
+            var actions = _bll.GetPossibleActions(from);
+
+            actions.Single().TtlToUse.Should().Be(0);
+        }
+
+        #endregion
+
+        #region Maintain
+
+        [TestMethod]
+        public void Clear_Ok()
+        {
+            _bll.CreateLocation(new Location());
+
+            _bll.Clear();
+
+            _bll.GetAllLocations().Should().HaveCount(0);
+        }
+
+        #endregion
+
+        [TestMethod]
+        public void GetOppositeDirection_Ok()
         {
             Directions d, od;
 

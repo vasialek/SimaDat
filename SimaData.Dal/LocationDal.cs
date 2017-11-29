@@ -12,11 +12,24 @@ namespace SimaData.Dal
         IList<Location> GetAllLocations();
 
         void CreateLocation(Location location);
+
+        /// <summary>
+        /// Removes all locations
+        /// </summary>
+        void Clear();
     }
 
     public class LocationDal : ILocationDal
     {
         private IList<Location> _locations = new List<Location>();
+
+        /// <summary>
+        /// Removes all locations
+        /// </summary>
+        public void Clear()
+        {
+            _locations?.Clear();
+        }
 
         public void CreateLocation(Location location)
         {

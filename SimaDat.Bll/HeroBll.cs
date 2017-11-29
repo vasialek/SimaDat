@@ -4,6 +4,7 @@ using SimaDat.Models.Characters;
 using SimaDat.Models.Exceptions;
 using SimaDat.Models.Interfaces;
 using SimaDat.Models.Skills;
+using SimaDat.Models.Actions;
 
 namespace SimaDat.Bll
 {
@@ -22,6 +23,24 @@ namespace SimaDat.Bll
             _locationBll = locationBll;
         }
 
+        public void ApplyAction(Hero h, ActionToDo action)
+        {
+            var ma = action as ActionToMove;
+            ActionToImprove ia = action as ActionToImprove;
+            if (ma != null)
+            {
+                MoveTo(h, h.CurrentLocationId, ma.LocationIdToGo);
+                return;
+            }
+            if (ia != null)
+            {
+                Improve(h, new SkillImprovement { Skill = ia.SkillToImprove, TtlToUse = ia.TtlToUse, ImprovementPoints = ia.PointsToImprove });
+                return;
+            }
+
+            throw new ArgumentOutOfRangeException(nameof(action), $"Unknown action to apply to Hero: {action.Name} ({action.GetType()})");
+        }
+
         public void Improve(Hero h, SkillImprovement skill)
         {
             if (h.Ttl < skill.TtlToUse)
@@ -29,7 +48,16 @@ namespace SimaDat.Bll
                 throw new NoTtlException($"Could not improve {skill.Skill} - not enough TTL {h.Ttl} of {skill.TtlToUse}");
             }
 
+            h.ModifySkill(skill.Skill, skill.ImprovementPoints);
             h.UseTtl(skill.TtlToUse);
+        }
+
+        public void MoveTo(Hero h, int fromId, int toId)
+        {
+            Location from = _locationBll.GetLocationById(fromId);
+            Location to = _locationBll.GetLocationById(toId);
+
+            MoveTo(h, from, to);
         }
 
         public void MoveTo(Hero h, Location from, Location to)
