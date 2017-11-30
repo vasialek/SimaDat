@@ -38,6 +38,8 @@ namespace SimaDat.UnitTests
             };
         }
 
+        #region Create girl
+
         [TestMethod]
         public void CreateGirl_Ok()
         {
@@ -54,6 +56,8 @@ namespace SimaDat.UnitTests
             girls.Should().HaveCount(1);
         }
 
+        #endregion
+        
         #region Say hi
 
         [TestMethod]
@@ -77,6 +81,44 @@ namespace SimaDat.UnitTests
             _bll.SayHi(_me, _laura);
 
             _laura.HeroLikes.Should().BeGreaterThan(heroLikes);
+        }
+
+        #endregion
+
+        #region Talk with Girl
+
+        [TestMethod]
+        [ExpectedException(typeof(ObjectNotHereException))]
+        public void Talk_Exception_WhenDifferentLocations()
+        {
+            // Ensure that hero is not together with girl
+            _bll.CreateGirl(_laura);
+            _me.CurrentLocationId = _laura.CurrentLocationId + 1;
+
+            // Expecting exception girl is not here
+            _bll.Talk(_me, _laura);
+        }
+
+        [TestMethod]
+        public void Talk_NoHeroLikes_WhenStranger()
+        {
+            int likes = _laura.HeroLikes;
+
+            _bll.Talk(_me, _laura);
+
+            _laura.HeroLikes.Should().Be(likes);
+        }
+
+        [TestMethod]
+        public void Talk_HeroLikesIncrease_When()
+        {
+            var girl = new Girl("Test", FriendshipLevels.SawHimSomewhere);
+            girl.CurrentLocationId = _me.CurrentLocationId;
+            int likes = girl.HeroLikes;
+
+            _bll.Talk(_me, girl);
+
+            girl.HeroLikes.Should().BeGreaterThan(likes);
         }
 
         #endregion

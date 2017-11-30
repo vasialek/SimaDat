@@ -24,7 +24,20 @@ namespace SimaDat.Models.Characters
         public FriendshipLevels FriendshipLevel { get; private set; } = FriendshipLevels.Stranger;
 
         public Girl()
+            : this(null, FriendshipLevels.Stranger)
         {
+        }
+
+        public Girl(string name)
+            : this(name, FriendshipLevels.Stranger)
+        {
+        }
+
+        public Girl(string name, FriendshipLevels friendLevel)
+        {
+            Name = name;
+            FriendshipLevel = friendLevel;
+
             var settings = MySettings.Get();
             _likesForFriendship = new int[5];
             _likesForFriendship[(int)FriendshipLevels.Stranger] = settings.GetLikesForFriendships(FriendshipLevels.Stranger);

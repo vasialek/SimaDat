@@ -53,11 +53,13 @@ namespace SimaDat.Console
             var me = new Hero();
             me.Name = "Lekha";
             me.CurrentLocationId = home.LocationId;
+            me.ResetTtl();
             
             var console = new SdConsole(me, locationBll, charactersBll);
 
 
             menu.Add("Exit", () => { isRunning = false; }, ConsoleColor.Red);
+            menu.Add("Hero menu", () => { console.HeroMenu(); }, ConsoleColor.Green);
             menu.Add("Hero", () => { console.DisplayHero(); }, ConsoleColor.Yellow);
             menu.Add("Move hero", () => { console.MoveHero(); });
             menu.Add("Improve hero", () => { console.ImproveHero(); });

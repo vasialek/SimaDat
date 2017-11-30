@@ -35,7 +35,7 @@ namespace SimaDat.UnitTests
         }
 
         [TestMethod]
-        public void Test_Could_Move_Everywhere()
+        public void CouldMoveTo_NoWay()
         {
             Location from = new Location();
             Location to = new Location();
@@ -68,7 +68,7 @@ namespace SimaDat.UnitTests
 
         [TestMethod]
         [ExpectedException(typeof(DirectionInUseException))]
-        public void Test_Deny_Create_Same_Door()
+        public void CreateDoorInLocation_DenySameDoor()
         {
             Location from = new Location();
             Location to = new Location();
@@ -81,7 +81,7 @@ namespace SimaDat.UnitTests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Test_Deny_Creation_Of_Null_Location()
+        public void CreateLocation_DenyNullLocation()
         {
             _bll.CreateLocation(null);
         }
@@ -95,6 +95,27 @@ namespace SimaDat.UnitTests
             var locations = _bll.GetAllLocations();
 
             Assert.AreEqual(1, locations.Count);
+        }
+
+        [TestMethod]
+        public void CreateLocation_DenySameLocationName()
+        {
+            bool isOk = false;
+            _bll.Clear();
+
+            _bll.CreateLocation(new Location("SameLocation"));
+
+            try
+            {
+                // Expecting exception on duplicate name
+                _bll.CreateLocation(new Location("SameLocation"));
+            }
+            catch (ArgumentException aex) when (aex.ParamName == "Name")
+            {
+                isOk = true;
+            }
+
+            isOk.Should().BeTrue("expecting exception when location name is not unique.");
         }
 
         #endregion

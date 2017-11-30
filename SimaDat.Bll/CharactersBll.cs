@@ -31,6 +31,31 @@ namespace SimaDat.Bll
             girl.LikeHero();
         }
 
+        public void Talk(Hero hero, Girl girl)
+        {
+            if (hero.CurrentLocationId != girl.CurrentLocationId)
+            {
+                throw new ObjectNotHereException($"No girl named {girl.Name} in location #{hero.CurrentLocationId}");
+            }
+
+            switch (girl.FriendshipLevel)
+            {
+                case Models.Enums.FriendshipLevels.Stranger:
+                    break;
+                case Models.Enums.FriendshipLevels.SawHimSomewhere:
+                    girl.LikeHero();
+                    break;
+                case Models.Enums.FriendshipLevels.Familar:
+                    break;
+                case Models.Enums.FriendshipLevels.Friend:
+                    break;
+                case Models.Enums.FriendshipLevels.Lover:
+                    break;
+                default:
+                    break;
+            }
+        }
+
         public IList<Girl> GetAll()
         {
             return _girls;

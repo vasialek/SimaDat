@@ -99,6 +99,11 @@ namespace SimaDat.Bll
             {
                 throw new ArgumentNullException(nameof(location));
             }
+            var existing = _locationDal.GetAllLocations().FirstOrDefault(x => x.Name == location.Name);
+            if (existing != null)
+            {
+                throw new ArgumentException($"Could not create location with duplicated name `{location.Name}`", "Name");
+            }
 
             _locationDal.CreateLocation(location);
         }
@@ -123,11 +128,11 @@ namespace SimaDat.Bll
             switch (location.Name.ToLower())
             {
                 case "gym":
-                    return new SkillImprovement[] { new SkillImprovement { Skill = HeroSkills.Strength, ImprovementPoints = 5, TtlToUse = 20 } };
+                    return new SkillImprovement[] { new SkillImprovement { Skill = HeroSkills.Strength, ImprovementPoints = 5, TtlToUse = 2 } };
                 case "school":
-                    return new SkillImprovement[] { new SkillImprovement { Skill = HeroSkills.Iq, ImprovementPoints = 1, TtlToUse = 40 } };
+                    return new SkillImprovement[] { new SkillImprovement { Skill = HeroSkills.Iq, ImprovementPoints = 1, TtlToUse = 4 } };
                 case "pub":
-                    return new SkillImprovement[] { new SkillImprovement { Skill = HeroSkills.Charm, ImprovementPoints = 2, TtlToUse = 40 } };
+                    return new SkillImprovement[] { new SkillImprovement { Skill = HeroSkills.Charm, ImprovementPoints = 2, TtlToUse = 4 } };
 
             }
             return null;

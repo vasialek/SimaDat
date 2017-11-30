@@ -19,5 +19,7 @@ namespace SimaDat.Models.Interfaces
 
         // Actions
         void SayHi(Hero hero, Girl girl);
+
+        void Talk(Hero hero, Girl girl);
     }
 }

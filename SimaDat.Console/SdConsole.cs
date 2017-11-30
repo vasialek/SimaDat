@@ -1,4 +1,5 @@
 ﻿using AvUtils;
+using SimaDat.Models.Actions;
 using SimaDat.Models.Characters;
 using SimaDat.Models.Interfaces;
 using System;
@@ -102,6 +103,62 @@ namespace SimaDat.Console
             }
         }
 
+        internal void HeroMenu()
+        {
+            try
+            {
+                bool isRunning = true;
+
+                do
+                {
+                    Output.Clear();
+                    this.DisplayHeroStats();
+
+                    var currentLocation = _locationBll.GetLocationById(_hero.CurrentLocationId);
+                    Output.WriteLine("You are in {0}", currentLocation.Name);
+                    var actions = _locationBll.GetPossibleActions(currentLocation);
+                    var skills = _locationBll.GetSkillsToImprove(currentLocation);
+
+                    var menu = new Menu();
+
+                    menu.Add("Back to main menu", () => { isRunning = false; }, ConsoleColor.DarkYellow);
+
+                    if (actions?.Count > 0)
+                    {
+                        foreach (var a in actions)
+                        {
+                            menu.Add(a.Name, () => { DoAction(a); });
+                        } 
+                    }
+                    if (skills?.Count > 0)
+                    {
+                        foreach (var s in skills)
+                        {
+                            menu.Add($"+{s.ImprovementPoints} to {s.Skill}, takes {s.TtlToUse} hours", () =>
+                            {
+                                DoAction(new ActionToImprove(s.Skill.ToString(), s.Skill, s.TtlToUse, s.ImprovementPoints));
+                            });
+                        } 
+                    }
+
+                    menu.Display();
+
+                } while (isRunning);
+            }
+            catch (Exception ex)
+            {
+                Output.WriteLine(ConsoleColor.Red, ex.Message);
+                Output.WriteLine(ex.ToString());
+            }
+        }
+
+        protected void DoAction(ActionToDo action)
+        {
+            Output.WriteLine("Performing {0}", action.Name);
+            Bll.BllFactory.Current.HeroBll.ApplyAction(_hero, action);
+            Input.ReadKey();
+        }
+
         internal void ImproveHero()
         {
             bool isRunning = true;
@@ -137,6 +194,17 @@ namespace SimaDat.Console
                 Output.WriteLine(ConsoleColor.Red, "Error moving Hero. " + ex.Message);
                 Output.WriteLine(ex.ToString());
             }
+        }
+
+        internal void DisplayHeroStats()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(" ".PadLeft(80, ' '));
+            sb.AppendFormat("|{0,8}|{1,8}|{2,8}|{3,12}|{4,8}|", "TTL", "IQ", "Charm", "Strength", "Money").AppendLine();
+            sb.Append(" ".PadLeft(80, ' '));
+            sb.AppendFormat("|{0,8}|{1,8}|{2,8}|{3,12}|{4,8}|", _hero.Ttl, _hero.Iq, _hero.Charm, _hero.Strength, 0);
+
+            Output.WriteLine(ConsoleColor.DarkGreen, sb.ToString());
         }
     }
 }
