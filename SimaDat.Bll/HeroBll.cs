@@ -27,6 +27,7 @@ namespace SimaDat.Bll
         {
             var ma = action as ActionToMove;
             ActionToImprove ia = action as ActionToImprove;
+            ActionToRest sa = action as ActionToRest;
             if (ma != null)
             {
                 MoveTo(h, h.CurrentLocationId, ma.LocationIdToGo);
@@ -35,6 +36,11 @@ namespace SimaDat.Bll
             if (ia != null)
             {
                 Improve(h, new SkillImprovement { Skill = ia.SkillToImprove, TtlToUse = ia.TtlToUse, ImprovementPoints = ia.PointsToImprove });
+                return;
+            }
+            if (sa != null)
+            {
+                Sleep(h);
                 return;
             }
 

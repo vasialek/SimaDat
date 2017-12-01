@@ -48,4 +48,13 @@ namespace SimaDat.Models.Actions
             PointsToImprove = pointsToImprove;
         }
     }
+
+    public class ActionToRest : ActionToDo
+    {
+        public ActionToRest()
+            : base("Sleep", 0)
+        {
+            DoesImpactHero = true;
+        }
+    }
 }

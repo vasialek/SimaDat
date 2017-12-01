@@ -1,6 +1,7 @@
 ﻿using AvUtils;
 using SimaDat.Models.Actions;
 using SimaDat.Models.Characters;
+using SimaDat.Models.Exceptions;
 using SimaDat.Models.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -118,6 +119,7 @@ namespace SimaDat.Console
                     Output.WriteLine("You are in {0}", currentLocation.Name);
                     var actions = _locationBll.GetPossibleActions(currentLocation);
                     var skills = _locationBll.GetSkillsToImprove(currentLocation);
+                    var girls = _charsBll.FindInLocation(_hero.CurrentLocationId);
 
                     var menu = new Menu();
 
@@ -134,16 +136,29 @@ namespace SimaDat.Console
                     {
                         foreach (var s in skills)
                         {
-                            menu.Add($"+{s.ImprovementPoints} to {s.Skill}, takes {s.TtlToUse} hours", () =>
+                            menu.Add($"{s.Name}, takes {s.TtlToUse} hours", () =>
                             {
-                                DoAction(new ActionToImprove(s.Skill.ToString(), s.Skill, s.TtlToUse, s.ImprovementPoints));
+                                DoAction(s);
                             });
                         } 
+                    }
+                    if (girls?.Count > 0)
+                    {
+                        foreach (var g in girls)
+                        {
+                            menu.Add($"Girl {g.Name}, relations {g.FriendshipLevel}", () => { });
+                            menu.Add("    Say 'Hi'", () => { _charsBll.SayHi(_hero, g); });
+                            menu.Add("    Talk wit her", () => { _charsBll.Talk(_hero, g); });
+                        }
                     }
 
                     menu.Display();
 
                 } while (isRunning);
+            }
+            catch (NoTtlException ntex)
+            {
+                Output.WriteLine(ConsoleColor.Red, "You need to sleep - {0}", ntex.Message);
             }
             catch (Exception ex)
             {
@@ -156,7 +171,7 @@ namespace SimaDat.Console
         {
             Output.WriteLine("Performing {0}", action.Name);
             Bll.BllFactory.Current.HeroBll.ApplyAction(_hero, action);
-            Input.ReadKey();
+            //Input.ReadKey();
         }
 
         internal void ImproveHero()
@@ -178,7 +193,7 @@ namespace SimaDat.Console
                     {
                         foreach (var improve in improvementsAvailable)
                         {
-                            menu.Add($"Improve your {improve.Skill} using {improve.TtlToUse} hours", () => { Output.WriteLine(ConsoleColor.Green, "You have improved {0}", improve); });
+                            menu.Add($"{improve.Name} using {improve.TtlToUse} hours", () => { Output.WriteLine(ConsoleColor.Green, "You have improved {0}", improve); });
                         }
                     }
                     else

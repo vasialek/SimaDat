@@ -123,19 +123,27 @@ namespace SimaDat.Bll
             return _locationDal.GetAllLocations();
         }
 
-        public IList<SkillImprovement> GetSkillsToImprove(Location location)
+        public IList<ActionToDo> GetSkillsToImprove(Location location)
         {
+            var actions = new List<ActionToDo>();
+
             switch (location.Name.ToLower())
             {
                 case "gym":
-                    return new SkillImprovement[] { new SkillImprovement { Skill = HeroSkills.Strength, ImprovementPoints = 5, TtlToUse = 2 } };
-                case "school":
-                    return new SkillImprovement[] { new SkillImprovement { Skill = HeroSkills.Iq, ImprovementPoints = 1, TtlToUse = 4 } };
-                case "pub":
-                    return new SkillImprovement[] { new SkillImprovement { Skill = HeroSkills.Charm, ImprovementPoints = 2, TtlToUse = 4 } };
+                    actions.Add(new ActionToImprove("Improve your strength", HeroSkills.Strength, 5, 1));
+                    break;
+                //return new SkillImprovement[] { new SkillImprovement { Skill = HeroSkills.Strength, ImprovementPoints = 5, TtlToUse = 2 } };
+                //case "school":
+                //    return new SkillImprovement[] { new SkillImprovement { Skill = HeroSkills.Iq, ImprovementPoints = 1, TtlToUse = 4 } };
+                //case "pub":
+                //    return new SkillImprovement[] { new SkillImprovement { Skill = HeroSkills.Charm, ImprovementPoints = 2, TtlToUse = 4 } };
+                case "home":
+                    actions.Add(new ActionToRest());
+                    break;
 
             }
-            return null;
+
+            return actions;
         }
 
         public void Clear()

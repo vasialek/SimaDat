@@ -24,7 +24,9 @@ namespace SimaDat.Models.Interfaces
         IList<Location> GetAllLocations();
 
         // Actions / Characters / Items for location
-        IList<SkillImprovement> GetSkillsToImprove(Location location);
+        //IList<SkillImprovement> GetSkillsToImprove(Location location);
+
+        IList<ActionToDo> GetSkillsToImprove(Location location);
 
         IList<ActionToDo> GetPossibleActions(Location location);
 

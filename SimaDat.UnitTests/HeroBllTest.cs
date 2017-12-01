@@ -24,12 +24,13 @@ namespace SimaDat.UnitTests
         private IHeroBll _heroBll = Bll.BllFactory.Current.HeroBll;
         private ILocationBll _locationBll = new LocationBll(DalFactory.Current.LocationDal);
 
-        private Location _from = new Location();
-        private Location _to = new Location();
+        private Location _from = new Location(1, "From");
+        private Location _to = new Location(2, "To");
 
         private SkillImprovement _improveIq = null;
         private SkillImprovement _improveStrength = null;
         private SkillImprovement _improveCharm = null;
+        private ActionToRest _sleepAction = null;
 
         [TestInitialize]
         public void TestInit()
@@ -43,9 +44,9 @@ namespace SimaDat.UnitTests
             _improveIq = new SkillImprovement { Skill = Models.Enums.HeroSkills.Iq, ImprovementPoints = 1, TtlToUse = 4 };
             _improveStrength = new SkillImprovement { Skill = HeroSkills.Strength, ImprovementPoints = 2, TtlToUse = 5 };
             _improveCharm = new SkillImprovement { Skill = HeroSkills.Charm, ImprovementPoints = 3, TtlToUse = 6 };
+            _sleepAction = new ActionToRest();
 
-            _from.LocationId = 1;
-            _to.LocationId = 2;
+            _locationBll.Clear();
             _locationBll.CreateDoorInLocation(_from, _to, Models.Enums.Directions.North);
             _locationBll.CreateLocation(_from);
             _locationBll.CreateLocation(_to);
@@ -230,6 +231,17 @@ namespace SimaDat.UnitTests
             var a = new ActionToImprove("Improve charm", HeroSkills.Charm, 4, 10);
 
             _heroBll.ApplyAction(_hero, a);
+        }
+
+        [TestMethod]
+        public void ApplyAction_RestoreMaxTtl_WhenActionToSleep()
+        {
+            _hero.UseTtl(MySettings.MaxTtlForHero);
+
+            _heroBll.ApplyAction(_hero, _sleepAction);
+
+            // Expecting that TTL will be max
+            _hero.Ttl.Should().Be(MySettings.MaxTtlForHero);
         }
 
         #endregion
