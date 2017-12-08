@@ -31,7 +31,9 @@ namespace SimaDat.Bll
         {
             var actions = new List<ActionToDo>();
 
-            var moves = location.Doors.Select(x => new ActionToMove($"Move to {x.Direction} for {x.LocationToGoId}", x.LocationToGoId));
+            var moves = location.Doors
+                .OrderBy(x => x.Direction)
+                .Select(x => new ActionToMove($"Move to {x.Direction} for {x.LocationToGoId}", x.LocationToGoId));
 
             actions.AddRange(moves);
 

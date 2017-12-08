@@ -28,6 +28,12 @@ namespace SimaDat.Bll
             {
                 throw new ObjectNotHereException($"No girl named {girl.Name} in location #{hero.CurrentLocationId}");
             }
+            if (hero.Ttl < 1)
+            {
+                throw new NoTtlException($"You can't say 'Hi' to {girl.Name} because not enough TTL");
+            }
+
+            hero.UseTtl(1);
             girl.LikeHero();
         }
 

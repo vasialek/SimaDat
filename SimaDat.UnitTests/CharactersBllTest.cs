@@ -29,6 +29,7 @@ namespace SimaDat.UnitTests
                 CurrentLocationId = 100,
                 HeroId = 1000
             };
+            _me.ResetTtl();
 
             _laura = new Girl
             {
@@ -57,8 +58,28 @@ namespace SimaDat.UnitTests
         }
 
         #endregion
-        
+
         #region Say hi
+
+        [TestMethod]
+        [ExpectedException(typeof(NoTtlException))]
+        public void SayHi_Exception_WhenNoTtl()
+        {
+            _me.UseTtl(MySettings.MaxTtlForHero);
+
+            // Expecting exception that no TTL
+            _bll.SayHi(_me, _laura);
+        }
+
+        [TestMethod]
+        public void SayHi_ShouldUseTtl()
+        {
+            int ttl = _me.Ttl;
+
+            _bll.SayHi(_me, _laura);
+
+            _me.Ttl.Should().BeLessThan(ttl);
+        }
 
         [TestMethod]
         [ExpectedException(typeof(ObjectNotHereException))]
