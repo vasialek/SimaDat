@@ -3,7 +3,6 @@ using SimaDat.Models;
 using SimaDat.Models.Characters;
 using SimaDat.Models.Exceptions;
 using SimaDat.Models.Interfaces;
-using SimaDat.Models.Skills;
 using SimaDat.Models.Actions;
 
 namespace SimaDat.Bll
@@ -35,7 +34,8 @@ namespace SimaDat.Bll
             }
             if (ia != null)
             {
-                Improve(h, new SkillImprovement { Skill = ia.SkillToImprove, TtlToUse = ia.TtlToUse, ImprovementPoints = ia.PointsToImprove });
+                //Improve(h, new SkillImprovement { Skill = ia.SkillToImprove, TtlToUse = ia.TtlToUse, ImprovementPoints = ia.PointsToImprove });
+                //Improve(h, action);
                 return;
             }
             if (sa != null)
@@ -47,14 +47,14 @@ namespace SimaDat.Bll
             throw new ArgumentOutOfRangeException(nameof(action), $"Unknown action to apply to Hero: {action.Name} ({action.GetType()})");
         }
 
-        public void Improve(Hero h, SkillImprovement skill)
+        public void Improve(Hero h, ActionToImprove skill)
         {
             if (h.Ttl < skill.TtlToUse)
             {
-                throw new NoTtlException($"Could not improve {skill.Skill} - not enough TTL {h.Ttl} of {skill.TtlToUse}");
+                throw new NoTtlException($"Could not improve {skill.SkillToImprove} - not enough TTL {h.Ttl} of {skill.TtlToUse}");
             }
 
-            h.ModifySkill(skill.Skill, skill.ImprovementPoints);
+            h.ModifySkill(skill.SkillToImprove, skill.PointsToImprove);
             h.UseTtl(skill.TtlToUse);
         }
 

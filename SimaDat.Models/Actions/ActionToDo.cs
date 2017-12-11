@@ -41,11 +41,14 @@ namespace SimaDat.Models.Actions
 
         public int PointsToImprove { get; private set; }
 
-        public ActionToImprove(string name, HeroSkills skill, int ttlToUse, int pointsToImprove)
+        public int MoneyToSpent { get; private set; }
+
+        public ActionToImprove(string name, HeroSkills skill, int ttlToUse, int pointsToImprove, int money = 0)
             : base(name, ttlToUse)
         {
             SkillToImprove = skill;
             PointsToImprove = pointsToImprove;
+            MoneyToSpent = money;
         }
     }
 

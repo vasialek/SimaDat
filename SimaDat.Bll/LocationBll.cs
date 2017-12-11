@@ -6,7 +6,6 @@ using SimaDat.Models.Enums;
 using SimaDat.Models.Exceptions;
 using SimaData.Dal;
 using SimaDat.Models.Interfaces;
-using SimaDat.Models.Skills;
 using SimaDat.Models.Actions;
 
 namespace SimaDat.Bll
@@ -133,6 +132,9 @@ namespace SimaDat.Bll
             {
                 case "gym":
                     actions.Add(new ActionToImprove("Improve your strength", HeroSkills.Strength, 5, 1));
+                    break;
+                case "pub":
+                    actions.Add(new ActionToImprove("Improve charm", HeroSkills.Charm, 3, 1, 10));
                     break;
                 //return new SkillImprovement[] { new SkillImprovement { Skill = HeroSkills.Strength, ImprovementPoints = 5, TtlToUse = 2 } };
                 //case "school":

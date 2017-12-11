@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimaDat.Models.Interfaces;
 using SimaDat.Models.Characters;
-using SimaDat.Models.Skills;
 using SimaDat.Models.Exceptions;
 using FluentAssertions;
 using SimaDat.Models;
@@ -27,9 +26,9 @@ namespace SimaDat.UnitTests
         private Location _from = new Location(1, "From");
         private Location _to = new Location(2, "To");
 
-        private SkillImprovement _improveIq = null;
-        private SkillImprovement _improveStrength = null;
-        private SkillImprovement _improveCharm = null;
+        private ActionToImprove _improveIq = null;
+        private ActionToImprove _improveStrength = null;
+        private ActionToImprove _improveCharm = null;
         private ActionToRest _sleepAction = null;
 
         [TestInitialize]
@@ -41,9 +40,9 @@ namespace SimaDat.UnitTests
             };
             _hero.ResetTtl();
 
-            _improveIq = new SkillImprovement { Skill = Models.Enums.HeroSkills.Iq, ImprovementPoints = 1, TtlToUse = 4 };
-            _improveStrength = new SkillImprovement { Skill = HeroSkills.Strength, ImprovementPoints = 2, TtlToUse = 5 };
-            _improveCharm = new SkillImprovement { Skill = HeroSkills.Charm, ImprovementPoints = 3, TtlToUse = 6 };
+            _improveIq = new ActionToImprove("Iq", HeroSkills.Iq, 4, 1);
+            _improveStrength = new ActionToImprove("Strength", HeroSkills.Strength, 5, 2);
+            _improveCharm = new ActionToImprove("Charm", HeroSkills.Charm, 6, 3);
             _sleepAction = new ActionToRest();
 
             _locationBll.Clear();
@@ -171,7 +170,7 @@ namespace SimaDat.UnitTests
 
             _heroBll.Improve(_hero, _improveIq);
 
-            _hero.Iq.Should().Be(v + _improveIq.ImprovementPoints);
+            _hero.Iq.Should().Be(v + _improveIq.PointsToImprove);
         }
 
         [TestMethod]
@@ -183,7 +182,7 @@ namespace SimaDat.UnitTests
 
             _heroBll.Improve(_hero, _improveStrength);
 
-            _hero.Strength.Should().Be(v + _improveStrength.ImprovementPoints);
+            _hero.Strength.Should().Be(v + _improveStrength.PointsToImprove);
         }
 
         [TestMethod]
@@ -195,7 +194,7 @@ namespace SimaDat.UnitTests
 
             _heroBll.Improve(_hero, _improveCharm);
 
-            _hero.Charm.Should().Be(v + _improveCharm.ImprovementPoints);
+            _hero.Charm.Should().Be(v + _improveCharm.PointsToImprove);
         }
 
         #endregion

@@ -1,4 +1,5 @@
-﻿using SimaDat.Models.Characters;
+﻿using SimaDat.Models.Actions;
+using SimaDat.Models.Characters;
 using SimaDat.Models.Skills;
 
 namespace SimaDat.Models.Interfaces
@@ -11,7 +12,7 @@ namespace SimaDat.Models.Interfaces
 
         void MoveTo(Hero h, Location from, Location to);
 
-        void Improve(Hero h, SkillImprovement skill);
+        void Improve(Hero h, ActionToImprove skill);
 
         /// <summary>
         /// Should restore TTL to maximum

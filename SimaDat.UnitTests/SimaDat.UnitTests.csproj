@@ -72,7 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SimaDat.Bll\SimaDat.Bll.csproj">
-      <Project>{932951e5-c7df-435f-9ec2-a76dde74000a}</Project>
+      <Project>{932951E5-C7DF-435F-9EC2-A76DDE74000A}</Project>
       <Name>SimaDat.Bll</Name>
     </ProjectReference>
     <ProjectReference Include="..\SimaDat.Models\SimaDat.Models.csproj">
