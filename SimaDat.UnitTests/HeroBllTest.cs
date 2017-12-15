@@ -30,6 +30,7 @@ namespace SimaDat.UnitTests
         private ActionToImprove _improveStrength = null;
         private ActionToImprove _improveCharm = null;
         private ActionToRest _sleepAction = null;
+        private ActionToWork _workAction = null;
 
         [TestInitialize]
         public void TestInit()
@@ -42,8 +43,9 @@ namespace SimaDat.UnitTests
 
             _improveIq = new ActionToImprove("Iq", HeroSkills.Iq, 4, 1);
             _improveStrength = new ActionToImprove("Strength", HeroSkills.Strength, 5, 2);
-            _improveCharm = new ActionToImprove("Charm", HeroSkills.Charm, 6, 3);
+            _improveCharm = new ActionToImprove("Charm", HeroSkills.Charm, 6, 3, 100);
             _sleepAction = new ActionToRest();
+            _workAction = new ActionToWork("Dock", 4, 10);
 
             _locationBll.Clear();
             _locationBll.CreateDoorInLocation(_from, _to, Models.Enums.Directions.North);
@@ -137,6 +139,37 @@ namespace SimaDat.UnitTests
 
         #endregion
 
+        #region Jump to
+
+        [TestMethod]
+        public void JumpTo_TtlDecreaseToOne()
+        {
+            int v = _hero.Ttl;
+
+            _heroBll.JumpTo(_hero, _to);
+
+            _hero.Ttl.Should().Be(v - 1);
+        }
+
+        [TestMethod]
+        public void JumpTo_LocationIsChanged()
+        {
+            _heroBll.JumpTo(_hero, _to);
+
+            _hero.CurrentLocationId.Should().Be(_to.LocationId);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(NoTtlException))]
+        public void JumpTo_Exception_WhenNoTtl()
+        {
+            _hero.UseTtl(MySettings.MaxTtlForHero);
+
+            _heroBll.JumpTo(_hero, _to);
+        }
+
+        #endregion
+
         #region Improvement
 
         [TestMethod]
@@ -186,15 +219,43 @@ namespace SimaDat.UnitTests
         }
 
         [TestMethod]
-        public void Improve_CharmShouldIncrease()
+        [ExpectedException(typeof(NoMoneyException))]
+        public void Improve_NoMoneyException_Charm()
         {
             // Restore TTL
             _heroBll.Sleep(_hero);
             int v = _hero.Charm;
 
             _heroBll.Improve(_hero, _improveCharm);
+        }
+
+        [TestMethod]
+        public void Improve_CharmShouldIncrease()
+        {
+            // Restore TTL
+            _heroBll.Sleep(_hero);
+            // Add enough money
+            _hero.SpendMoney(-_improveCharm.MoneyToSpent);
+            int v = _hero.Charm;
+
+            _heroBll.Improve(_hero, _improveCharm);
 
             _hero.Charm.Should().Be(v + _improveCharm.PointsToImprove);
+        }
+
+        [TestMethod]
+        public void Improve_MoneyShouldDecrease_Charm()
+        {
+            // Restore TTL
+            _heroBll.Sleep(_hero);
+            // Add enough money
+            _hero.SpendMoney(-1000);
+            int v = _hero.Money;
+
+            _heroBll.Improve(_hero, _improveCharm);
+
+            // Expecting money to be decresead on cost of charm
+            _hero.Money.Should().Be(v - _improveCharm.MoneyToSpent);
         }
 
         #endregion
@@ -207,6 +268,39 @@ namespace SimaDat.UnitTests
             _heroBll.Sleep(_hero);
 
             _hero.Ttl.Should().Be(MySettings.MaxTtlForHero);
+        }
+
+        #endregion
+
+        #region Work
+
+        [TestMethod]
+        public void Work_DescreaseTtl()
+        {
+            int v = _hero.Ttl;
+
+            _heroBll.Work(_hero, _workAction);
+
+            _hero.Ttl.Should().Be(v - _workAction.TtlToUse);
+        }
+
+        [TestMethod]
+        public void Work_EarnMoney()
+        {
+            int v = _hero.Money;
+
+            _heroBll.Work(_hero, _workAction);
+
+            _hero.Money.Should().Be(v + _workAction.MoneyToEarn);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(NoTtlException))]
+        public void Work_Exception_WhenNoTtl()
+        {
+            _hero.UseTtl(MySettings.MaxTtlForHero);
+
+            _heroBll.Work(_hero, _workAction);
         }
 
         #endregion

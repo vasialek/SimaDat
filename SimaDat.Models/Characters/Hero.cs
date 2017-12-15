@@ -9,6 +9,8 @@ namespace SimaDat.Models.Characters
 {
     public class Hero
     {
+        public HeroCalendar Calendar { get; } = new HeroCalendar();
+
         public int HeroId { get; set; }
 
         public string Name { get; set; }
@@ -17,6 +19,8 @@ namespace SimaDat.Models.Characters
         /// Where are am I
         /// </summary>
         public int CurrentLocationId { get; set; }
+
+        public int Money { get; private set; }
 
         /// <summary>
         /// How many hours could operate
@@ -28,6 +32,8 @@ namespace SimaDat.Models.Characters
         public int Iq { get; private set; }
 
         public int Charm { get; private set; }
+
+        public bool HasJumper { get; } = true;
 
         /// <summary>
         /// Resets TTL to max
@@ -60,6 +66,11 @@ namespace SimaDat.Models.Characters
                 default:
                     break;
             }
+        }
+
+        public void SpendMoney(int money)
+        {
+            Money -= money;
         }
     }
 }

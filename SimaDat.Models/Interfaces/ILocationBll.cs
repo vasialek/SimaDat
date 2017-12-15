@@ -1,6 +1,5 @@
 ﻿using SimaDat.Models.Actions;
 using SimaDat.Models.Enums;
-using SimaDat.Models.Skills;
 using System.Collections.Generic;
 
 namespace SimaDat.Models.Interfaces

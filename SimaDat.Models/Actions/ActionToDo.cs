@@ -1,5 +1,4 @@
 ﻿using SimaDat.Models.Enums;
-using SimaDat.Models.Skills;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,6 +57,37 @@ namespace SimaDat.Models.Actions
             : base("Sleep", 0)
         {
             DoesImpactHero = true;
+        }
+    }
+
+    public class ActionToWork : ActionToDo
+    {
+        public int MoneyToEarn { get; private set; }
+
+        /// <summary>
+        /// Hero could increase his skill (if != null)
+        /// </summary>
+        private ActionToImprove _improvement = null;
+
+        /// <summary>
+        /// Hero could decrease his sill in some cases
+        /// </summary>
+        private ActionToImprove _penalty = null;
+
+        public ActionToWork(string name, int ttl, int money)
+            : base(name, ttl)
+        {
+            MoneyToEarn = money;
+        }
+
+        public void SetImprovement(HeroSkills skill, int pointsToImprove)
+        {
+
+        }
+
+        public void SetPenalty(HeroSkills skill, int pointsToLoose)
+        {
+
         }
     }
 }

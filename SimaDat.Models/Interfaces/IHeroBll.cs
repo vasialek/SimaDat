@@ -1,6 +1,5 @@
 ﻿using SimaDat.Models.Actions;
 using SimaDat.Models.Characters;
-using SimaDat.Models.Skills;
 
 namespace SimaDat.Models.Interfaces
 {
@@ -13,6 +12,13 @@ namespace SimaDat.Models.Interfaces
         void MoveTo(Hero h, Location from, Location to);
 
         void Improve(Hero h, ActionToImprove skill);
+
+        void Work(Hero h, ActionToWork job);
+
+        /// <summary>
+        /// Lets Hero to jump to any location. 1 TTL is used
+        /// </summary>
+        void JumpTo(Hero h, Location to);
 
         /// <summary>
         /// Should restore TTL to maximum

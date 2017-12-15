@@ -136,13 +136,17 @@ namespace SimaDat.Bll
                 case "pub":
                     actions.Add(new ActionToImprove("Improve charm", HeroSkills.Charm, 3, 1, 10));
                     break;
-                //return new SkillImprovement[] { new SkillImprovement { Skill = HeroSkills.Strength, ImprovementPoints = 5, TtlToUse = 2 } };
-                //case "school":
-                //    return new SkillImprovement[] { new SkillImprovement { Skill = HeroSkills.Iq, ImprovementPoints = 1, TtlToUse = 4 } };
-                //case "pub":
-                //    return new SkillImprovement[] { new SkillImprovement { Skill = HeroSkills.Charm, ImprovementPoints = 2, TtlToUse = 4 } };
+                case "school":
+                    actions.Add(new ActionToImprove("Improve IQ", HeroSkills.Iq, 4, 2));
+                    break;
+                case "library":
+                    actions.Add(new ActionToImprove("Improve IQ", HeroSkills.Iq, 4, 1));
+                    break;
                 case "home":
                     actions.Add(new ActionToRest());
+                    break;
+                case "dock":
+                    actions.Add(new ActionToWork("Move boxes", 4, 10));
                     break;
 
             }

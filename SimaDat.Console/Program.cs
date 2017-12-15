@@ -31,6 +31,20 @@ namespace SimaDat.Console
             locationBll.CreateLocation(gym);
             var school = new Location("School");
             locationBll.CreateLocation(school);
+            var library = new Location("Library");
+            locationBll.CreateLocation(library);
+            // Ala barack :)
+            var girlHouse = new Location("Girl house");
+            locationBll.CreateLocation(girlHouse);
+            var cityCenter = new Location("City center");
+            locationBll.CreateLocation(cityCenter);
+            // Some job centers
+            var bazaar = new Location("Bazaar");
+            locationBll.CreateLocation(bazaar);
+            var cafe = new Location("Cafe");
+            locationBll.CreateLocation(cafe);
+            var dock = new Location("Dock");
+            locationBll.CreateLocation(dock);
 
             // Home <-> Square
             locationBll.CreateDoorInLocation(home, square, Models.Enums.Directions.North);
@@ -40,6 +54,18 @@ namespace SimaDat.Console
             locationBll.CreateDoorInLocation(square, gym, Models.Enums.Directions.East);
             // Square <-> School
             locationBll.CreateDoorInLocation(square, school, Models.Enums.Directions.West);
+            // Square <-> Girl house
+            locationBll.CreateDoorInLocation(square, girlHouse, Models.Enums.Directions.NorthEast);
+            // Square <-> City center
+            locationBll.CreateDoorInLocation(square, cityCenter, Models.Enums.Directions.SouthEast);
+            // School <-> Library
+            locationBll.CreateDoorInLocation(school, library, Models.Enums.Directions.North);
+            // City center <-> Bazaar
+            locationBll.CreateDoorInLocation(cityCenter, bazaar, Models.Enums.Directions.SouthWest);
+            // City center <-> Dock
+            locationBll.CreateDoorInLocation(cityCenter, dock, Models.Enums.Directions.South);
+            // City center <-> Cafe
+            locationBll.CreateDoorInLocation(cityCenter, cafe, Models.Enums.Directions.SouthEast);
 
             // Girls
             Girl laura = new Girl

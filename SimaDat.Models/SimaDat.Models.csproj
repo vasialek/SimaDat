@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\ActionToDo.cs" />
+    <Compile Include="HeroCalendar.cs" />
     <Compile Include="Characters\Appearance.cs" />
     <Compile Include="Characters\Girl.cs" />
     <Compile Include="Characters\Hero.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="Enums\Relations.cs" />
     <Compile Include="Exceptions\CouldNotMoveException.cs" />
     <Compile Include="Exceptions\DirectionInUseException.cs" />
+    <Compile Include="Exceptions\NoMoneyException.cs" />
     <Compile Include="Exceptions\NoTtlException.cs" />
     <Compile Include="Exceptions\ObjectDoesNotExistException.cs" />
     <Compile Include="Exceptions\ObjectNotHereException.cs" />

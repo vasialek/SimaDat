@@ -16,6 +16,7 @@ namespace SimaDat.Console
         private Hero _hero = null;
         private ILocationBll _locationBll = null;
         private ICharactersBll _charsBll = null;
+        private IHeroBll _heroBll = null;
         private Dumper _dumper = new Dumper();
 
         public SdConsole(Hero hero, ILocationBll locationBll, ICharactersBll charsBll)
@@ -36,6 +37,7 @@ namespace SimaDat.Console
             _hero = hero;
             _locationBll = locationBll;
             _charsBll = charsBll;
+            _heroBll = Bll.BllFactory.Current.HeroBll;
         }
 
         public void DisplayHero()
@@ -90,7 +92,7 @@ namespace SimaDat.Console
                     {
                         menu.Add($"Move to {d.Direction} to location #{d.LocationToGoId}", () => {
                             var locationToGo = _locationBll.GetLocationById(d.LocationToGoId);
-                            Bll.BllFactory.Current.HeroBll.MoveTo(_hero, currentLocation, locationToGo);
+                            _heroBll.MoveTo(_hero, currentLocation, locationToGo);
                         });
                     }
 
@@ -109,6 +111,7 @@ namespace SimaDat.Console
             try
             {
                 bool isRunning = true;
+                var locations = _locationBll.GetAllLocations();
 
                 do
                 {
@@ -124,6 +127,10 @@ namespace SimaDat.Console
                     var menu = new Menu();
 
                     menu.Add("Back to main menu", () => { isRunning = false; }, ConsoleColor.DarkYellow);
+                    if (_hero.HasJumper)
+                    {
+                        menu.Add("Use jumper", () => { JumpTo(); }, ConsoleColor.Green);
+                    }
 
                     if (actions?.Count > 0)
                     {
@@ -156,9 +163,13 @@ namespace SimaDat.Console
 
                 } while (isRunning);
             }
+            catch (NoMoneyException nmex)
+            {
+                Output.WriteLine(ConsoleColor.Red, nmex.Message);
+            }
             catch (NoTtlException ntex)
             {
-                Output.WriteLine(ConsoleColor.Red, "You need to sleep - {0}", ntex.Message);
+                Output.WriteLine(ConsoleColor.Red, ntex.Message);
             }
             catch (Exception ex)
             {
@@ -167,10 +178,35 @@ namespace SimaDat.Console
             }
         }
 
+        protected void JumpTo()
+        {
+            Output.Clear();
+            this.DisplayHeroStats();
+
+            var locations = _locationBll.GetAllLocations();
+
+            var menu = new Menu();
+            menu.Add("Back to Hero menu", () => { }, ConsoleColor.DarkYellow);
+
+            foreach (var loc in locations)
+            {
+                if (_hero.CurrentLocationId == loc.LocationId)
+                {
+                    menu.Add($"{loc.Name} (current)", () => { });
+                }
+                else
+                {
+                    menu.Add(loc.Name, () => { _heroBll.JumpTo(_hero, loc);  });
+                }
+            }
+
+            menu.Display();
+        }
+
         protected void DoAction(ActionToDo action)
         {
             Output.WriteLine("Performing {0}", action.Name);
-            Bll.BllFactory.Current.HeroBll.ApplyAction(_hero, action);
+            _heroBll.ApplyAction(_hero, action);
             //Input.ReadKey();
         }
 
@@ -193,7 +229,10 @@ namespace SimaDat.Console
                     {
                         foreach (var improve in improvementsAvailable)
                         {
-                            menu.Add($"{improve.Name} using {improve.TtlToUse} hours", () => { Output.WriteLine(ConsoleColor.Green, "You have improved {0}", improve); });
+                            menu.Add($"{improve.Name} using {improve.TtlToUse} hours", () => {
+                                //Bll.BllFactory.Current.HeroBll.Improve(_hero, improve as ActionToImprove);
+                                Output.WriteLine(ConsoleColor.Green, "You have improved {0}", improve);
+                            });
                         }
                     }
                     else
@@ -215,9 +254,9 @@ namespace SimaDat.Console
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(" ".PadLeft(80, ' '));
-            sb.AppendFormat("|{0,8}|{1,8}|{2,8}|{3,12}|{4,8}|", "TTL", "IQ", "Charm", "Strength", "Money").AppendLine();
+            sb.AppendFormat("|{0,8}|{1,8}|{2,8}|{3,12}|{4,8}|{5,8}", "TTL", "IQ", "Charm", "Strength", "Money", "Day").AppendLine();
             sb.Append(" ".PadLeft(80, ' '));
-            sb.AppendFormat("|{0,8}|{1,8}|{2,8}|{3,12}|{4,8}|", _hero.Ttl, _hero.Iq, _hero.Charm, _hero.Strength, 0);
+            sb.AppendFormat("|{0,8}|{1,8}|{2,8}|{3,12}|{4,8}|{5,8}", _hero.Ttl, _hero.Iq, _hero.Charm, _hero.Strength, _hero.Money, String.Concat(_hero.Calendar.Day, ", ", _hero.Calendar.WeekDay));
 
             Output.WriteLine(ConsoleColor.DarkGreen, sb.ToString());
         }
