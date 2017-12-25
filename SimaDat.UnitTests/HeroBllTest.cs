@@ -305,6 +305,53 @@ namespace SimaDat.UnitTests
 
         #endregion
 
+
+        #region Penalty for work/job
+
+        [TestMethod]
+        public void Work_DecreaseIq_WhenPenaltyIs()
+        {
+            _hero.ModifySkill(HeroSkills.Iq, 100);
+            int v = _hero.Iq;
+            int penalty = 1;
+            _workAction.SetPenalty(HeroSkills.Iq, penalty);
+
+            _heroBll.Work(_hero, _workAction);
+
+            // Expecting IQ to decrease by penalty
+            _hero.Iq.Should().Be(v - penalty);
+        }
+
+        [TestMethod]
+        public void Work_NoDecreaseIq_WhenIqIsZerro()
+        {
+            int penalty = 1000;
+            _workAction.SetPenalty(HeroSkills.Iq, penalty);
+
+            _heroBll.Work(_hero, _workAction);
+
+            // Do not decrease IQ below 0
+            _hero.Iq.Should().BeGreaterOrEqualTo(0);
+        }
+
+        #endregion
+
+        #region Bonus for job/work
+
+        [TestMethod]
+        public void Work_IncreaseCharm_WhenBonusIs()
+        {
+            int bonus = 1;
+            int v = _hero.Charm;
+            _workAction.SetBonus(HeroSkills.Charm, bonus);
+
+            _heroBll.Work(_hero, _workAction);
+
+            _hero.Charm.Should().Be(v + bonus);
+        }
+
+        #endregion
+
         #region Actions
 
         [TestMethod]

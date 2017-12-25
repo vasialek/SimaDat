@@ -61,6 +61,16 @@ namespace SimaDat.Bll
 
             h.UseTtl(job.TtlToUse);
             h.SpendMoney(-job.MoneyToEarn);
+
+            if (job.Penalty != null)
+            {
+                h.ModifySkill(job.Penalty.SkillToImprove, job.Penalty.PointsToImprove);
+            }
+
+            if (job.Bonus != null)
+            {
+                h.ModifySkill(job.Bonus.SkillToImprove, job.Bonus.PointsToImprove);
+            }
         }
 
         public void Improve(Hero h, ActionToImprove skill)

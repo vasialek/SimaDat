@@ -146,9 +146,20 @@ namespace SimaDat.Bll
                     actions.Add(new ActionToRest());
                     break;
                 case "dock":
-                    actions.Add(new ActionToWork("Move boxes", 4, 10));
+                    var dw = new ActionToWork("Move boxes", 4, 10);
+                    dw.SetBonus(HeroSkills.Strength, 1);
+                    actions.Add(dw);
                     break;
-
+                case "bazaar":
+                    var bw = new ActionToWork("Sell samshit", 5, 20);
+                    bw.SetPenalty(HeroSkills.Iq, 1);
+                    actions.Add(bw);
+                    break;
+                case "cafe":
+                    var cw = new ActionToWork("Work in cafe", 6, 10);
+                    cw.SetBonus(HeroSkills.Charm, 1);
+                    actions.Add(cw);
+                    break;
             }
 
             return actions;

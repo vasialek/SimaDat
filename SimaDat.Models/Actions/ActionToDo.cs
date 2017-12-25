@@ -67,12 +67,12 @@ namespace SimaDat.Models.Actions
         /// <summary>
         /// Hero could increase his skill (if != null)
         /// </summary>
-        private ActionToImprove _improvement = null;
+        public ActionToImprove Bonus { get; private set; } = null;
 
         /// <summary>
         /// Hero could decrease his sill in some cases
         /// </summary>
-        private ActionToImprove _penalty = null;
+        public ActionToImprove Penalty { get; private set; } = null;
 
         public ActionToWork(string name, int ttl, int money)
             : base(name, ttl)
@@ -80,14 +80,14 @@ namespace SimaDat.Models.Actions
             MoneyToEarn = money;
         }
 
-        public void SetImprovement(HeroSkills skill, int pointsToImprove)
+        public void SetBonus(HeroSkills skill, int pointsToImprove)
         {
-
+            Bonus = new ActionToImprove("Bonus", skill, 0, pointsToImprove);
         }
 
         public void SetPenalty(HeroSkills skill, int pointsToLoose)
         {
-
+            Penalty = new Actions.ActionToImprove("Penalty", skill, 0, -pointsToLoose);
         }
     }
 }

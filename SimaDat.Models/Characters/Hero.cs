@@ -55,13 +55,13 @@ namespace SimaDat.Models.Characters
                 case HeroSkills.None:
                     break;
                 case HeroSkills.Iq:
-                    Iq += improvementPoints;
+                    Iq = ModifyInRange(Iq, improvementPoints, 0, MySettings.MaxIqForHero);
                     break;
                 case HeroSkills.Strength:
-                    Strength += improvementPoints;
+                    Strength = ModifyInRange(Strength, improvementPoints, 0, MySettings.MaxStrengthForHero);
                     break;
                 case HeroSkills.Charm:
-                    Charm += improvementPoints;
+                    Charm = ModifyInRange(Charm, improvementPoints, 0, MySettings.MaxCharmForHero);
                     break;
                 default:
                     break;
@@ -71,6 +71,21 @@ namespace SimaDat.Models.Characters
         public void SpendMoney(int money)
         {
             Money -= money;
+        }
+
+        protected int ModifyInRange(int initial, int modify, int min, int max)
+        {
+            int v = initial + modify;
+
+            if (v < min)
+            {
+                return min;
+            }
+            if (v > max)
+            {
+                return max;
+            }
+            return v;
         }
     }
 }
