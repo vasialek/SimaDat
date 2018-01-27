@@ -139,6 +139,52 @@ namespace SimaDat.UnitTests
 
         #endregion
 
+        #region Movement with enter condition
+
+        [TestMethod]
+        [ExpectedException(typeof(BadConditionException))]
+        public void MoveTo_EnterIsNotPossible()
+        {
+            // Never allow to enter
+            _to.SetEnterCondition("XEP BAM", delegate(Hero h) { return false; });
+
+            _heroBll.MoveTo(_hero, _from, _to);
+        }
+
+        [TestMethod]
+        public void MoveTo_CouldNotEnterOnSaturday()
+        {
+            bool isOk = false;
+            string violateMessage = "Closed on weekend";
+            // Could not enter after Friday
+            _to.SetEnterCondition(violateMessage, delegate (Hero h) { return h.Calendar.WeekDay < 6; });
+            // Set Hero day to Saturday
+            while (_hero.Calendar.WeekDay < 6)
+            {
+                _heroBll.Sleep(_hero);
+            }
+
+            try
+            {
+                _heroBll.MoveTo(_hero, _from, _to);
+            }
+            catch (BadConditionException bcex) when (bcex.Message == violateMessage)
+            {
+                isOk = true;
+            }
+
+            isOk.Should().BeTrue();
+        }
+
+        //[TestMethod]
+        //public void MoveTo_CouldNoEnterWhenStranger()
+        //{
+        //    var girl = new Girl("Laura");
+        //    _to.SetEnterCondition((Hero h) => { return h.CurrentLocationId; });
+        //}
+
+        #endregion
+
         #region Jump to
 
         [TestMethod]
@@ -268,6 +314,17 @@ namespace SimaDat.UnitTests
             _heroBll.Sleep(_hero);
 
             _hero.Ttl.Should().Be(MySettings.MaxTtlForHero);
+        }
+
+        [TestMethod]
+        public void Sleep_ChangeDay()
+        {
+            int v = _hero.Calendar.Day;
+
+            _heroBll.Sleep(_hero);
+
+            // Should be next day after sleep
+            _hero.Calendar.Day.Should().BeGreaterThan(v);
         }
 
         #endregion

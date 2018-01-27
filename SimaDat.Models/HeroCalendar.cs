@@ -11,20 +11,20 @@ namespace SimaDat.Models
         /// <summary>
         /// Monday = 1
         /// </summary>
-        private int _weekDay = 1;
+        public int WeekDay { get; private set; } = 1;
 
         public int Day { get; private set; }
 
-        public string WeekDay
+        public string WeekDayShort
         {
             get
             {
-                if (_weekDay > 7)
+                if (WeekDay > 7)
                 {
-                    _weekDay = 1;
+                    WeekDay = 1;
                 }
 
-                switch (_weekDay)
+                switch (WeekDay)
                 {
                     case 1:
                         return "Mon";
@@ -41,7 +41,7 @@ namespace SimaDat.Models
                     case 7:
                         return "Sun";
                 }
-                throw new ArgumentOutOfRangeException("Week day is incorrect: " + _weekDay);
+                throw new ArgumentOutOfRangeException("Week day is incorrect: " + WeekDay);
             }
         }
 
@@ -53,7 +53,17 @@ namespace SimaDat.Models
 
         public HeroCalendar(int weekDay)
         {
-            _weekDay = weekDay;
+            WeekDay = weekDay;
+        }
+
+        public void NextDay()
+        {
+            Day++;
+            WeekDay++;
+            if (WeekDay > 7)
+            {
+                WeekDay = 1;
+            }
         }
     }
 }

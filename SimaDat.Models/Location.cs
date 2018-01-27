@@ -41,6 +41,25 @@ namespace SimaDat.Models
             Doors = new List<Door>();
         }
 
+        public string ViolateEnterMessage { get; private set; } = "Hero is not allowed to enter.";
+        private Func<Characters.Hero, bool> _couldEnterAction = (Characters.Hero h) => { return true; };
+
+        public bool CouldEnter(Characters.Hero hero)
+        {
+            return _couldEnterAction(hero);
+        }
+
+        public void SetEnterCondition(Func<Characters.Hero, bool> f)
+        {
+            SetEnterCondition(null, f);
+        }
+
+        public void SetEnterCondition(string violateMsg, Func<Characters.Hero, bool> f)
+        {
+            ViolateEnterMessage = violateMsg;
+            _couldEnterAction = f;
+        }
+
         public Door GetDoorAtDirection(Directions d)
         {
             if (Doors == null)

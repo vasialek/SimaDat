@@ -15,23 +15,22 @@ namespace SimaDat.UnitTests
     public class LocationBllTest
     {
         private ILocationBll _bll = null;
+        private Location _from = null;
+        private Location _to = null;
+
+
 
         [TestInitialize]
         public void TestInit()
         {
+            _from = new Location("From");
+            _to = new Location("To");
+
             _bll = new LocationBll(DalFactory.Current.LocationDal);
-        }
-
-        [TestMethod]
-        public void Test_CouldNot_Move_At_All()
-        {
-            // No doors in location
-            Location from = new Location();
-            Location to = new Location();
-
-            bool couldMove = _bll.CouldMoveTo(from, to);
-
-            Assert.IsFalse(couldMove);
+            _bll.Clear();
+            _bll.CreateLocation(_from);
+            _bll.CreateLocation(_to);
+            _bll.CreateDoorInLocation(_from, _to, Directions.North);
         }
 
         [TestMethod]
@@ -125,11 +124,7 @@ namespace SimaDat.UnitTests
         [TestMethod]
         public void GetPossibleActions_GetOneMove()
         {
-            Location from = new Location();
-            Location to = new Location();
-            _bll.CreateDoorInLocation(from, to, Directions.North);
-
-            var actions = _bll.GetPossibleActions(from);
+            var actions = _bll.GetPossibleActions(_from);
 
             // Should be just 1 action - to move
             actions.Should().HaveCount(1);
@@ -138,11 +133,7 @@ namespace SimaDat.UnitTests
         [TestMethod]
         public void GetPossibleActions_GetMoveToTtl0()
         {
-            Location from = new Location();
-            Location to = new Location();
-            _bll.CreateDoorInLocation(from, to, Directions.North);
-
-            var actions = _bll.GetPossibleActions(from);
+            var actions = _bll.GetPossibleActions(_from);
 
             actions.Single().TtlToUse.Should().Be(0);
         }

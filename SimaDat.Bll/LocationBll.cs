@@ -30,11 +30,12 @@ namespace SimaDat.Bll
         {
             var actions = new List<ActionToDo>();
 
-            var moves = location.Doors
-                .OrderBy(x => x.Direction)
-                .Select(x => new ActionToMove($"Move to {x.Direction} for {x.LocationToGoId}", x.LocationToGoId));
+            foreach (var d in location.Doors.OrderBy(x => x.Direction))
+            {
+                var loc = GetLocationById(d.LocationToGoId);
+                actions.Add(new ActionToMove($"Move to {d.Direction} for {loc.Name} ({d.LocationToGoId})", d.LocationToGoId));
+            }
 
-            actions.AddRange(moves);
 
             return actions;
         }

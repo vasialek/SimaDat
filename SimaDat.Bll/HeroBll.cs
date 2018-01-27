@@ -102,17 +102,22 @@ namespace SimaDat.Bll
         {
             if (h.CurrentLocationId != from.LocationId)
             {
-                throw new ObjectNotHereException("Hero is not in location you want to move from");
+                throw new ObjectNotHereException("Hero is not in location you want to move from.");
             }
 
             if (_locationBll.CouldMoveTo(from, to) == false)
             {
-                throw new CouldNotMoveException("There is no door to desired location");
+                throw new CouldNotMoveException("There is no door to desired location.");
             }
 
             if (h.Ttl < 1)
             {
-                throw new NoTtlException("Hero has not enough TTL to move");
+                throw new NoTtlException("Hero has not enough TTL to move.");
+            }
+
+            if (to.CouldEnter(h) == false)
+            {
+                throw new BadConditionException(String.IsNullOrEmpty(to.ViolateEnterMessage) ? $"Hero is not allowed to enter {to.Name}." : to.ViolateEnterMessage);
             }
 
             h.CurrentLocationId = to.LocationId;
@@ -128,6 +133,11 @@ namespace SimaDat.Bll
                 throw new NoTtlException("Hero has not enough TTL to jump");
             }
 
+            if (to.CouldEnter(h) == false)
+            {
+                throw new BadConditionException(String.IsNullOrEmpty(to.ViolateEnterMessage) ? $"Hero is not allowed to enter {to.Name}." : to.ViolateEnterMessage);
+            }
+
             h.UseTtl(1);
             h.CurrentLocationId = to.LocationId;
         }
@@ -135,6 +145,7 @@ namespace SimaDat.Bll
 
         public void Sleep(Hero h)
         {
+            h.Calendar.NextDay();
             h.ResetTtl();
         }
     }

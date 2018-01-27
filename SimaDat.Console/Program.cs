@@ -36,6 +36,11 @@ namespace SimaDat.Console
             // Ala barack :)
             var girlHouse = new Location("Girl house");
             locationBll.CreateLocation(girlHouse);
+            // Girls in barack
+            var linaRoom = new Location("Lina room");
+            locationBll.CreateLocation(linaRoom);
+            var annaRoom = new Location("Anna room");
+            locationBll.CreateLocation(annaRoom);
             var cityCenter = new Location("City center");
             locationBll.CreateLocation(cityCenter);
             // Some job centers
@@ -56,6 +61,10 @@ namespace SimaDat.Console
             locationBll.CreateDoorInLocation(square, school, Models.Enums.Directions.West);
             // Square <-> Girl house
             locationBll.CreateDoorInLocation(square, girlHouse, Models.Enums.Directions.NorthEast);
+            // Girls house <-> Lina room
+            locationBll.CreateDoorInLocation(girlHouse, linaRoom, Models.Enums.Directions.NorthWest);
+            // Girls house <-> Anna room
+            locationBll.CreateDoorInLocation(girlHouse, annaRoom, Models.Enums.Directions.North);
             // Square <-> City center
             locationBll.CreateDoorInLocation(square, cityCenter, Models.Enums.Directions.SouthEast);
             // School <-> Library
@@ -66,6 +75,9 @@ namespace SimaDat.Console
             locationBll.CreateDoorInLocation(cityCenter, dock, Models.Enums.Directions.South);
             // City center <-> Cafe
             locationBll.CreateDoorInLocation(cityCenter, cafe, Models.Enums.Directions.SouthEast);
+
+            // Conditions
+            school.SetEnterCondition("School is closed on weekend.", (Hero h) => { return h.Calendar.WeekDay < 6; });
 
             // Girls
             Girl laura = new Girl

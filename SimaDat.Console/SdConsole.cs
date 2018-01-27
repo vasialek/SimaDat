@@ -163,6 +163,10 @@ namespace SimaDat.Console
 
                 } while (isRunning);
             }
+            catch (BadConditionException bcex)
+            {
+                Output.WriteLine(ConsoleColor.Red, bcex.Message);
+            }
             catch (NoMoneyException nmex)
             {
                 Output.WriteLine(ConsoleColor.Red, nmex.Message);
@@ -256,7 +260,7 @@ namespace SimaDat.Console
             sb.Append(" ".PadLeft(80, ' '));
             sb.AppendFormat("|{0,8}|{1,8}|{2,8}|{3,12}|{4,8}|{5,8}", "TTL", "IQ", "Charm", "Strength", "Money", "Day").AppendLine();
             sb.Append(" ".PadLeft(80, ' '));
-            sb.AppendFormat("|{0,8}|{1,8}|{2,8}|{3,12}|{4,8}|{5,8}", _hero.Ttl, _hero.Iq, _hero.Charm, _hero.Strength, _hero.Money, String.Concat(_hero.Calendar.Day, ", ", _hero.Calendar.WeekDay));
+            sb.AppendFormat("|{0,8}|{1,8}|{2,8}|{3,12}|{4,8}|{5,8}", _hero.Ttl, _hero.Iq, _hero.Charm, _hero.Strength, _hero.Money, String.Concat(_hero.Calendar.Day, ", ", _hero.Calendar.WeekDayShort));
 
             Output.WriteLine(ConsoleColor.DarkGreen, sb.ToString());
         }

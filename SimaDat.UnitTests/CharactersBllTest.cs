@@ -131,7 +131,7 @@ namespace SimaDat.UnitTests
         }
 
         [TestMethod]
-        public void Talk_HeroLikesIncrease_When()
+        public void Talk_HeroLikesIncrease_WhenSawHimSomewhere()
         {
             var girl = new Girl("Test", FriendshipLevels.SawHimSomewhere);
             girl.CurrentLocationId = _me.CurrentLocationId;
