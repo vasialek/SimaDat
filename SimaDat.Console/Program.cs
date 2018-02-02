@@ -2,6 +2,7 @@
 using SimaDat.Bll;
 using SimaDat.Models;
 using SimaDat.Models.Characters;
+using SimaDat.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,9 +77,6 @@ namespace SimaDat.Console
             // City center <-> Cafe
             locationBll.CreateDoorInLocation(cityCenter, cafe, Models.Enums.Directions.SouthEast);
 
-            // Conditions
-            school.SetEnterCondition("School is closed on weekend.", (Hero h) => { return h.Calendar.WeekDay < 6; });
-
             // Girls
             Girl laura = new Girl
             {
@@ -87,6 +85,34 @@ namespace SimaDat.Console
                 CurrentLocationId = pub.LocationId,
             };
             charactersBll.CreateGirl(laura);
+            Girl lina = new Girl
+            {
+                Name = "Lina",
+                Appearance = new Appearance(165, 97, 70, 95) { Hair = Hairs.Blond },
+            };
+            charactersBll.CreateGirl(lina);
+            linaRoom.OwnerId = lina.CharacterId;
+            Girl anna = new Girl
+            {
+                Name = "Anna",
+                Appearance = new Appearance(175, 80, 60, 90) { Hair = Hairs.Red },
+                CurrentLocationId = pub.LocationId,
+            };
+            charactersBll.CreateGirl(anna);
+            annaRoom.OwnerId = anna.CharacterId;
+
+            // Conditions
+            school.SetEnterCondition("School is closed on weekend.", (Hero h) => { return h.Calendar.WeekDay < 6; });
+            linaRoom.SetEnterCondition((Hero h) =>
+            {
+                var owner = BllFactory.Current.LocationBll.GetOwnerOfLocation(linaRoom.LocationId);
+                return ((int)owner.FriendshipLevel >= (int)FriendshipLevels.Familar);
+            });
+            annaRoom.SetEnterCondition((Hero h) =>
+            {
+                return (int)anna.FriendshipLevel >= (int)FriendshipLevels.Familar;
+            });
+
 
             var me = new Hero();
             me.Name = "Lekha";

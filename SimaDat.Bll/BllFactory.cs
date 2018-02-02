@@ -37,7 +37,7 @@ namespace SimaDat.Bll
             {
                 if (_locationBll == null)
                 {
-                    _locationBll = new LocationBll(DalFactory.Current.LocationDal);
+                    _locationBll = new LocationBll(CharactersBll, DalFactory.Current.LocationDal);
                 }
                 return _locationBll;
             }

@@ -108,15 +108,22 @@ namespace SimaDat.Console
 
         internal void HeroMenu()
         {
-            try
+            bool isRunning = true;
+            string error = null;
+            do
             {
-                bool isRunning = true;
-                var locations = _locationBll.GetAllLocations();
-
-                do
+                try
                 {
+                    var locations = _locationBll.GetAllLocations();
+
                     Output.Clear();
                     this.DisplayHeroStats();
+
+                    if (String.IsNullOrEmpty(error) == false)
+                    {
+                        Output.WriteLine(ConsoleColor.Red, error);
+                        error = null;
+                    }
 
                     var currentLocation = _locationBll.GetLocationById(_hero.CurrentLocationId);
                     Output.WriteLine("You are in {0}", currentLocation.Name);
@@ -161,25 +168,26 @@ namespace SimaDat.Console
 
                     menu.Display();
 
-                } while (isRunning);
-            }
-            catch (BadConditionException bcex)
-            {
-                Output.WriteLine(ConsoleColor.Red, bcex.Message);
-            }
-            catch (NoMoneyException nmex)
-            {
-                Output.WriteLine(ConsoleColor.Red, nmex.Message);
-            }
-            catch (NoTtlException ntex)
-            {
-                Output.WriteLine(ConsoleColor.Red, ntex.Message);
-            }
-            catch (Exception ex)
-            {
-                Output.WriteLine(ConsoleColor.Red, ex.Message);
-                Output.WriteLine(ex.ToString());
-            }
+                }
+                catch (BadConditionException bcex)
+                {
+                    //Output.WriteLine(ConsoleColor.Red, bcex.Message);
+                    error = bcex.Message;
+                }
+                catch (NoMoneyException nmex)
+                {
+                    error = nmex.Message;
+                }
+                catch (NoTtlException ntex)
+                {
+                    error = ntex.Message;
+                }
+                catch (Exception ex)
+                {
+                    error = ex.Message;
+                    //Output.WriteLine(ex.ToString());
+                }
+            } while (isRunning);
         }
 
         protected void JumpTo()

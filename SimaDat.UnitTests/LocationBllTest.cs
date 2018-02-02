@@ -26,7 +26,7 @@ namespace SimaDat.UnitTests
             _from = new Location("From");
             _to = new Location("To");
 
-            _bll = new LocationBll(DalFactory.Current.LocationDal);
+            _bll = new LocationBll(BllFactory.Current.CharactersBll, DalFactory.Current.LocationDal);
             _bll.Clear();
             _bll.CreateLocation(_from);
             _bll.CreateLocation(_to);

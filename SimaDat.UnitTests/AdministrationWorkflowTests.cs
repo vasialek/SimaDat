@@ -25,7 +25,7 @@ namespace SimaDat.UnitTests
         public void Init()
         {
             // TODO: Replace this with fake after real DB is conected
-            _locationBll = new LocationBll(new LocationDal());
+            _locationBll = new LocationBll(BllFactory.Current.CharactersBll, new LocationDal());
             _heroBll = new HeroBll(_locationBll);
             _hero = new Hero();
             _hero.ResetTtl();

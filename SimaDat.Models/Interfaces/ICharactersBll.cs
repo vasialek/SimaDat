@@ -12,6 +12,8 @@ namespace SimaDat.Models.Interfaces
         void CreateGirl(Girl g);
 
         // Get
+        Girl GetById(int characterId);
+
         IList<Girl> GetAll();
 
         // Search

@@ -29,6 +29,8 @@ namespace SimaDat.Models.Interfaces
 
         IList<ActionToDo> GetPossibleActions(Location location);
 
+        Characters.Girl GetOwnerOfLocation(int locationId);
+
         /*
          * Maintain
          */

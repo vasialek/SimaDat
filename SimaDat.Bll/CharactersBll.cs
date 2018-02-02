@@ -62,6 +62,11 @@ namespace SimaDat.Bll
             }
         }
 
+        public Girl GetById(int characterId)
+        {
+            return _girls.First(x => x.CharacterId == characterId);
+        }
+
         public IList<Girl> GetAll()
         {
             return _girls;

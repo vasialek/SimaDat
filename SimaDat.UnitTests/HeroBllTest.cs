@@ -21,7 +21,7 @@ namespace SimaDat.UnitTests
     {
         private Hero _hero = null;
         private IHeroBll _heroBll = Bll.BllFactory.Current.HeroBll;
-        private ILocationBll _locationBll = new LocationBll(DalFactory.Current.LocationDal);
+        private ILocationBll _locationBll = new LocationBll(BllFactory.Current.CharactersBll, DalFactory.Current.LocationDal);
 
         private Location _from = new Location(1, "From");
         private Location _to = new Location(2, "To");
@@ -176,12 +176,20 @@ namespace SimaDat.UnitTests
             isOk.Should().BeTrue();
         }
 
-        //[TestMethod]
-        //public void MoveTo_CouldNoEnterWhenStranger()
-        //{
-        //    var girl = new Girl("Laura");
-        //    _to.SetEnterCondition((Hero h) => { return h.CurrentLocationId; });
-        //}
+        [TestMethod]
+        [ExpectedException(typeof(BadConditionException))]
+        public void MoveTo_CouldNoEnterWhenStranger()
+        {
+            var girl = new Girl("Laura");
+            BllFactory.Current.CharactersBll.CreateGirl(girl);
+            _to.OwnerId = girl.CharacterId;
+            _to.SetEnterCondition($"You should reach next level of friendship to enter home of {girl.Name}.", (Hero h) => {
+                //var owner = BllFactory.Current.LocationBll.GetOwnerOfLocation(_to.LocationId);
+                return ((int)girl.FriendshipLevel >= (int)FriendshipLevels.SawHimSomewhere);
+            });
+
+            _heroBll.MoveTo(_hero, _from, _to);
+        }
 
         #endregion
 

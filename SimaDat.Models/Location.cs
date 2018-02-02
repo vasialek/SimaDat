@@ -16,6 +16,8 @@ namespace SimaDat.Models
             public Directions Direction { get; set; }
         }
 
+        public int OwnerId { get; set; } = -1;
+
         public int LocationId { get; set; }
         public string Name { get; set; }
 

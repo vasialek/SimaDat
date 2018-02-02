@@ -7,22 +7,28 @@ using SimaDat.Models.Exceptions;
 using SimaData.Dal;
 using SimaDat.Models.Interfaces;
 using SimaDat.Models.Actions;
+using SimaDat.Models.Characters;
 
 namespace SimaDat.Bll
 {
 
     public class LocationBll : ILocationBll
     {
-
+        private ICharactersBll _characterBll = null;
         private ILocationDal _locationDal = null;
 
-        public LocationBll(ILocationDal locationDal)
+        public LocationBll(ICharactersBll characterBll, ILocationDal locationDal)
         {
+            if (characterBll == null)
+            {
+                throw new ArgumentNullException(nameof(characterBll));
+            }
             if (locationDal == null)
             {
                 throw new ArgumentNullException(nameof(locationDal));
             }
 
+            _characterBll = characterBll;
             _locationDal = locationDal;
         }
 
@@ -169,6 +175,17 @@ namespace SimaDat.Bll
         public void Clear()
         {
             _locationDal.Clear();
+        }
+
+        public Girl GetOwnerOfLocation(int locationId)
+        {
+            var loc = GetLocationById(locationId);
+            if (loc.OwnerId > 0)
+            {
+                return _characterBll.GetById(loc.OwnerId);
+            }
+
+            return null;
         }
     }
 }
