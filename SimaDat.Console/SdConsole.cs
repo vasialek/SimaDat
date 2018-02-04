@@ -150,7 +150,7 @@ namespace SimaDat.Console
                     {
                         foreach (var s in skills)
                         {
-                            menu.Add($"{s.Name}, takes {s.TtlToUse} hours", () =>
+                            menu.Add(s.ShortDescription, () =>
                             {
                                 DoAction(s);
                             });
@@ -181,11 +181,6 @@ namespace SimaDat.Console
                 catch (NoTtlException ntex)
                 {
                     error = ntex.Message;
-                }
-                catch (Exception ex)
-                {
-                    error = ex.Message;
-                    //Output.WriteLine(ex.ToString());
                 }
             } while (isRunning);
         }
@@ -269,6 +264,17 @@ namespace SimaDat.Console
             sb.AppendFormat("|{0,8}|{1,8}|{2,8}|{3,12}|{4,8}|{5,8}", "TTL", "IQ", "Charm", "Strength", "Money", "Day").AppendLine();
             sb.Append(" ".PadLeft(80, ' '));
             sb.AppendFormat("|{0,8}|{1,8}|{2,8}|{3,12}|{4,8}|{5,8}", _hero.Ttl, _hero.Iq, _hero.Charm, _hero.Strength, _hero.Money, String.Concat(_hero.Calendar.Day, ", ", _hero.Calendar.WeekDayShort));
+            sb.AppendLine();
+            sb.Append(" ".PadLeft(80, ' '));
+            sb.Append("-".PadLeft(60, '-'));
+            sb.AppendLine();
+
+            string[] giftNames = _hero.Gifts?.Select(x => x.Name).Distinct().ToArray();
+            for (int i = 0; i < giftNames.Length; i++)
+            {
+                sb.AppendFormat("| {0}: {1} ", giftNames[i], _hero.Gifts.Count(x => x.Name == giftNames[i]));
+            }
+            sb.AppendLine();
 
             Output.WriteLine(ConsoleColor.DarkGreen, sb.ToString());
         }

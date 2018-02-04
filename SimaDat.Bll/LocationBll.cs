@@ -161,6 +161,12 @@ namespace SimaDat.Bll
                     var bw = new ActionToWork("Sell samshit", 5, 20);
                     bw.SetPenalty(HeroSkills.Iq, 1);
                     actions.Add(bw);
+
+                    var gifts = BllFactory.Current.ShopBll.GetListOfGifts();
+                    foreach (var g in gifts)
+                    {
+                        actions.Add(new ActionToBuy(g));
+                    }
                     break;
                 case "cafe":
                     var cw = new ActionToWork("Work in cafe", 6, 10);

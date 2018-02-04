@@ -59,6 +59,8 @@
     <Compile Include="Interfaces\IHeroBll.cs" />
     <Compile Include="Interfaces\ILocationBll.cs" />
     <Compile Include="Interfaces\ISerializer.cs" />
+    <Compile Include="Interfaces\IShopBll.cs" />
+    <Compile Include="Items\Gift.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="MySettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

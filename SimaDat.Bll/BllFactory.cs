@@ -19,6 +19,8 @@ namespace SimaDat.Bll
 
         private ICharactersBll _charactersBll = null;
 
+        private IShopBll _shopBll = null;
+
         public static BllFactory Current
         {
             get
@@ -64,6 +66,18 @@ namespace SimaDat.Bll
                     _charactersBll = new CharactersBll();
                 }
                 return _charactersBll;
+            }
+        }
+
+        public IShopBll ShopBll
+        {
+            get
+            {
+                if (_shopBll == null)
+                {
+                    _shopBll = new ShopBll();
+                }
+                return _shopBll;
             }
         }
     }

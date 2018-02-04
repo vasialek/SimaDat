@@ -1,4 +1,5 @@
 ﻿using SimaDat.Models.Enums;
+using SimaDat.Models.Items;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,19 @@ namespace SimaDat.Models.Actions
 
         public string Name { get; protected set; }
 
+        public virtual string ShortDescription
+        {
+            get
+            {
+                return String.Concat(Name, " takes ", TtlToUse, " hours");
+            }
+        }
+
         public ActionToDo(string name, int ttlToUse)
         {
             Name = name;
             TtlToUse = ttlToUse;
-        }
+       }
     }
 
     public class ActionToMove : ActionToDo
@@ -74,6 +83,26 @@ namespace SimaDat.Models.Actions
         /// </summary>
         public ActionToImprove Penalty { get; private set; } = null;
 
+        public override string ShortDescription
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder();
+
+                sb.AppendFormat("{0} for {1} hours to earn {2}", Name, TtlToUse, MoneyToEarn);
+                if (Penalty != null)
+                {
+                    sb.AppendFormat(". Penalty: {0} to your {1}", Penalty.PointsToImprove, Penalty.SkillToImprove);
+                }
+                if (Bonus != null)
+                {
+                    sb.AppendFormat(". Bonus: {0} to your {1}", Bonus.PointsToImprove, Bonus.SkillToImprove);
+                }
+
+                return sb.ToString();
+            }
+        }
+
         public ActionToWork(string name, int ttl, int money)
             : base(name, ttl)
         {
@@ -88,6 +117,25 @@ namespace SimaDat.Models.Actions
         public void SetPenalty(HeroSkills skill, int pointsToLoose)
         {
             Penalty = new Actions.ActionToImprove("Penalty", skill, 0, -pointsToLoose);
+        }
+    }
+
+    public class ActionToBuy : ActionToDo
+    {
+        public Gift Gift { get; private set; }
+
+        public override string ShortDescription
+        {
+            get
+            {
+                return String.Concat("Buy ", Gift.Name, " for price of ", Gift.Price);
+            }
+        }
+
+        public ActionToBuy(Gift g)
+            : base(g.Name, 0)
+        {
+            Gift = g;
         }
     }
 }

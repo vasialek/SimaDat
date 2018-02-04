@@ -11,6 +11,7 @@ namespace SimaDat.Bll
     public class HeroBll : IHeroBll
     {
         private ILocationBll _locationBll = null;
+        private IShopBll _shopBll = null;
 
         public HeroBll(ILocationBll locationBll)
         {
@@ -20,6 +21,7 @@ namespace SimaDat.Bll
             }
 
             _locationBll = locationBll;
+            _shopBll = BllFactory.Current.ShopBll;
         }
 
         public void ApplyAction(Hero h, ActionToDo action)
@@ -46,6 +48,11 @@ namespace SimaDat.Bll
             if (wa != null)
             {
                 Work(h, wa);
+                return;
+            }
+            if (action is ActionToBuy)
+            {
+                _shopBll.BuyGift(h, ((ActionToBuy)action).Gift.GiftId);
                 return;
             }
 

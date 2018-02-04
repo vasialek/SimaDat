@@ -31,6 +31,7 @@ namespace SimaDat.UnitTests
         private ActionToImprove _improveCharm = null;
         private ActionToRest _sleepAction = null;
         private ActionToWork _workAction = null;
+        private ActionToBuy _buyAction = null;
 
         [TestInitialize]
         public void TestInit()
@@ -46,6 +47,7 @@ namespace SimaDat.UnitTests
             _improveCharm = new ActionToImprove("Charm", HeroSkills.Charm, 6, 3, 100);
             _sleepAction = new ActionToRest();
             _workAction = new ActionToWork("Dock", 4, 10);
+            _buyAction = new ActionToBuy(new Models.Items.Gift { GiftId = 1, Name = "Flower", Price = 1, FirendshipPoints = 100 });
 
             _locationBll.Clear();
             _locationBll.CreateDoorInLocation(_from, _to, Models.Enums.Directions.North);
@@ -447,6 +449,17 @@ namespace SimaDat.UnitTests
 
             // Expecting that TTL will be max
             _hero.Ttl.Should().Be(MySettings.MaxTtlForHero);
+        }
+
+        [TestMethod]
+        public void ApplyAction_BuyGift_Ok()
+        {
+            _hero.Gifts.Clear();
+            _hero.SpendMoney(-1000);
+
+            _heroBll.ApplyAction(_hero, _buyAction);
+
+            _hero.Gifts.Should().HaveCount(1);
         }
 
         #endregion

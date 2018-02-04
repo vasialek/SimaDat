@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SimaDat.Models.Enums;
+using SimaDat.Models.Items;
 
 namespace SimaDat.Models.Characters
 {
@@ -34,6 +35,13 @@ namespace SimaDat.Models.Characters
         public int Charm { get; private set; }
 
         public bool HasJumper { get; } = true;
+
+        public IList<Gift> Gifts { get; set; }
+
+        public Hero()
+        {
+            Gifts = new List<Gift>();
+        }
 
         /// <summary>
         /// Resets TTL to max
