@@ -45,11 +45,13 @@ namespace SimaDat.Models.Characters
             _likesForFriendship[(int)FriendshipLevels.Familar] = settings.GetLikesForFriendships(FriendshipLevels.Familar);
             _likesForFriendship[(int)FriendshipLevels.Friend] = settings.GetLikesForFriendships(FriendshipLevels.Friend);
             _likesForFriendship[(int)FriendshipLevels.Lover] = settings.GetLikesForFriendships(FriendshipLevels.Lover);
+
+            HeroLikes = _likesForFriendship[(int)friendLevel];
         }
 
-        public void LikeHero()
+        public void LikeHero(int likes = 1)
         {
-            HeroLikes++;
+            HeroLikes += likes;
             for (int i = _likesForFriendship.Length - 1; i >= 0; i--)
             {
                 if (HeroLikes >= _likesForFriendship[i])

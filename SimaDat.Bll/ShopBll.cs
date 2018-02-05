@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using SimaDat.Models.Items;
 using SimaDat.Models.Characters;
 using SimaDat.Models.Exceptions;
+using SimaDat.Models.Enums;
 
 namespace SimaDat.Bll
 {
@@ -39,9 +40,9 @@ namespace SimaDat.Bll
         {
             return new Gift[]
             {
-                new Gift { GiftId = 1, Name = "Flower", Price = 10, FirendshipPoints = 3 },
-                new Gift { GiftId = 2, Name = "Teddy bear", Price = 40, FirendshipPoints = 15 },
-                new Gift { GiftId = 3, Name = "Diamond ring", Price = 1000, FirendshipPoints = 350 }
+                new Gift { GiftId = 1, GiftTypeId = GiftTypes.Flower, Name = "Flower", Price = 10, FirendshipPoints = 3 },
+                new Gift { GiftId = 2, GiftTypeId = GiftTypes.TeddyBear, Name = "Teddy bear", Price = 40, FirendshipPoints = 15 },
+                new Gift { GiftId = 3, GiftTypeId = GiftTypes.DiamondRing, Name = "Diamond ring", Price = 1000, FirendshipPoints = 350 }
             };
         }
     }

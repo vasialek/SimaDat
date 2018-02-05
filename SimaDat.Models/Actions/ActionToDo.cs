@@ -67,6 +67,14 @@ namespace SimaDat.Models.Actions
         {
             DoesImpactHero = true;
         }
+
+        public override string ShortDescription
+        {
+            get
+            {
+                return "Sleep to restore TTL to max";
+            }
+        }
     }
 
     public class ActionToWork : ActionToDo

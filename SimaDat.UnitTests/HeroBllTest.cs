@@ -82,17 +82,17 @@ namespace SimaDat.UnitTests
             _heroBll.MoveTo(_hero, from, to);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(NoTtlException))]
-        public void MoveTo_Exception_WhenNoTtl()
-        {
-            // Expecting exception that Hero could not move - 0 TTL
-            HeroProxy hero = new HeroProxy();
-            hero.SetTtl(0);
-            hero.CurrentLocationId = _from.LocationId;
+        //[TestMethod]
+        //[ExpectedException(typeof(NoTtlException))]
+        //public void MoveTo_Exception_WhenNoTtl()
+        //{
+        //    // Expecting exception that Hero could not move - 0 TTL
+        //    HeroProxy hero = new HeroProxy();
+        //    hero.SetTtl(0);
+        //    hero.CurrentLocationId = _from.LocationId;
 
-            _heroBll.MoveTo(hero, _from, _to);
-        }
+        //    _heroBll.MoveTo(hero, _from, _to);
+        //}
 
         [TestMethod]
         [ExpectedException(typeof(ObjectNotHereException))]

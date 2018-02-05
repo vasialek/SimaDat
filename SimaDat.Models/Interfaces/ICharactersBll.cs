@@ -1,4 +1,5 @@
 ﻿using SimaDat.Models.Characters;
+using SimaDat.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,5 +24,7 @@ namespace SimaDat.Models.Interfaces
         void SayHi(Hero hero, Girl girl);
 
         void Talk(Hero hero, Girl girl);
+
+        void Present(Hero h, Girl g, GiftTypes giftTypeId);
     }
 }

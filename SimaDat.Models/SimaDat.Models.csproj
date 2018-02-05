@@ -40,7 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\ActionToDo.cs" />
+    <Compile Include="Enums\GiftTypes.cs" />
     <Compile Include="Exceptions\BadConditionException.cs" />
+    <Compile Include="Exceptions\FriendshipLeveTooLowException.cs" />
     <Compile Include="HeroCalendar.cs" />
     <Compile Include="Characters\Appearance.cs" />
     <Compile Include="Characters\Girl.cs" />

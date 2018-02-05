@@ -117,10 +117,10 @@ namespace SimaDat.Bll
                 throw new CouldNotMoveException("There is no door to desired location.");
             }
 
-            if (h.Ttl < 1)
-            {
-                throw new NoTtlException("Hero has not enough TTL to move.");
-            }
+            //if (h.Ttl < 1)
+            //{
+            //    throw new NoTtlException("Hero has not enough TTL to move.");
+            //}
 
             if (to.CouldEnter(h) == false)
             {

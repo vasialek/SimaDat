@@ -103,6 +103,10 @@ namespace SimaDat.Console
                 charactersBll.CreateGirl(anna);
                 annaRoom.OwnerId = anna.CharacterId;
 
+                var girlFamilar = new Girl("Familar girl", FriendshipLevels.Familar);
+                girlFamilar.CurrentLocationId = home.LocationId;
+                charactersBll.CreateGirl(girlFamilar);
+
                 // Conditions
                 school.SetEnterCondition("School is closed on weekend.", (Hero h) => { return h.Calendar.WeekDay < 6; });
                 linaRoom.SetEnterCondition((Hero h) =>
@@ -120,6 +124,12 @@ namespace SimaDat.Console
                 me.Name = "Lekha";
                 me.CurrentLocationId = home.LocationId;
                 me.ResetTtl();
+
+                // Gifts
+                for (int i = 0; i < 10; i++)
+                {
+                    me.Gifts.Add(new Models.Items.Gift { Name = "Test flower", GiftTypeId = GiftTypes.Flower, FirendshipPoints = 5 });
+                }
 
                 var console = new SdConsole(me, locationBll, charactersBll);
 

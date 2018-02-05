@@ -1,6 +1,7 @@
 ﻿using AvUtils;
 using SimaDat.Models.Actions;
 using SimaDat.Models.Characters;
+using SimaDat.Models.Enums;
 using SimaDat.Models.Exceptions;
 using SimaDat.Models.Interfaces;
 using System;
@@ -163,6 +164,9 @@ namespace SimaDat.Console
                             menu.Add($"Girl {g.Name}, relations {g.FriendshipLevel}", () => { });
                             menu.Add("    Say 'Hi'", () => { _charsBll.SayHi(_hero, g); });
                             menu.Add("    Talk wit her", () => { _charsBll.Talk(_hero, g); });
+                            menu.Add($"    Present {GiftTypes.Flower}", () => { _charsBll.Present(_hero, g, GiftTypes.Flower); });
+                            menu.Add($"    Present {GiftTypes.TeddyBear}", () => { _charsBll.Present(_hero, g, GiftTypes.TeddyBear); });
+                            menu.Add($"    Present {GiftTypes.DiamondRing}", () => { _charsBll.Present(_hero, g, GiftTypes.DiamondRing); });
                         }
                     }
 
@@ -181,6 +185,10 @@ namespace SimaDat.Console
                 catch (NoTtlException ntex)
                 {
                     error = ntex.Message;
+                }
+                catch (ObjectDoesNotExistException odnex)
+                {
+                    error = odnex.Message;
                 }
             } while (isRunning);
         }

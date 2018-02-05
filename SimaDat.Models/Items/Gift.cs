@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimaDat.Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,8 @@ namespace SimaDat.Models.Items
     public class Gift
     {
         public int GiftId { get; set; }
+
+        public GiftTypes GiftTypeId { get; set; }
 
         public string Name { get; set; }
 

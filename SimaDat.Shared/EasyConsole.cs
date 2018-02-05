@@ -28,12 +28,12 @@ namespace AvUtils
                 if (Options[i].Color != ConsoleColor.White)
                 {
                     Console.ForegroundColor = Options[i].Color;
-                    Console.WriteLine("{0}. {1}", i + 1, Options[i].Name);
+                    Console.WriteLine("{0,2}. {1}", i + 1, Options[i].Name);
                     Console.ResetColor();
                 }
                 else
                 {
-                    Console.WriteLine("{0}. {1}", i + 1, Options[i].Name); 
+                    Console.WriteLine("{0,2}. {1}", i + 1, Options[i].Name); 
                 }
             }
             Console.WriteLine();
