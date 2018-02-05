@@ -111,6 +111,7 @@ namespace SimaDat.Console
         {
             bool isRunning = true;
             string error = null;
+            string msg = null;
             do
             {
                 try
@@ -124,6 +125,11 @@ namespace SimaDat.Console
                     {
                         Output.WriteLine(ConsoleColor.Red, error);
                         error = null;
+                    }
+                    if (String.IsNullOrEmpty(msg) == false)
+                    {
+                        Output.WriteLine(ConsoleColor.Green, msg);
+                        msg = null;
                     }
 
                     var currentLocation = _locationBll.GetLocationById(_hero.CurrentLocationId);
@@ -167,6 +173,16 @@ namespace SimaDat.Console
                             menu.Add($"    Present {GiftTypes.Flower}", () => { _charsBll.Present(_hero, g, GiftTypes.Flower); });
                             menu.Add($"    Present {GiftTypes.TeddyBear}", () => { _charsBll.Present(_hero, g, GiftTypes.TeddyBear); });
                             menu.Add($"    Present {GiftTypes.DiamondRing}", () => { _charsBll.Present(_hero, g, GiftTypes.DiamondRing); });
+                            menu.Add("    Ask dating", () => {
+                                if (_charsBll.AskDating(_hero, g))
+                                {
+                                    msg = "You are dating";
+                                }
+                                else
+                                {
+                                    error = "She rejects";
+                                }
+                            });
                         }
                     }
 
@@ -189,6 +205,10 @@ namespace SimaDat.Console
                 catch (ObjectDoesNotExistException odnex)
                 {
                     error = odnex.Message;
+                }
+                catch (FriendshipLeveTooLowException fltlex)
+                {
+                    error = fltlex.Message;
                 }
             } while (isRunning);
         }

@@ -53,6 +53,7 @@
     <Compile Include="CharactersBll.cs" />
     <Compile Include="HeroBll.cs" />
     <Compile Include="LocationBll.cs" />
+    <Compile Include="PossibilityBll.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializerBll.cs" />
     <Compile Include="ShopBll.cs" />

@@ -17,6 +17,8 @@ namespace SimaDat.UnitTests
     {
         private ICharactersBll _bll = null;
         private Girl _laura = null;
+        private Girl _girlFamilar = null;
+        private Girl _girlFriend = null;
         private Hero _me = null;
         private Gift _gift = null;
 
@@ -40,6 +42,14 @@ namespace SimaDat.UnitTests
                 Appearance = new Appearance(165, 80, 60, 95) { Hair = Models.Enums.Hairs.Black },
                 CurrentLocationId = 100
             };
+
+            // Familar girl in the same location as Hero
+            _girlFamilar = new Girl("Familar girl", FriendshipLevels.Familar);
+            _girlFamilar.CurrentLocationId = _me.CurrentLocationId;
+
+            // Friend girl in the same location as Hero
+            _girlFriend = new Girl("Friend girl", FriendshipLevels.Friend);
+            _girlFriend.CurrentLocationId = _me.CurrentLocationId;
 
             _gift = new Gift { GiftId = 123, GiftTypeId = GiftTypes.Flower, Name = "Test flower", FirendshipPoints = 10, Price = 50 };
         }
@@ -231,27 +241,23 @@ namespace SimaDat.UnitTests
         [TestMethod]
         public void Present_ReachNewFriendshipLevel()
         {
-            var girl = new Girl("Test", FriendshipLevels.Familar);
-            girl.CurrentLocationId = _me.CurrentLocationId;
             int likesForFamilar = MySettings.Get().GetLikesForFriendships(FriendshipLevels.Familar);
             int likesForFriend = MySettings.Get().GetLikesForFriendships(FriendshipLevels.Friend);
             // Make gift to reach next friendship level
             _gift.FirendshipPoints = likesForFriend - likesForFamilar + 1;
             _me.Gifts.Add(_gift);
 
-            _bll.Present(_me, girl, _gift.GiftTypeId);
+            _bll.Present(_me, _girlFamilar, _gift.GiftTypeId);
 
-            girl.FriendshipLevel.Should().Be(FriendshipLevels.Friend);
+            _girlFamilar.FriendshipLevel.Should().Be(FriendshipLevels.Friend);
         }
 
         [TestMethod]
         public void Present_GiftDissapears_AfterPresent()
         {
-            var girl = new Girl("Test", FriendshipLevels.Familar);
-            girl.CurrentLocationId = _me.CurrentLocationId;
             _me.Gifts.Add(_gift);
 
-            _bll.Present(_me, girl, _gift.GiftTypeId);
+            _bll.Present(_me, _girlFamilar, _gift.GiftTypeId);
 
             // Gift is moved to girl
             _me.Gifts.Should().HaveCount(0);
@@ -260,12 +266,10 @@ namespace SimaDat.UnitTests
         [TestMethod]
         public void Present_ShouldUseTtl()
         {
-            var girl = new Girl("Test", FriendshipLevels.Familar);
-            girl.CurrentLocationId = _me.CurrentLocationId;
             _me.Gifts.Add(_gift);
             int v = _me.Ttl;
 
-            _bll.Present(_me, girl, _gift.GiftTypeId);
+            _bll.Present(_me, _girlFamilar, _gift.GiftTypeId);
 
             // TTL should be decreased
             _me.Ttl.Should().BeLessThan(v);
@@ -275,12 +279,51 @@ namespace SimaDat.UnitTests
         [ExpectedException(typeof(NoTtlException))]
         public void Present_Exception_WhenNoTtl()
         {
-            var girl = new Girl("Test", FriendshipLevels.Familar);
-            girl.CurrentLocationId = _me.CurrentLocationId;
             _me.Gifts.Add(_gift);
             _me.UseTtl(MySettings.MaxTtlForHero);
 
-            _bll.Present(_me, girl, _gift.GiftTypeId);
+            _bll.Present(_me, _girlFamilar, _gift.GiftTypeId);
+        }
+
+        #endregion
+
+        #region Ask dating
+
+        [TestMethod]
+        [ExpectedException(typeof(NoTtlException))]
+        public void AskDating_Exception_WhenNoTtl()
+        {
+            _me.UseTtl(MySettings.MaxTtlForHero);
+
+            _bll.AskDating(_me, _girlFriend);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ObjectNotHereException))]
+        public void AskDating_Exception_WhenNoGirl()
+        {
+            // She is not here
+            _girlFriend.CurrentLocationId = _me.CurrentLocationId + 1;
+
+            _bll.AskDating(_me, _girlFriend);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FriendshipLeveTooLowException))]
+        public void AskDating_Exception_WhenGirlIsNotFriend()
+        {
+            _bll.AskDating(_me, _girlFamilar);
+        }
+
+        [TestMethod]
+        public void AskDating_ShouldUseTtl()
+        {
+            int v = _me.Ttl;
+
+            _bll.AskDating(_me, _girlFriend);
+
+            // Should spent some TTL
+            _me.Ttl.Should().BeLessThan(v);
         }
 
         #endregion

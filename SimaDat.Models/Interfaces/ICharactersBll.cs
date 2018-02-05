@@ -26,5 +26,7 @@ namespace SimaDat.Models.Interfaces
         void Talk(Hero hero, Girl girl);
 
         void Present(Hero h, Girl g, GiftTypes giftTypeId);
+
+        bool AskDating(Hero h, Girl g);
     }
 }

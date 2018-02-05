@@ -12,7 +12,19 @@ namespace SimaDat.Bll
 {
     public class CharactersBll : ICharactersBll
     {
+        private IPossibilityBll _possibilityBll = null;
+
         private IList<Girl> _girls = new List<Girl>();
+
+        public CharactersBll()
+            : this(null)
+        {
+        }
+
+        public CharactersBll(IPossibilityBll possibilityBll)
+        {
+            _possibilityBll = possibilityBll ?? BllFactory.Current.PossibilityBll;
+        }
 
         public void CreateGirl(Girl g)
         {
@@ -109,6 +121,26 @@ namespace SimaDat.Bll
             g.LikeHero(gift.FirendshipPoints);
             h.Gifts.Remove(gift);
             h.UseTtl(1);
+        }
+
+        public bool AskDating(Hero h, Girl g)
+        {
+            if (h.Ttl < 1)
+            {
+                throw new NoTtlException($"Could not ask for dating, because not enough TTL.");
+            }
+            if (h.CurrentLocationId != g.CurrentLocationId)
+            {
+                throw new ObjectNotHereException("Could not ask for dating, because girl is not here.");
+            }
+            if ((int)g.FriendshipLevel < (int)FriendshipLevels.Friend)
+            {
+                throw new FriendshipLeveTooLowException($"Could not ask for dating, need to reach friendship {FriendshipLevels.Friend}");
+            }
+
+            h.UseTtl(1);
+
+            return _possibilityBll.RequestDating(h, g);
         }
     }
 }

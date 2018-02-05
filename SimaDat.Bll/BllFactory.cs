@@ -14,12 +14,10 @@ namespace SimaDat.Bll
         private static BllFactory _bllFactory = null;
 
         private ILocationBll _locationBll = null;
-
         private IHeroBll _heroBll = null;
-
         private ICharactersBll _charactersBll = null;
-
         private IShopBll _shopBll = null;
+        private IPossibilityBll _possibilityBll = null;
 
         public static BllFactory Current
         {
@@ -78,6 +76,18 @@ namespace SimaDat.Bll
                     _shopBll = new ShopBll();
                 }
                 return _shopBll;
+            }
+        }
+
+        public IPossibilityBll PossibilityBll
+        {
+            get
+            {
+                if (_possibilityBll == null)
+                {
+                    _possibilityBll = new PossibilityBll();
+                }
+                return _possibilityBll;
             }
         }
     }
