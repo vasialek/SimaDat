@@ -51,6 +51,7 @@
     <Compile Include="AutoMapperInitializer.cs" />
     <Compile Include="BllFactory.cs" />
     <Compile Include="CharactersBll.cs" />
+    <Compile Include="DatingBll.cs" />
     <Compile Include="HeroBll.cs" />
     <Compile Include="LocationBll.cs" />
     <Compile Include="PossibilityBll.cs" />

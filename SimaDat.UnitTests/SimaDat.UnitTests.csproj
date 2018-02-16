@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="AdministrationWorkflowTests.cs" />
     <Compile Include="CharactersBllTest.cs" />
+    <Compile Include="DatingBllTest.cs" />
     <Compile Include="FakeClasses\HeroProxy.cs" />
     <Compile Include="HeroBllTest.cs" />
     <Compile Include="HeroTest.cs" />
