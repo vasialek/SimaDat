@@ -8,11 +8,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SimaDat.Models.Items;
 
 namespace SimaDat.Bll
 {
     public class DatingBll : IDatingBll
     {
+        public DatingLocation Location { get; private set; }
+
         public void JoinDating(Hero h, Girl g, DatingLocation datingLocation)
         {
             if (h.Ttl < 1)
@@ -27,7 +30,24 @@ namespace SimaDat.Bll
             {
                 throw new FriendshipLeveTooLowException($"You can't date {g.Name}, because you are not friends.");
             }
-        
+
+            h.UseTtl(3);
+            h.SpendMoney(datingLocation.Price);
+
+            Location = datingLocation;
+            Location.Hero = h;
+            Location.Girl = g;
+        }
+
+        public void Present(GiftTypes gt)
+        {
+            var gift = Location.Hero.Gifts?.FirstOrDefault(x => x.GiftTypeId == gt);
+            if (gift == null)
+            {
+                throw new ObjectDoesNotExistException($"You have no {gt} to present.", (int)gt);
+            }
+
+            Location.Hero.Gifts.Remove(gift);
         }
     }
 }
