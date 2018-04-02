@@ -43,6 +43,7 @@
     <Compile Include="Datings\DatingLocation.cs" />
     <Compile Include="Enums\GiftTypes.cs" />
     <Compile Include="Exceptions\BadConditionException.cs" />
+    <Compile Include="Exceptions\EventIsOverException.cs" />
     <Compile Include="Exceptions\FriendshipLeveTooLowException.cs" />
     <Compile Include="HeroCalendar.cs" />
     <Compile Include="Characters\Appearance.cs" />

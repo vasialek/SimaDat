@@ -17,5 +17,7 @@ namespace SimaDat.Models.Interfaces
         void JoinDating(Hero h, Girl g, DatingLocation datingLocation);
 
         void Present(GiftTypes gt);
+
+        void Kiss();
     }
 }

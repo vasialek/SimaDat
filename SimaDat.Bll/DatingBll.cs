@@ -14,6 +14,11 @@ namespace SimaDat.Bll
 {
     public class DatingBll : IDatingBll
     {
+        /// <summary>
+        /// When girl is ready for kiss
+        /// </summary>
+        private int _kissLevel = 10;
+
         public DatingLocation Location { get; private set; }
 
         public void JoinDating(Hero h, Girl g, DatingLocation datingLocation)
@@ -39,15 +44,54 @@ namespace SimaDat.Bll
             Location.Girl = g;
         }
 
+        public void Kiss()
+        {
+            EnsureDatingIsNotOver();
+
+            if (Location.KissPoints < _kissLevel)
+            {
+                // Girl is little dissapointed
+                Location.IncreaseKissPoints(-1);
+                throw new BadConditionException("Girl is not ready for kiss");
+            }
+
+            // Make her lover
+            int likesNeeded = Models.MySettings.Get().GetLikesForFriendships(FriendshipLevels.Lover) - Models.MySettings.Get().GetLikesForFriendships(Location.Girl.FriendshipLevel);
+            Location.Girl.LikeHero(likesNeeded);
+
+            // Mark success
+            Location.WasKiss = true;
+        }
+
         public void Present(GiftTypes gt)
         {
+            EnsureDatingIsNotOver();
+
             var gift = Location.Hero.Gifts?.FirstOrDefault(x => x.GiftTypeId == gt);
             if (gift == null)
             {
                 throw new ObjectDoesNotExistException($"You have no {gt} to present.", (int)gt);
             }
 
+            switch (gift.GiftTypeId)
+            {
+                case GiftTypes.Flower:
+                case GiftTypes.TeddyBear:
+                case GiftTypes.DiamondRing:
+                    Location.IncreaseKissPoints();
+                    break;
+                default:
+                    break;
+            }
             Location.Hero.Gifts.Remove(gift);
+        }
+
+        private void EnsureDatingIsNotOver()
+        {
+            if (Location.WasKiss)
+            {
+                throw new EventIsOverException($"Dating in {Location.Name} is over, you've already kissed {Location.Girl.Name}");
+            }
         }
     }
 }
