@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SimaDat.Models.Interfaces
 {
-    public interface IPossibilityBll
+    public interface IProbabilityBll
     {
         bool RequestDating(Hero h, Girl g);
     }

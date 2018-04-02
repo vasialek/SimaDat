@@ -9,7 +9,7 @@ using SimaDat.Models;
 
 namespace SimaDat.Bll
 {
-    public class PossibilityBll : IPossibilityBll
+    public class ProbabilityBll : IProbabilityBll
     {
         private static Random _random = new Random((int)DateTime.Now.Ticks);
 

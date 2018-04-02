@@ -16,20 +16,18 @@ namespace SimaDat.Bll
     {
         private ICharactersBll _characterBll = null;
         private ILocationDal _locationDal = null;
+        private IShopBll _shopBll = null;
 
         public LocationBll(ICharactersBll characterBll, ILocationDal locationDal)
+            : this(characterBll, locationDal, null)
         {
-            if (characterBll == null)
-            {
-                throw new ArgumentNullException(nameof(characterBll));
-            }
-            if (locationDal == null)
-            {
-                throw new ArgumentNullException(nameof(locationDal));
-            }
+        }
 
-            _characterBll = characterBll;
-            _locationDal = locationDal;
+        public LocationBll(ICharactersBll characterBll, ILocationDal locationDal, IShopBll shopBll)
+        {
+            _characterBll = characterBll ?? throw new ArgumentNullException(nameof(characterBll));
+            _locationDal = locationDal ?? throw new ArgumentNullException(nameof(locationDal));
+            _shopBll = shopBll ?? BllFactory.Current.ShopBll;
         }
 
         public IList<ActionToDo> GetPossibleActions(Location location)
