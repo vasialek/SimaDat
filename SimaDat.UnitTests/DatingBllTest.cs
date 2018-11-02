@@ -6,6 +6,8 @@ using SimaDat.Bll;
 using SimaDat.Models.Characters;
 using SimaDat.Models.Datings;
 using SimaDat.Models;
+using FluentAssertions;
+using System.Linq;
 
 namespace SimaDat.UnitTests
 {
@@ -22,16 +24,17 @@ namespace SimaDat.UnitTests
         {
             _bll = new DatingBll();
 
+            _location = new DatingLocation("Test dating", 100);
+
             _me = new Hero()
             {
                 CurrentLocationId = 100
             };
+            _me.SpendMoney(-_location.Price);
             _me.ResetTtl();
 
             _laura = new Girl("Laura", Models.Enums.FriendshipLevels.Friend);
             _laura.CurrentLocationId = _me.CurrentLocationId;
-
-            _location = new DatingLocation("Test dating", 100);
         }
 
         [TestMethod]
@@ -41,6 +44,16 @@ namespace SimaDat.UnitTests
             _me.UseTtl(MySettings.MaxTtlForHero);
 
             _bll.JoinDating(_me, _laura, _location);
+        }
+
+        [TestMethod]
+        public void JoinDating_TtlShouldDecrease()
+        {
+            int v = _me.Ttl;
+
+            _bll.JoinDating(_me, _laura, _location);
+
+            _me.Ttl.Should().BeLessThan(v);
         }
 
         [TestMethod]
@@ -56,11 +69,31 @@ namespace SimaDat.UnitTests
         [ExpectedException(typeof(FriendshipLeveTooLowException))]
         public void JoinDating_Exception_WhenGirlIsLessThanFriend()
         {
-            _me.SpendMoney(-_location.Price);
-
             var g = new Girl("NotFriendly", Models.Enums.FriendshipLevels.Familar);
 
             _bll.JoinDating(_me, g, _location);
         }
+
+        [TestMethod]
+        public void JoinDating_MoneyShouldBeSpent()
+        {
+            int v = _me.Money;
+
+            _bll.JoinDating(_me, _laura, _location);
+            //
+            _me.Money.Should().Be(v - _location.Price);
+        }
+
+        #region Actions
+
+        [TestMethod]
+        public void GetHeroActions_NotNull()
+        {
+            var actions = _bll.GetHeroActions(_location);
+
+            actions.Count().Should().BeGreaterThan(0);
+        }
+
+        #endregion
     }
 }

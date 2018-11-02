@@ -1,4 +1,5 @@
-﻿using SimaDat.Models.Characters;
+﻿using SimaDat.Models.Actions;
+using SimaDat.Models.Characters;
 using SimaDat.Models.Datings;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ namespace SimaDat.Models.Interfaces
 {
     public interface IDatingBll
     {
-        void JoinDating(Hero h, Girl g, DatingLocation datingLocation);
+        void JoinDating(Hero h, Girl g, DatingLocation loc);
+
+        IEnumerable<ActionToDo> GetHeroActions(DatingLocation loc);
     }
 }

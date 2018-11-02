@@ -294,7 +294,7 @@ namespace SimaDat.Console
             sb.AppendFormat("|{0,8}|{1,8}|{2,8}|{3,12}|{4,8}|{5,8}", _hero.Ttl, _hero.Iq, _hero.Charm, _hero.Strength, _hero.Money, String.Concat(_hero.Calendar.Day, ", ", _hero.Calendar.WeekDayShort));
             sb.AppendLine();
             sb.Append(" ".PadLeft(80, ' '));
-            sb.Append("-".PadLeft(60, '-'));
+            sb.Append("-".PadLeft(58, '-'));
             sb.AppendLine();
 
             string[] giftNames = _hero.Gifts?.Select(x => x.Name).Distinct().ToArray();
