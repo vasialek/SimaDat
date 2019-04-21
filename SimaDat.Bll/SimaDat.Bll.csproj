@@ -54,7 +54,7 @@
     <Compile Include="DatingBll.cs" />
     <Compile Include="HeroBll.cs" />
     <Compile Include="LocationBll.cs" />
-    <Compile Include="PossibilityBll.cs" />
+    <Compile Include="ProbabilityBll.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializerBll.cs" />
     <Compile Include="ShopBll.cs" />

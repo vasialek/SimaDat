@@ -17,7 +17,7 @@ namespace SimaDat.Bll
         private IHeroBll _heroBll = null;
         private ICharactersBll _charactersBll = null;
         private IShopBll _shopBll = null;
-        private IPossibilityBll _possibilityBll = null;
+        private IProbabilityBll _possibilityBll = null;
 		private IDatingBll _datingBll = null;
 
 		public static BllFactory Current
@@ -80,13 +80,13 @@ namespace SimaDat.Bll
             }
         }
 
-        public IPossibilityBll PossibilityBll
+        public IProbabilityBll ProbabilityBll
         {
             get
             {
                 if (_possibilityBll == null)
                 {
-                    _possibilityBll = new PossibilityBll();
+                    _possibilityBll = new ProbabilityBll();
                 }
                 return _possibilityBll;
             }

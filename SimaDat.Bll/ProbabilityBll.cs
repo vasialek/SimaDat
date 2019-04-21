@@ -1,16 +1,12 @@
-﻿using SimaDat.Models.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SimaDat.Models;
 using SimaDat.Models.Characters;
-using SimaDat.Models;
+using SimaDat.Models.Interfaces;
+using System;
 
 namespace SimaDat.Bll
 {
-    public class PossibilityBll : IPossibilityBll
-    {
+	public class ProbabilityBll : IProbabilityBll
+	{
         private static Random _random = new Random((int)DateTime.Now.Ticks);
 
         public bool RequestDating(Hero h, Girl g)

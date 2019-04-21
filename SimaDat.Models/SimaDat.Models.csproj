@@ -65,7 +65,7 @@
     <Compile Include="Interfaces\IDatingBll.cs" />
     <Compile Include="Interfaces\IHeroBll.cs" />
     <Compile Include="Interfaces\ILocationBll.cs" />
-    <Compile Include="Interfaces\IPossibilityBll.cs" />
+    <Compile Include="Interfaces\IProbabilityBll.cs" />
     <Compile Include="Interfaces\ISerializer.cs" />
     <Compile Include="Interfaces\IShopBll.cs" />
     <Compile Include="Items\Gift.cs" />

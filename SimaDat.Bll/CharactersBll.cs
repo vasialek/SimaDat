@@ -12,7 +12,7 @@ namespace SimaDat.Bll
 {
     public class CharactersBll : ICharactersBll
     {
-        private IPossibilityBll _possibilityBll = null;
+        private IProbabilityBll _possibilityBll = null;
 
         private IList<Girl> _girls = new List<Girl>();
 
@@ -21,9 +21,9 @@ namespace SimaDat.Bll
         {
         }
 
-        public CharactersBll(IPossibilityBll possibilityBll)
+        public CharactersBll(IProbabilityBll possibilityBll)
         {
-            _possibilityBll = possibilityBll ?? BllFactory.Current.PossibilityBll;
+            _possibilityBll = possibilityBll ?? BllFactory.Current.ProbabilityBll;
         }
 
         public void CreateGirl(Girl g)

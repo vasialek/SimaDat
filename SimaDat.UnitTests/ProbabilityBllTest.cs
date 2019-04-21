@@ -9,16 +9,16 @@ using FluentAssertions;
 namespace SimaDat.UnitTests
 {
     [TestClass]
-    public class PossibilityBllTest
-    {
-        private IPossibilityBll _bll = null;
+    public class ProbabilityBllTest
+	{
+        private IProbabilityBll _bll = null;
         private Hero _me = null;
         private Girl _girl = null;
 
         [TestInitialize]
         public void TestInit()
         {
-            _bll = new PossibilityBll();
+            _bll = new ProbabilityBll();
 
             _me = new Hero();
             _me.CurrentLocationId = 100;
