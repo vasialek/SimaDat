@@ -1,4 +1,5 @@
 ﻿using AvUtils;
+using SimaDat.Models.Actions;
 using SimaDat.Models.Datings;
 using SimaDat.Models.Interfaces;
 using System;
@@ -25,7 +26,14 @@ namespace SimaDatConsole
 			foreach (var a in actions)
 			{
 				menu.Add(a.Name, () => {
-					System.Console.WriteLine(a.Name);
+					if (a is ActionToPresent actionToPresent)
+					{
+						_datingBll.Present(datingLocation, actionToPresent.GiftType);
+					}
+					else
+					{
+						Console.WriteLine("Do not know how to act `{0}`", a.Name);
+					}
 				});
 			}
 

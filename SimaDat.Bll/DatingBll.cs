@@ -1,18 +1,15 @@
-﻿using SimaDat.Models.Characters;
+﻿using SimaDat.Models.Actions;
+using SimaDat.Models.Characters;
 using SimaDat.Models.Datings;
 using SimaDat.Models.Enums;
 using SimaDat.Models.Exceptions;
 using SimaDat.Models.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SimaDat.Models.Actions;
 
 namespace SimaDat.Bll
 {
-    public class DatingBll : IDatingBll
+	public class DatingBll : IDatingBll
     {
         public IEnumerable<ActionToDo> GetHeroActions(DatingLocation loc)
         {
@@ -25,6 +22,7 @@ namespace SimaDat.Bll
             actions.Add(new ActionToPresent($"Present {GiftTypes.DiamondRing}", loc.Girl, GiftTypes.DiamondRing));
 
             actions.Add(new ActionToKiss("Kiss her"));
+			//actions.Add(new ActionToKiss("Force her"));
 
             return actions;
         }
@@ -47,5 +45,10 @@ namespace SimaDat.Bll
             h.UseTtl(1);
             h.SpendMoney(loc.Price);
         }
-    }
+
+		public void Present(DatingLocation loc, GiftTypes gift)
+		{
+			loc.KissPoints++;
+		}
+	}
 }

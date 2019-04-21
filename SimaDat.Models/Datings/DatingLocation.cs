@@ -19,7 +19,7 @@ namespace SimaDat.Models.Datings
 
         public Girl Girl { get; set; } = null;
 
-        public int KissPoints { get; private set; } = 0;
+        public int KissPoints { get; set; } = 0;
 
 		public bool IsOver { get; set; }
 

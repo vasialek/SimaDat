@@ -94,6 +94,34 @@ namespace SimaDat.UnitTests
             actions.Count().Should().BeGreaterThan(0);
         }
 
-        #endregion
-    }
+		#endregion
+
+		#region Present
+
+		[TestMethod]
+		public void Present_TtlShouldNotDecrease()
+		{
+			_bll.JoinDating(_me, _laura, _location);
+			int expected = _me.Ttl;
+
+			_bll.Present(_location, Models.Enums.GiftTypes.Flower);
+
+			// No TTL is used during dating
+			_me.Ttl.Should().Be(expected);
+		}
+
+		[TestMethod]
+		public void Present_KissPointsShouldIncrease_AfterFlowerGift()
+		{
+			_bll.JoinDating(_me, _laura, _location);
+			int expected = _location.KissPoints;
+
+			_bll.Present(_location, Models.Enums.GiftTypes.Flower);
+
+			// Expecting Kiss points increases
+			_location.KissPoints.Should().BeGreaterThan(expected);
+		}
+
+		#endregion
+	}
 }
