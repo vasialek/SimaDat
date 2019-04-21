@@ -21,10 +21,13 @@ namespace SimaDat.Models.Datings
 
         public int KissPoints { get; private set; } = 0;
 
-        public DatingLocation(string name, int price)
+		public bool IsOver { get; set; }
+
+		public DatingLocation(string name, int price)
         {
             Name = name;
             Price = price;
+			IsOver = false;
         }
     }
 }
