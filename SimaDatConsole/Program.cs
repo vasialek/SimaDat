@@ -5,14 +5,10 @@ using SimaDat.Models.Characters;
 using SimaDat.Models.Datings;
 using SimaDat.Models.Enums;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SimaDat.Console
+namespace SimaDatConsole
 {
-    class Program
+	class Program
     {
         static void Main(string[] args)
         {
@@ -57,35 +53,35 @@ namespace SimaDat.Console
                 locationBll.CreateLocation(dock);
 
                 // Home <-> Square
-                locationBll.CreateDoorInLocation(home, square, Models.Enums.Directions.North);
+                locationBll.CreateDoorInLocation(home, square, Directions.North);
                 // Square <-> Pub
-                locationBll.CreateDoorInLocation(square, pub, Models.Enums.Directions.North);
+                locationBll.CreateDoorInLocation(square, pub, Directions.North);
                 // Square <-> Gym
-                locationBll.CreateDoorInLocation(square, gym, Models.Enums.Directions.East);
+                locationBll.CreateDoorInLocation(square, gym, Directions.East);
                 // Square <-> School
-                locationBll.CreateDoorInLocation(square, school, Models.Enums.Directions.West);
+                locationBll.CreateDoorInLocation(square, school, Directions.West);
                 // Square <-> Girl house
-                locationBll.CreateDoorInLocation(square, girlHouse, Models.Enums.Directions.NorthEast);
+                locationBll.CreateDoorInLocation(square, girlHouse, Directions.NorthEast);
                 // Girls house <-> Lina room
-                locationBll.CreateDoorInLocation(girlHouse, linaRoom, Models.Enums.Directions.NorthWest);
+                locationBll.CreateDoorInLocation(girlHouse, linaRoom, Directions.NorthWest);
                 // Girls house <-> Anna room
-                locationBll.CreateDoorInLocation(girlHouse, annaRoom, Models.Enums.Directions.North);
+                locationBll.CreateDoorInLocation(girlHouse, annaRoom, Directions.North);
                 // Square <-> City center
-                locationBll.CreateDoorInLocation(square, cityCenter, Models.Enums.Directions.SouthEast);
+                locationBll.CreateDoorInLocation(square, cityCenter, Directions.SouthEast);
                 // School <-> Library
-                locationBll.CreateDoorInLocation(school, library, Models.Enums.Directions.North);
+                locationBll.CreateDoorInLocation(school, library, Directions.North);
                 // City center <-> Bazaar
-                locationBll.CreateDoorInLocation(cityCenter, bazaar, Models.Enums.Directions.SouthWest);
+                locationBll.CreateDoorInLocation(cityCenter, bazaar, Directions.SouthWest);
                 // City center <-> Dock
-                locationBll.CreateDoorInLocation(cityCenter, dock, Models.Enums.Directions.South);
+                locationBll.CreateDoorInLocation(cityCenter, dock, Directions.South);
                 // City center <-> Cafe
-                locationBll.CreateDoorInLocation(cityCenter, cafe, Models.Enums.Directions.SouthEast);
+                locationBll.CreateDoorInLocation(cityCenter, cafe, Directions.SouthEast);
 
                 // Girls
                 Girl laura = new Girl
                 {
                     Name = "Laura",
-                    Appearance = new Appearance(165, 80, 60, 95) { Hair = Models.Enums.Hairs.Black },
+                    Appearance = new Appearance(165, 80, 60, 95) { Hair = Hairs.Black },
                     CurrentLocationId = pub.LocationId,
                 };
                 charactersBll.CreateGirl(laura);
@@ -130,7 +126,7 @@ namespace SimaDat.Console
                 // Gifts
                 for (int i = 0; i < 10; i++)
                 {
-                    me.Gifts.Add(new Models.Items.Gift { Name = "Test flower", GiftTypeId = GiftTypes.Flower, FirendshipPoints = 5 });
+                    me.Gifts.Add(new SimaDat.Models.Items.Gift { Name = "Test flower", GiftTypeId = GiftTypes.Flower, FirendshipPoints = 5 });
                 }
 
                 var console = new SdConsole(me, locationBll, charactersBll);

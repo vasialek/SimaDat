@@ -2,12 +2,8 @@
 using SimaDat.Models.Datings;
 using SimaDat.Models.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SimaDat.Console
+namespace SimaDatConsole
 {
 	internal class DatingConsole
 	{
@@ -24,6 +20,7 @@ namespace SimaDat.Console
 			var menu = new Menu();
 			var actions = _datingBll.GetHeroActions(datingLocation);
 
+
 			menu.Add("Quit dating", () => { isDating = false; }, ConsoleColor.DarkYellow);
 			foreach (var a in actions)
 			{
@@ -34,6 +31,7 @@ namespace SimaDat.Console
 
 			do
 			{
+				System.Console.WriteLine("Kiss point {0}", datingLocation.KissPoints);
 				menu.Display();
 			} while (isDating);
 		}

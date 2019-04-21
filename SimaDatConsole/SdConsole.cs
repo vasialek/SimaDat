@@ -5,14 +5,12 @@ using SimaDat.Models.Enums;
 using SimaDat.Models.Exceptions;
 using SimaDat.Models.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace SimaDat.Console
+namespace SimaDatConsole
 {
-    internal class SdConsole
+	internal class SdConsole
     {
         private Hero _hero = null;
         private ILocationBll _locationBll = null;
@@ -38,7 +36,7 @@ namespace SimaDat.Console
             _hero = hero;
             _locationBll = locationBll;
             _charsBll = charsBll;
-            _heroBll = Bll.BllFactory.Current.HeroBll;
+            _heroBll = SimaDat.Bll.BllFactory.Current.HeroBll;
         }
 
         public void DisplayHero()

@@ -18,8 +18,9 @@ namespace SimaDat.Bll
         private ICharactersBll _charactersBll = null;
         private IShopBll _shopBll = null;
         private IPossibilityBll _possibilityBll = null;
+		private IDatingBll _datingBll = null;
 
-        public static BllFactory Current
+		public static BllFactory Current
         {
             get
             {
@@ -90,5 +91,13 @@ namespace SimaDat.Bll
                 return _possibilityBll;
             }
         }
-    }
+
+		public IDatingBll DatingBll
+		{
+			get
+			{
+				return _datingBll ?? (_datingBll = new DatingBll());
+			}
+		}
+	}
 }
