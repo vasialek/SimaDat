@@ -10,9 +10,12 @@ namespace SimaDat.Models.Actions
 {
     public class ActionToPresent : ActionToDo
     {
-        public ActionToPresent(string name, Girl g, GiftTypes giftType)
+		public GiftTypes GiftType { get; private set; }
+
+		public ActionToPresent(string name, Girl g, GiftTypes giftType)
             : base(name, 1)
         {
+			GiftType = giftType;
         }
     }
 }
