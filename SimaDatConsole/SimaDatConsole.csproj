@@ -7,8 +7,8 @@
     <ProjectGuid>{69DB4356-F70B-4A4E-A659-D5A11CD599BC}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SimaDat.Console</RootNamespace>
-    <AssemblyName>SimaDat.Console</AssemblyName>
+    <RootNamespace>SimaDatConsole</RootNamespace>
+    <AssemblyName>SimaDatConsole</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DatingConsole.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SdConsole.cs" />

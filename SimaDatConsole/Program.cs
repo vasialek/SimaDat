@@ -2,6 +2,7 @@
 using SimaDat.Bll;
 using SimaDat.Models;
 using SimaDat.Models.Characters;
+using SimaDat.Models.Datings;
 using SimaDat.Models.Enums;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace SimaDat.Console
             var locationBll = BllFactory.Current.LocationBll;
             var heroBll = BllFactory.Current.HeroBll;
             var charactersBll = BllFactory.Current.CharactersBll;
+			var datingBll = BllFactory.Current.DatingBll;
 
 
             try
@@ -132,6 +134,8 @@ namespace SimaDat.Console
                 }
 
                 var console = new SdConsole(me, locationBll, charactersBll);
+				var datingConsole = new DatingConsole(datingBll);
+				var testDatingLocation = new DatingLocation("Test dating place", 100);
 
 
                 menu.Add("Exit", () => { isRunning = false; }, ConsoleColor.Red);
@@ -141,6 +145,7 @@ namespace SimaDat.Console
                 menu.Add("Improve hero", () => { console.ImproveHero(); });
                 menu.Add("Display locations", () => { console.DisplayLocations(); });
                 menu.Add("Display girls", () => { console.DisplayGirls(); });
+				menu.Add($"Date with ", () => { datingConsole.DoDating(testDatingLocation); });
 
                 do
                 {
