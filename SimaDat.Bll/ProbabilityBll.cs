@@ -10,7 +10,7 @@ namespace SimaDat.Bll
 {
 	public class ProbabilityBll : IProbabilityBll
 	{
-        private static Random _random = new Random((int)DateTime.Now.Ticks);
+		private static Random _random = new Random((int)DateTime.Now.Ticks);
 
 		public bool Kiss(DatingLocation datingLocation)
 		{
@@ -30,10 +30,10 @@ namespace SimaDat.Bll
 		}
 
 		public bool RequestDating(Hero h, Girl g)
-        {
-            float probability = h.Charm * 1.0f / MySettings.MaxCharmForHero;
+		{
+			float probability = h.Charm * 1.0f / MySettings.MaxCharmForHero;
 
-            return _random.NextDouble() <= probability;
-        }
-    }
+			return _random.NextDouble() <= probability;
+		}
+	}
 }

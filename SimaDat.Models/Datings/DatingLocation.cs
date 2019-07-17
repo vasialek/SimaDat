@@ -9,6 +9,8 @@ namespace SimaDat.Models.Datings
 {
     public class DatingLocation
     {
+        public bool WasKiss { get; set; } = false;
+
         public string Name { get; private set; }
 
         public int Price { get; private set; }
@@ -28,6 +30,15 @@ namespace SimaDat.Models.Datings
             Name = name;
             Price = price;
 			IsOver = false;
+        }
+
+        public void IncreaseKissPoints(int points = 1)
+        {
+            KissPoints += points;
+            if (KissPoints < 0)
+            {
+                KissPoints = 0;
+            }
         }
     }
 }

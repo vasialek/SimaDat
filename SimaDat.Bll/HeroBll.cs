@@ -14,14 +14,14 @@ namespace SimaDat.Bll
         private IShopBll _shopBll = null;
 
         public HeroBll(ILocationBll locationBll)
+            : this(locationBll, null)
         {
-            if (locationBll == null)
-            {
-                throw new ArgumentNullException("locationBll");
-            }
+        }
 
-            _locationBll = locationBll;
-            _shopBll = BllFactory.Current.ShopBll;
+        public HeroBll(ILocationBll locationBll, IShopBll shopBll)
+        {
+            _locationBll = locationBll ?? throw new ArgumentNullException("locationBll");
+            _shopBll = shopBll ?? BllFactory.Current.ShopBll;
         }
 
         public void ApplyAction(Hero h, ActionToDo action)
