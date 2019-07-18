@@ -53,6 +53,7 @@
     <Compile Include="CharactersBll.cs" />
     <Compile Include="DatingBll.cs" />
     <Compile Include="HeroBll.cs" />
+    <Compile Include="RandomProvider.cs" />
     <Compile Include="LocationBll.cs" />
     <Compile Include="ProbabilityBll.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -19,6 +19,7 @@ namespace SimaDat.Bll
         private IShopBll _shopBll = null;
         private IProbabilityBll _possibilityBll = null;
 		private IDatingBll _datingBll = null;
+		private IRandomProvider _randomProvider = null;
 
 		public static BllFactory Current
         {
@@ -97,6 +98,14 @@ namespace SimaDat.Bll
 			get
 			{
 				return _datingBll ?? (_datingBll = new DatingBll());
+			}
+		}
+
+		public IRandomProvider RandomProvider
+		{
+			get
+			{
+				return _randomProvider ?? (_randomProvider = new RandomProvider());
 			}
 		}
 	}
