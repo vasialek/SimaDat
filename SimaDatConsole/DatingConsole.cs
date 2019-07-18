@@ -1,6 +1,8 @@
 ﻿using AvUtils;
 using SimaDat.Models.Actions;
+using SimaDat.Models.Characters;
 using SimaDat.Models.Datings;
+using SimaDat.Models.Exceptions;
 using SimaDat.Models.Interfaces;
 using System;
 
@@ -15,11 +17,14 @@ namespace SimaDatConsole
 			_datingBll = datingBll ?? throw new ArgumentNullException(nameof(datingBll));
 		}
 
-		public void DoDating(DatingLocation datingLocation)
+		public void DoDating(DatingLocation datingLocation, Hero me)
 		{
 			bool isDating = true;
 			var menu = new Menu();
 			var actions = _datingBll.GetHeroActions(datingLocation);
+			Girl g = new Girl("Dating Girl", SimaDat.Models.Enums.FriendshipLevels.Friend);
+			me.SpendMoney(-datingLocation.Price);
+			_datingBll.JoinDating(me, g, datingLocation);
 
 
 			menu.Add("Quit dating", () => { isDating = false; }, ConsoleColor.DarkYellow);
@@ -29,6 +34,17 @@ namespace SimaDatConsole
 					if (a is ActionToPresent actionToPresent)
 					{
 						_datingBll.Present(datingLocation, actionToPresent.GiftType);
+					}
+					else if (a is ActionToKiss actionToKiss)
+					{
+						try
+						{
+							_datingBll.Kiss();
+						}
+						catch (BadConditionException bcex)
+						{
+							Output.WriteLine(ConsoleColor.Red, bcex.Message);
+						}
 					}
 					else
 					{

@@ -141,7 +141,7 @@ namespace SimaDatConsole
                 menu.Add("Improve hero", () => { console.ImproveHero(); });
                 menu.Add("Display locations", () => { console.DisplayLocations(); });
                 menu.Add("Display girls", () => { console.DisplayGirls(); });
-				menu.Add($"Date with ", () => { datingConsole.DoDating(testDatingLocation); });
+				menu.Add($"Date with ", () => { datingConsole.DoDating(testDatingLocation, me); });
 
                 do
                 {
