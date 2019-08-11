@@ -15,12 +15,24 @@ namespace SimaDat.Bll
 {
 	public class DatingBll : IDatingBll
     {
+		private readonly IProbabilityBll _probabilityBll = null;
+
         /// <summary>
         /// When girl is ready for kiss
         /// </summary>
         private int _kissLevel = 10;
 
         public DatingLocation Location { get; private set; }
+
+		public DatingBll()
+			: this(null)
+		{
+		}
+
+		public DatingBll(IProbabilityBll probabilityBll)
+		{
+			_probabilityBll = probabilityBll ?? BllFactory.Current.ProbabilityBll;
+		}
 
         
         public IEnumerable<ActionToDo> GetHeroActions(DatingLocation loc)
