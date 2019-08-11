@@ -4,6 +4,7 @@ using SimaDat.Models.Datings;
 using SimaDat.Models.Enums;
 using SimaDat.Models.Exceptions;
 using SimaDat.Models.Interfaces;
+using SimaDat.Shared;
 using System;
 
 namespace SimaDat.Bll
@@ -25,13 +26,8 @@ namespace SimaDat.Bll
 				throw new ObjectDoesNotExistException($"Dating with {datingLocation.Girl.Name} in {datingLocation.Name} is over", datingLocation.DatingLocationId);
 			}
 
-			// [0 - 100]
-			float charm = datingLocation.Hero.Charm * 100f / MySettings.MaxCharmForHero;
-			// [0 - 2]
-			float friendhsip = ((int)datingLocation.Girl.FriendshipLevel - (int)FriendshipLevels.Familar);
-
-			// Max probability is 0.8 + 0.18 = 0.98
-			float probability = charm * 0.008f + friendhsip * 0.09f;
+			// Max probability is 0.98
+			float probability = ProbabilityCalculator.ProbabilityToKiss(datingLocation.Hero.Charm, datingLocation.Girl.FriendshipLevel);
 
 			return _randomProvider.NextDouble() <= probability;
 		}
