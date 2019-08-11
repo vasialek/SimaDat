@@ -83,6 +83,7 @@
     <Compile Include="HeroTest.cs" />
     <Compile Include="LocationBllTest.cs" />
     <Compile Include="ProbabilityBllTest.cs" />
+    <Compile Include="ProbabilityCalculatorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializerBllTest.cs" />
     <Compile Include="ShopBllTest.cs" />
@@ -95,6 +96,10 @@
     <ProjectReference Include="..\SimaDat.Models\SimaDat.Models.csproj">
       <Project>{0f43b82e-a92a-444d-aaee-662a16b5a713}</Project>
       <Name>SimaDat.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SimaDat.Shared\SimaDat.Shared.csproj">
+      <Project>{E26E2DEF-D311-4D08-859D-63E451D89E2D}</Project>
+      <Name>SimaDat.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\SimaData.Dal\SimaData.Dal.csproj">
       <Project>{1c66ecbe-f1a9-49c5-af78-f75997183c91}</Project>

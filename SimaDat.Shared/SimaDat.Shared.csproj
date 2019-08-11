@@ -43,7 +43,14 @@
   <ItemGroup>
     <Compile Include="Dumper.cs" />
     <Compile Include="EasyConsole.cs" />
+    <Compile Include="ProbabilityCalculator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SimaDat.Models\SimaDat.Models.csproj">
+      <Project>{0F43B82E-A92A-444D-AAEE-662A16B5A713}</Project>
+      <Name>SimaDat.Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
