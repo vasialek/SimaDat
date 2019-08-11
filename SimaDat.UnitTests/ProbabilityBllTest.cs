@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using SimaDat.Bll;
 using SimaDat.Models;
 using SimaDat.Models.Characters;
@@ -15,19 +16,22 @@ namespace SimaDat.UnitTests
     public class ProbabilityBllTest
 	{
         private IProbabilityBll _bll = null;
+
+		private Mock<IRandomProvider> _mockRandomProvider = new Mock<IRandomProvider>();
+
         private Hero _me = null;
         private Girl _girl = null;
 
         [TestInitialize]
         public void TestInit()
         {
-            _bll = new ProbabilityBll();
+            _bll = new ProbabilityBll(_mockRandomProvider.Object);
 
             _me = new Hero();
             _me.CurrentLocationId = 100;
-            _me.ModifySkill(Models.Enums.HeroSkills.Charm, MySettings.MaxCharmForHero);
+            _me.ModifySkill(HeroSkills.Charm, MySettings.MaxCharmForHero);
 
-            _girl = new Girl("Friend girl", Models.Enums.FriendshipLevels.Friend);
+            _girl = new Girl("Friend girl", FriendshipLevels.Friend);
             _girl.CurrentLocationId = _me.CurrentLocationId;
         }
 
@@ -36,6 +40,8 @@ namespace SimaDat.UnitTests
         [TestMethod]
         public void RequestDating_True()
         {
+			SetupDating(20, 0.09);
+
             bool isDating = _bll.RequestDating(_me, _girl);
 
             isDating.Should().BeTrue();
@@ -44,7 +50,7 @@ namespace SimaDat.UnitTests
         [TestMethod]
         public void RequestDating_False()
         {
-            _me.ModifySkill(Models.Enums.HeroSkills.Charm, -MySettings.MaxCharmForHero);
+			SetupDating(0, 001);
 
             bool isDating = _bll.RequestDating(_me, _girl);
 
@@ -52,14 +58,15 @@ namespace SimaDat.UnitTests
         }
 
         [TestMethod]
-        public void RequestDating_50pct()
+        public void RequestDating_False_WhenMaxCharm()
         {
-            _me.ModifySkill(Models.Enums.HeroSkills.Charm, MySettings.MaxCharmForHero / -2);
+			// Set to max charm, but random probability to reject dating
+			SetupDating(MySettings.MaxCharmForHero, 0.995);
 
-			int positive = CountPositiveProbability(() => { return _bll.RequestDating(_me, _girl); });
+			bool isDating = _bll.RequestDating(_me, _girl);
 
-			// Expected more less 50% of positive
-			positive.Should().BeInRange(40, 70);
+			// Expecting dating was rejected even max charm
+			isDating.Should().BeFalse();
         }
 
 		#endregion
@@ -70,7 +77,7 @@ namespace SimaDat.UnitTests
 		public void Kiss_Exception_WhenDatingIsOver()
 		{
 			bool isOk = false;
-			var dl = SetupForKiss(_girl, 10);
+			var dl = SetupForKiss(_girl, 10, 0);
 			dl.IsOver = true;
 
 			try
@@ -87,36 +94,44 @@ namespace SimaDat.UnitTests
 		}
 
 		[TestMethod]
-		public void Kiss_HighProbability_WhenCharmAndLover()
+		public void Kiss_Success_WhenCharmAndLover()
 		{
 			var lover = new Girl("Lover girl", FriendshipLevels.Lover);
-			var dl = SetupForKiss(lover, MySettings.MaxCharmForHero);
+			var dl = SetupForKiss(lover, MySettings.MaxCharmForHero, 0.97);
 
-			int positive = CountPositiveProbability(() => { return _bll.Kiss(dl); });
-
-			// Expecting high probability when charm & lover
-			positive.Should().BeInRange(80, 99);
+			// Expecting success, because high charm gives probablitity ~ 0.98
+			_bll.Kiss(dl).Should().BeTrue();
 		}
 
 		[TestMethod]
-		public void Kiss_LowProbabilityWithoutCharm()
+		public void Kiss_Success_WhenLowProbabilityWithoutCharm()
 		{
-			var datingLocation = SetupForKiss(_girl, 0);
+			var datingLocation = SetupForKiss(_girl, 0, 0.08);
 
-			int positive = CountPositiveProbability(() => { return _bll.Kiss(datingLocation); });
-			
-			// Expecting low probability, but possible
-			positive.Should().BeGreaterOrEqualTo(1);
+			// Expecting low probability (~0.09), but possible
+			_bll.Kiss(datingLocation).Should().BeTrue();
 		}
 
 		#endregion
 
 		#region Setup
 
-		private DatingLocation SetupForKiss(Girl g, int heroCharm)
+		private void SetupDating(int heroCharm, double randomValue)
 		{
-			_me.ModifySkill(HeroSkills.Charm, heroCharm);
+			SetHeroCharm(heroCharm);
 			_me.ResetTtl();
+
+			_mockRandomProvider.Setup(x => x.NextDouble())
+				.Returns(randomValue);
+		}
+
+		private DatingLocation SetupForKiss(Girl g, int heroCharm, double randomValue)
+		{
+			SetHeroCharm(heroCharm);
+			_me.ResetTtl();
+
+			_mockRandomProvider.Setup(x => x.NextDouble())
+				.Returns(randomValue);
 
 			var datingLocation = new DatingLocation("Test", 0)
 			{
@@ -130,21 +145,10 @@ namespace SimaDat.UnitTests
 			return datingLocation;
 		}
 
-		#endregion
-
-		#region Helpers
-
-		private int CountPositiveProbability(Func<bool> act)
+		private void SetHeroCharm(int charm)
 		{
-			int positive = 0;
-			for (int i = 0; i < 100; i++)
-			{
-				if (act.Invoke())
-				{
-					positive++;
-				}
-			}
-			return positive;
+			_me.ModifySkill(HeroSkills.Charm, -_me.Charm);
+			_me.ModifySkill(HeroSkills.Charm, charm);
 		}
 
 		#endregion
