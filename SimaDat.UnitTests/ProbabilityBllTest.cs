@@ -8,6 +8,7 @@ using SimaDat.Models.Datings;
 using SimaDat.Models.Enums;
 using SimaDat.Models.Exceptions;
 using SimaDat.Models.Interfaces;
+using SimaDat.Shared;
 using System;
 
 namespace SimaDat.UnitTests
@@ -97,7 +98,8 @@ namespace SimaDat.UnitTests
 		public void Kiss_Success_WhenCharmAndLover()
 		{
 			var lover = new Girl("Lover girl", FriendshipLevels.Lover);
-			var dl = SetupForKiss(lover, MySettings.MaxCharmForHero, 0.97);
+			float probability = ProbabilityCalculator.ProbabilityToKiss(0, lover.FriendshipLevel);
+			var dl = SetupForKiss(lover, MySettings.MaxCharmForHero, probability - 0.0001);
 
 			// Expecting success, because high charm gives probablitity ~ 0.98
 			_bll.Kiss(dl).Should().BeTrue();
@@ -106,7 +108,9 @@ namespace SimaDat.UnitTests
 		[TestMethod]
 		public void Kiss_Success_WhenLowProbabilityWithoutCharm()
 		{
-			var datingLocation = SetupForKiss(_girl, 0, 0.08);
+			// Setup random value to be smaller then smallest probability
+			float probability = ProbabilityCalculator.ProbabilityToKiss(0, _girl.FriendshipLevel);
+			var datingLocation = SetupForKiss(_girl, 0, probability - 0.0001);
 
 			// Expecting low probability (~0.09), but possible
 			_bll.Kiss(datingLocation).Should().BeTrue();
