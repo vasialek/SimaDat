@@ -341,6 +341,17 @@ namespace SimaDat.UnitTests
 			datingLocation.KissPoints.Should().Be(MySettings.MaxKissPoints);
 		}
 
+		[TestMethod]
+		public void IncreaseKissPoints_NotLessThanZero()
+		{
+			var datingLocation = PrepareDatingLocation();
+
+			_bll.IncreaseKissPoints(datingLocation, -1);
+
+			// Should be 0, not less
+			datingLocation.KissPoints.Should().Be(0);
+		}
+
 		#endregion
 
 		private DatingLocation PrepareDatingLocation(Gift giftToAdd = null)

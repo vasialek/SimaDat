@@ -31,14 +31,5 @@ namespace SimaDat.Models.Datings
             Price = price;
 			IsOver = false;
         }
-
-        public void IncreaseKissPoints(int points = 1)
-        {
-            KissPoints += points;
-            if (KissPoints < 0)
-            {
-                KissPoints = 0;
-            }
-        }
     }
 }

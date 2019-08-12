@@ -52,7 +52,11 @@ namespace SimaDat.Bll
 			if (datingLocation.KissPoints > MySettings.MaxKissPoints)
 			{
 				datingLocation.KissPoints = MySettings.MaxKissPoints;
+			} else if (datingLocation.KissPoints < 0)
+			{
+				datingLocation.KissPoints = 0;
 			}
+
 			return datingLocation.KissPoints;
 		}
 
@@ -86,7 +90,7 @@ namespace SimaDat.Bll
             if (datingLocation.KissPoints < _kissLevel)
             {
 				// Girl is little dissapointed
-				datingLocation.IncreaseKissPoints(-1);
+				IncreaseKissPoints(datingLocation, -1);
                 throw new BadConditionException("Girl is not ready for kiss");
             }
 
@@ -113,7 +117,7 @@ namespace SimaDat.Bll
 				case GiftTypes.Flower:
 				case GiftTypes.TeddyBear:
 				case GiftTypes.DiamondRing:
-					datingLocation.IncreaseKissPoints();
+					IncreaseKissPoints(datingLocation, 1);
 					break;
 				default:
 					break;
