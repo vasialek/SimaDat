@@ -13,13 +13,9 @@ namespace SimaDat.Models.Interfaces
 {
     public interface IDatingBll
     {
-        DatingLocation Location { get; }
-
         void JoinDating(Hero h, Girl g, DatingLocation datingLocation);
 
-        void Present(GiftTypes gt);
-
-        void Kiss();
+        void Kiss(DatingLocation datingLocation);
 
         IEnumerable<ActionToDo> GetHeroActions(DatingLocation loc);
 

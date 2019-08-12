@@ -22,8 +22,6 @@ namespace SimaDat.Bll
         /// </summary>
         private int _kissLevel = 10;
 
-        public DatingLocation Location { get; private set; }
-
 		public DatingBll()
 			: this(null)
 		{
@@ -69,64 +67,58 @@ namespace SimaDat.Bll
             h.UseTtl(3);
             h.SpendMoney(datingLocation.Price);
 
-            Location = datingLocation;
-            Location.Hero = h;
-            Location.Girl = g;
+            datingLocation.Hero = h;
+			datingLocation.Girl = g;
         }
 
-        public void Kiss()
+        public void Kiss(DatingLocation datingLocation)
         {
-            EnsureDatingIsNotOver();
+            EnsureDatingIsNotOver(datingLocation);
 
-            if (Location.KissPoints < _kissLevel)
+            if (datingLocation.KissPoints < _kissLevel)
             {
-                // Girl is little dissapointed
-                Location.IncreaseKissPoints(-1);
+				// Girl is little dissapointed
+				datingLocation.IncreaseKissPoints(-1);
                 throw new BadConditionException("Girl is not ready for kiss");
             }
 
             // Make her lover
-            int likesNeeded = Models.MySettings.Get().GetLikesForFriendships(FriendshipLevels.Lover) - Models.MySettings.Get().GetLikesForFriendships(Location.Girl.FriendshipLevel);
-            Location.Girl.LikeHero(likesNeeded);
+            int likesNeeded = Models.MySettings.Get().GetLikesForFriendships(FriendshipLevels.Lover) - Models.MySettings.Get().GetLikesForFriendships(datingLocation.Girl.FriendshipLevel);
+			datingLocation.Girl.LikeHero(likesNeeded);
 
-            // Mark success
-            Location.WasKiss = true;
+			// Mark success
+			datingLocation.WasKiss = true;
         }
 
-        public void Present(GiftTypes gt)
-        {
-            EnsureDatingIsNotOver();
-
-            var gift = Location.Hero.Gifts?.FirstOrDefault(x => x.GiftTypeId == gt);
-            if (gift == null)
-            {
-                throw new ObjectDoesNotExistException($"You have no {gt} to present.", (int)gt);
-            }
-
-            switch (gift.GiftTypeId)
-            {
-                case GiftTypes.Flower:
-                case GiftTypes.TeddyBear:
-                case GiftTypes.DiamondRing:
-                    Location.IncreaseKissPoints();
-                    break;
-                default:
-                    break;
-            }
-            Location.Hero.Gifts.Remove(gift);
-        }
-
-        private void EnsureDatingIsNotOver()
-        {
-            if (Location.WasKiss)
-            {
-                throw new EventIsOverException($"Dating in {Location.Name} is over, you've already kissed {Location.Girl.Name}");
-            }
-        }
-
-		public void Present(DatingLocation loc, GiftTypes gift)
+		public void Present(DatingLocation datingLocation, GiftTypes giftType)
 		{
-			loc.KissPoints++;
+			EnsureDatingIsNotOver(datingLocation);
+
+			var gift = datingLocation.Hero.Gifts?.FirstOrDefault(x => x.GiftTypeId == giftType);
+			if (gift == null)
+			{
+				throw new ObjectDoesNotExistException($"You have no {giftType} to present.", (int)giftType);
+			}
+
+			switch (gift.GiftTypeId)
+			{
+				case GiftTypes.Flower:
+				case GiftTypes.TeddyBear:
+				case GiftTypes.DiamondRing:
+					datingLocation.IncreaseKissPoints();
+					break;
+				default:
+					break;
+			}
+			datingLocation.Hero.Gifts.Remove(gift);
 		}
+
+		private void EnsureDatingIsNotOver(DatingLocation datingLocation)
+        {
+            if (datingLocation.WasKiss)
+            {
+                throw new EventIsOverException($"Dating in {datingLocation.Name} is over, you've already kissed {datingLocation.Girl.Name}");
+            }
+        }
 	}
 }

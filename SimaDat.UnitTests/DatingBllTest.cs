@@ -1,19 +1,18 @@
-﻿using System;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SimaDat.Models.Exceptions;
-using SimaDat.Models.Interfaces;
 using SimaDat.Bll;
+using SimaDat.Models;
 using SimaDat.Models.Characters;
 using SimaDat.Models.Datings;
-using SimaDat.Models;
 using SimaDat.Models.Enums;
-using FluentAssertions;
+using SimaDat.Models.Exceptions;
+using SimaDat.Models.Interfaces;
 using SimaDat.Models.Items;
 using System.Linq;
 
 namespace SimaDat.UnitTests
 {
-    [TestClass]
+	[TestClass]
     public class DatingBllTest
     {
         private IDatingBll _bll = null;
@@ -37,10 +36,8 @@ namespace SimaDat.UnitTests
             _me.SpendMoney(-_location.Price);
             _me.ResetTtl();
 
-            _laura = new Girl("Laura", Models.Enums.FriendshipLevels.Friend);
+            _laura = new Girl("Laura", FriendshipLevels.Friend);
             _laura.CurrentLocationId = _me.CurrentLocationId;
-
-            _location = new DatingLocation("Test dating", 100);
 
             _giftFlower = new Gift { GiftId = 123, GiftTypeId = GiftTypes.Flower, Name = "Test flower", FirendshipPoints = 10, Price = 50 };
             _giftDiamondRing = new Gift { GiftId = 124, GiftTypeId = GiftTypes.DiamondRing, Name = "Test diamond ring", FirendshipPoints = 50, Price = 900 };
@@ -70,7 +67,7 @@ namespace SimaDat.UnitTests
         [ExpectedException(typeof(FriendshipLeveTooLowException))]
         public void JoinDating_Exception_WhenGirlIsLessThanFriend()
         {
-            var g = new Girl("NotFriendly", Models.Enums.FriendshipLevels.Familar);
+            var g = new Girl("NotFriendly", FriendshipLevels.Familar);
 
             _bll.JoinDating(_me, g, _location);
         }
@@ -106,25 +103,25 @@ namespace SimaDat.UnitTests
         [TestMethod]
         public void JoinDating_LocationShouldBeCreated()
         {
-            PrepareDatingLocation();
+            var datingLocation = PrepareDatingLocation();
 
-            _bll.Location.Should().NotBeNull();
+			datingLocation.Should().NotBeNull();
         }
 
         [TestMethod]
         public void JoinDating_HeroShouldBe()
         {
-            PrepareDatingLocation();
+			var datingLocation = PrepareDatingLocation();
 
-            _bll.Location.Hero.Should().Be(_me);
+			datingLocation.Hero.Should().Be(_me);
         }
 
         [TestMethod]
         public void JoinDating_GirlShouldBe()
         {
-            PrepareDatingLocation();
+            var datingLocation = PrepareDatingLocation();
 
-            _bll.Location.Girl.Should().Be(_laura);
+			datingLocation.Girl.Should().Be(_laura);
         }
 
         #endregion
@@ -136,18 +133,18 @@ namespace SimaDat.UnitTests
         public void Present_Exception_WhenNoGift()
         {
             // Join dating with Laura
-            PrepareDatingLocation();
+            var datingLocation = PrepareDatingLocation();
 
-            _bll.Present(GiftTypes.Flower);
+            _bll.Present(datingLocation, GiftTypes.Flower);
         }
 
         [TestMethod]
         public void Present_GiftDissapears_AfterPresent()
         {
-            // Join dating with Laura
-            PrepareDatingLocation(_giftFlower);
+			// Join dating with Laura
+			var datingLocation = PrepareDatingLocation(_giftFlower);
 
-            _bll.Present(_giftFlower.GiftTypeId);
+            _bll.Present(datingLocation, _giftFlower.GiftTypeId);
 
             // Gift is moved to girl
             _me.Gifts.Should().HaveCount(0);
@@ -156,94 +153,118 @@ namespace SimaDat.UnitTests
         [TestMethod]
         public void Present_KissPointsShouldIncrease()
         {
-            // Join dating with Laura
-            PrepareDatingLocation(_giftFlower);
-            int v = _bll.Location.KissPoints;
+			// Join dating with Laura
+			var datingLocation = PrepareDatingLocation(_giftFlower);
+            int v = datingLocation.KissPoints;
 
-            _bll.Present(_giftFlower.GiftTypeId);
+            _bll.Present(datingLocation, _giftFlower.GiftTypeId);
 
-            // Girl should be pleased :)
-            _bll.Location.KissPoints.Should().BeGreaterThan(v);
+			// Girl should be pleased :)
+			datingLocation.KissPoints.Should().BeGreaterThan(v);
         }
 
-        #endregion
+		[TestMethod]
+		public void Present_TtlShouldNotDecrease()
+		{
+			var datingLocation = PrepareDatingLocation(_giftFlower);
+			int expected = _me.Ttl;
 
-        #region Kiss
+			_bll.Present(datingLocation, _giftFlower.GiftTypeId);
 
-        [TestMethod]
+			// No TTL is used during dating
+			_me.Ttl.Should().Be(expected);
+		}
+
+		[TestMethod]
+		public void Present_KissPointsShouldIncrease_AfterFlowerGift()
+		{
+			var datingLocation = PrepareDatingLocation(_giftFlower);
+			int expected = datingLocation.KissPoints;
+
+			_bll.Present(datingLocation, GiftTypes.Flower);
+
+			// Expecting Kiss points increases
+			datingLocation.KissPoints.Should().BeGreaterThan(expected);
+		}
+
+		#endregion
+
+		#region Kiss
+
+		[TestMethod]
         [ExpectedException(typeof(BadConditionException))]
         public void Kiss_Exception_WhenGirlNotReady()
         {
-            PrepareDatingLocation();
+			var datingLocation = PrepareDatingLocation();
 
-            _bll.Kiss();
+            _bll.Kiss(datingLocation);
         }
 
         [TestMethod]
         public void Kiss_KissPointDecrease_WhenGirlWasNotReady()
         {
-            PrepareDatingLocation(_giftFlower);
+			var datingLocation = PrepareDatingLocation(_giftFlower);
             // Need to increase kiss points
-            _bll.Present(_giftFlower.GiftTypeId);
-            int v = _bll.Location.KissPoints;
+            _bll.Present(datingLocation, _giftFlower.GiftTypeId);
+            int v = datingLocation.KissPoints;
 
             try
             {
-                _bll.Kiss();
+                _bll.Kiss(datingLocation);
             }
             catch (BadConditionException bcex)
             {
                 // Expecting this exception
             }
 
-            // Girl should be little dissapointed when kiss to early
-            _bll.Location.KissPoints.Should().BeLessThan(v);
+			// Girl should be little dissapointed when kiss to early
+			datingLocation.KissPoints.Should().BeLessThan(v);
         }
 
         [TestMethod]
         public void Kiss_KissPointDecreaseTillZero_WhenGirlWasNotReady()
         {
-            PrepareDatingLocation();
+			var datingLocation = PrepareDatingLocation();
 
             try
             {
-                _bll.Kiss();
+                _bll.Kiss(datingLocation);
             }
             catch (BadConditionException bcex)
             {
                 // Expecting this exception
             }
 
-            // Do not decrease below 0
-            _bll.Location.KissPoints.Should().Be(0);
+			// Do not decrease below 0
+			datingLocation.KissPoints.Should().Be(0);
         }
 
         [TestMethod]
         public void Kiss_Success()
         {
-            PrepareDatingLocation();
+			var datingLocation = PrepareDatingLocation();
             // Should reach kiss level
             for (int i = 0; i < 100; i++)
             {
                 _me.Gifts.Add(_giftFlower);
-                _bll.Present(_giftFlower.GiftTypeId);
+                _bll.Present(datingLocation, _giftFlower.GiftTypeId);
             }
 
-            _bll.Kiss();
+            _bll.Kiss(datingLocation);
 
-            // Expected lover aftef kiss
-            _laura.FriendshipLevel.Should().Be(FriendshipLevels.Lover);
+			// Expected lover aftef kiss
+			datingLocation.Girl.FriendshipLevel.Should().Be(FriendshipLevels.Lover);
         }
 
         [TestMethod]
         public void Kiss_CheckWasKiss()
         {
-            PrepareDatingLocation();
-            MakeReadyForKiss();
+			var datingLocation = PrepareDatingLocation();
+			MakeReadyForKiss(datingLocation);
 
-            _bll.Kiss();
+			_bll.Kiss(datingLocation);
 
-            _bll.Location.WasKiss.Should().BeTrue();
+			datingLocation.WasKiss.Should().BeTrue();
         }
 
         #endregion
@@ -254,29 +275,29 @@ namespace SimaDat.UnitTests
         [ExpectedException(typeof(EventIsOverException))]
         public void Present_Fail_AfterKiss()
         {
-            PrepareDatingLocation(_giftFlower);
-            MakeReadyForKiss();
-            _bll.Kiss();
+			var datingLocation = PrepareDatingLocation(_giftFlower);
+            MakeReadyForKiss(datingLocation);
+            _bll.Kiss(datingLocation);
 
             // This shouls fail, because dating is over after kiss
-            _bll.Present(_giftFlower.GiftTypeId);
+            _bll.Present(datingLocation, _giftFlower.GiftTypeId);
         }
 
         [TestMethod]
         [ExpectedException(typeof(EventIsOverException))]
         public void Kiss_Fail_AfterKiss()
         {
-            PrepareDatingLocation(_giftFlower);
-            MakeReadyForKiss();
-            _bll.Kiss();
+			var datingLocation = PrepareDatingLocation(_giftFlower);
+			MakeReadyForKiss(datingLocation);
+			_bll.Kiss(datingLocation);
 
             // This shouls fail, because dating is over after kiss
-            _bll.Kiss();
+            _bll.Kiss(datingLocation);
         }
 
         #endregion
 
-        private void PrepareDatingLocation(Gift giftToAdd = null)
+        private DatingLocation PrepareDatingLocation(Gift giftToAdd = null)
         {
             _me.SpendMoney(-_location.Price);
             _bll.JoinDating(_me, _laura, _location);
@@ -284,16 +305,18 @@ namespace SimaDat.UnitTests
             {
                 _me.Gifts.Add(_giftFlower);
             }
+
+			return _location;
         }
 
-        private void MakeReadyForKiss()
+        private void MakeReadyForKiss(DatingLocation datingLocation)
         {
             // Should reach kiss level
             for (int i = 0; i < 100; i++)
             {
                 _me.Gifts.Add(_giftDiamondRing);
-                _bll.Present(_giftDiamondRing.GiftTypeId);
-            }
+				_bll.Present(datingLocation, _giftDiamondRing.GiftTypeId);
+			}
         }
 
         [TestMethod]
@@ -318,32 +341,5 @@ namespace SimaDat.UnitTests
 
 		#endregion
 
-		#region Present
-
-		[TestMethod]
-		public void Present_TtlShouldNotDecrease()
-		{
-			_bll.JoinDating(_me, _laura, _location);
-			int expected = _me.Ttl;
-
-			_bll.Present(_location, Models.Enums.GiftTypes.Flower);
-
-			// No TTL is used during dating
-			_me.Ttl.Should().Be(expected);
-		}
-
-		[TestMethod]
-		public void Present_KissPointsShouldIncrease_AfterFlowerGift()
-		{
-			_bll.JoinDating(_me, _laura, _location);
-			int expected = _location.KissPoints;
-
-			_bll.Present(_location, Models.Enums.GiftTypes.Flower);
-
-			// Expecting Kiss points increases
-			_location.KissPoints.Should().BeGreaterThan(expected);
-		}
-
-		#endregion
 	}
 }
