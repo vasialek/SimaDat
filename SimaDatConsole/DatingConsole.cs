@@ -4,6 +4,7 @@ using SimaDat.Models.Characters;
 using SimaDat.Models.Datings;
 using SimaDat.Models.Exceptions;
 using SimaDat.Models.Interfaces;
+using SimaDat.Shared;
 using System;
 
 namespace SimaDatConsole
@@ -20,6 +21,7 @@ namespace SimaDatConsole
 		public void DoDating(DatingLocation datingLocation, Hero me)
 		{
 			bool isDating = true;
+			string errorMsg = "";
 			var menu = new Menu();
 			var actions = _datingBll.GetHeroActions(datingLocation);
 			Girl g = new Girl("Dating Girl", SimaDat.Models.Enums.FriendshipLevels.Friend);
@@ -30,6 +32,7 @@ namespace SimaDatConsole
 			menu.Add("Quit dating", () => { isDating = false; }, ConsoleColor.DarkYellow);
 			foreach (var a in actions)
 			{
+				errorMsg = "";
 				menu.Add(a.Name, () => {
 					if (a is ActionToPresent actionToPresent)
 					{
@@ -39,23 +42,29 @@ namespace SimaDatConsole
 					{
 						try
 						{
-							_datingBll.Kiss();
+							_datingBll.Kiss(datingLocation);
 						}
 						catch (BadConditionException bcex)
 						{
-							Output.WriteLine(ConsoleColor.Red, bcex.Message);
+							errorMsg = bcex.Message;
 						}
 					}
 					else
 					{
-						Console.WriteLine("Do not know how to act `{0}`", a.Name);
+						errorMsg = $"Do not know how to act `{a.Name}`";
 					}
 				});
 			}
 
 			do
 			{
-				System.Console.WriteLine("Kiss point {0}", datingLocation.KissPoints);
+				Console.Clear();
+				Output.WriteLine(ConsoleColor.DarkGray, "Probability to kiss is: {0:0.000#}", ProbabilityCalculator.ProbabilityToKiss(me.Charm, g.FriendshipLevel));
+				if (String.IsNullOrEmpty(errorMsg) == false)
+				{
+					Output.WriteLine(ConsoleColor.Red, errorMsg);
+				}
+				Console.WriteLine("Kiss point {0}", datingLocation.KissPoints);
 				menu.Display();
 			} while (isDating);
 		}
