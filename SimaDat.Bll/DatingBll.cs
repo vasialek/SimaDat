@@ -1,15 +1,12 @@
-﻿using SimaDat.Models.Actions;
+﻿using SimaDat.Models;
+using SimaDat.Models.Actions;
 using SimaDat.Models.Characters;
 using SimaDat.Models.Datings;
 using SimaDat.Models.Enums;
 using SimaDat.Models.Exceptions;
 using SimaDat.Models.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SimaDat.Models.Items;
 
 namespace SimaDat.Bll
 {
@@ -49,6 +46,16 @@ namespace SimaDat.Bll
             return actions;
         }
 
+		public int IncreaseKissPoints(DatingLocation datingLocation, int kissPoints)
+		{
+			datingLocation.KissPoints += kissPoints;
+			if (datingLocation.KissPoints > MySettings.MaxKissPoints)
+			{
+				datingLocation.KissPoints = MySettings.MaxKissPoints;
+			}
+			return datingLocation.KissPoints;
+		}
+
 		public void JoinDating(Hero h, Girl g, DatingLocation datingLocation)
 		{
             if (h.Ttl < 1)
@@ -67,6 +74,7 @@ namespace SimaDat.Bll
             h.UseTtl(3);
             h.SpendMoney(datingLocation.Price);
 
+			datingLocation.KissPoints = 0;
             datingLocation.Hero = h;
 			datingLocation.Girl = g;
         }

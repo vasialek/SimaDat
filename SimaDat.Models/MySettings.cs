@@ -15,6 +15,8 @@ namespace SimaDat.Models
         public static readonly int MaxCharmForHero = 200;
         public static readonly int MaxStrengthForHero = 200;
 
+		public static readonly int MaxKissPoints = 50;
+
         public int GetLikesForFriendships(FriendshipLevels levelNeeded)
         {
             switch (levelNeeded)

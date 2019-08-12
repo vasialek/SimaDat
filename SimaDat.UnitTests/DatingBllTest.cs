@@ -96,11 +96,30 @@ namespace SimaDat.UnitTests
             _me.Ttl.Should().BeLessThan(v);
         }
 
-        #endregion
+		[TestMethod]
+		public void JoinDating_MoneyShouldBeSpent()
+		{
+			int v = _me.Money;
 
-        #region Dating location state
+			_bll.JoinDating(_me, _laura, _location);
+			//
+			_me.Money.Should().Be(v - _location.Price);
+		}
 
-        [TestMethod]
+		[TestMethod]
+		public void JoinDating_KissPointsIsZero()
+		{
+			_location.KissPoints = 3;
+			_bll.JoinDating(_me, _laura, _location);
+
+			_location.KissPoints.Should().Be(0);
+		}
+
+		#endregion
+
+		#region Dating location state
+
+		[TestMethod]
         public void JoinDating_LocationShouldBeCreated()
         {
             var datingLocation = PrepareDatingLocation();
@@ -295,9 +314,36 @@ namespace SimaDat.UnitTests
             _bll.Kiss(datingLocation);
         }
 
-        #endregion
+		#endregion
 
-        private DatingLocation PrepareDatingLocation(Gift giftToAdd = null)
+		#region Increase kiss points
+
+		[TestMethod]
+		public void IncreaseKissPoints_ShouldBeIncreased_WhenGiftPresented()
+		{
+			var datingLocation = PrepareDatingLocation(_giftFlower);
+			int kp = datingLocation.KissPoints;
+
+			_bll.IncreaseKissPoints(datingLocation, 1);
+
+			// Expecting flower makes girl more happy
+			datingLocation.KissPoints.Should().BeGreaterThan(kp);
+		}
+
+		[TestMethod]
+		public void IncreaseKissPoints_NotIncreased_WhenMaxIsReached()
+		{
+			var datingLocation = PrepareDatingLocation();
+
+			_bll.IncreaseKissPoints(datingLocation, MySettings.MaxKissPoints + 1);
+
+			// Should not exceed max
+			datingLocation.KissPoints.Should().Be(MySettings.MaxKissPoints);
+		}
+
+		#endregion
+
+		private DatingLocation PrepareDatingLocation(Gift giftToAdd = null)
         {
             _me.SpendMoney(-_location.Price);
             _bll.JoinDating(_me, _laura, _location);
@@ -317,16 +363,6 @@ namespace SimaDat.UnitTests
                 _me.Gifts.Add(_giftDiamondRing);
 				_bll.Present(datingLocation, _giftDiamondRing.GiftTypeId);
 			}
-        }
-
-        [TestMethod]
-        public void JoinDating_MoneyShouldBeSpent()
-        {
-            int v = _me.Money;
-
-            _bll.JoinDating(_me, _laura, _location);
-            //
-            _me.Money.Should().Be(v - _location.Price);
         }
 
         #region Actions

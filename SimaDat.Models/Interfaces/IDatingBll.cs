@@ -17,6 +17,8 @@ namespace SimaDat.Models.Interfaces
 
         void Kiss(DatingLocation datingLocation);
 
+		int IncreaseKissPoints(DatingLocation datingLocation, int kissPoints);
+
         IEnumerable<ActionToDo> GetHeroActions(DatingLocation loc);
 
 		void Present(DatingLocation loc, GiftTypes gift);
