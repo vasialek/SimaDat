@@ -1,13 +1,10 @@
-﻿using SimaDat.Models.Interfaces;
-using System;
+﻿using SimaDat.Models.Characters;
+using SimaDat.Models.Enums;
+using SimaDat.Models.Exceptions;
+using SimaDat.Models.Interfaces;
+using SimaDat.Models.Items;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SimaDat.Models.Items;
-using SimaDat.Models.Characters;
-using SimaDat.Models.Exceptions;
-using SimaDat.Models.Enums;
 
 namespace SimaDat.Bll
 {
@@ -29,16 +26,12 @@ namespace SimaDat.Bll
         public Gift GetGiftById(int giftId)
         {
             var g = GetListOfGifts().FirstOrDefault(x => x.GiftId == giftId);
-            if (g == null)
-            {
-                throw new ObjectDoesNotExistException("No such gift found", giftId);
-            }
-            return g;
+            return g ?? throw new ObjectDoesNotExistException("No such gift found", giftId);
         }
 
         public IEnumerable<Gift> GetListOfGifts()
         {
-            return new Gift[]
+            return new[]
             {
                 new Gift { GiftId = 1, GiftTypeId = GiftTypes.Flower, Name = "Flower", Price = 10, FirendshipPoints = 3 },
                 new Gift { GiftId = 2, GiftTypeId = GiftTypes.TeddyBear, Name = "Teddy bear", Price = 40, FirendshipPoints = 15 },

@@ -1,21 +1,15 @@
-﻿using System;
+﻿using SimaDat.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using SimaDat.Models;
 
 namespace SimaData.Dal
 {
-
     public interface ILocationDal
     {
         IList<Location> GetAllLocations();
 
         void CreateLocation(Location location);
 
-        /// <summary>
-        /// Removes all locations
-        /// </summary>
         void Clear();
     }
 
@@ -23,9 +17,6 @@ namespace SimaData.Dal
     {
         private IList<Location> _locations = new List<Location>();
 
-        /// <summary>
-        /// Removes all locations
-        /// </summary>
         public void Clear()
         {
             _locations?.Clear();

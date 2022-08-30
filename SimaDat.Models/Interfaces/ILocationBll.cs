@@ -31,10 +31,6 @@ namespace SimaDat.Models.Interfaces
 
         Characters.Girl GetOwnerOfLocation(int locationId);
 
-        /*
-         * Maintain
-         */
-        // Clear all locations
         void Clear();
     }
 }

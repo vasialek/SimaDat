@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using SimaDat.Models;
-using SimaDat.Models.Enums;
-using SimaDat.Models.Exceptions;
-using SimaData.Dal;
-using SimaDat.Models.Interfaces;
+﻿using SimaDat.Models;
 using SimaDat.Models.Actions;
 using SimaDat.Models.Characters;
+using SimaDat.Models.Enums;
+using SimaDat.Models.Exceptions;
+using SimaDat.Models.Interfaces;
+using SimaData.Dal;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SimaDat.Bll
 {
-
     public class LocationBll : ILocationBll
     {
-        private ICharactersBll _characterBll = null;
-        private ILocationDal _locationDal = null;
-        private IShopBll _shopBll = null;
+        private readonly ICharactersBll _characterBll = null;
+        private readonly ILocationDal _locationDal = null;
 
         public LocationBll(ICharactersBll characterBll, ILocationDal locationDal)
             : this(characterBll, locationDal, null)
@@ -27,7 +25,6 @@ namespace SimaDat.Bll
         {
             _characterBll = characterBll ?? throw new ArgumentNullException(nameof(characterBll));
             _locationDal = locationDal ?? throw new ArgumentNullException(nameof(locationDal));
-            _shopBll = shopBll ?? BllFactory.Current.ShopBll;
         }
 
         public IList<ActionToDo> GetPossibleActions(Location location)
@@ -39,7 +36,6 @@ namespace SimaDat.Bll
                 var loc = GetLocationById(d.LocationToGoId);
                 actions.Add(new ActionToMove($"Move to {d.Direction} for {loc.Name} ({d.LocationToGoId})", d.LocationToGoId));
             }
-
 
             return actions;
         }
@@ -82,20 +78,16 @@ namespace SimaDat.Bll
                 throw new DirectionInUseException("There is already door at direction: " + doorsAt);
             }
             // Ensure we could go back in same door and no door exists
-            Directions oppositeDirection = GetOppositeDirection(doorsAt);
+            var oppositeDirection = GetOppositeDirection(doorsAt);
             if (to.GetDoorAtDirection(oppositeDirection) != null)
             {
                 throw new DirectionInUseException("There is door from other location to this");
             }
 
-            var d = new Location.Door();
-            d.LocationToGoId = to.LocationId;
-            d.Direction = doorsAt;
+            var d = new Location.Door { LocationToGoId = to.LocationId, Direction = doorsAt };
             from.Doors.Add(d);
 
-            d = new Location.Door();
-            d.LocationToGoId = from.LocationId;
-            d.Direction = oppositeDirection;
+            d = new Location.Door { LocationToGoId = @from.LocationId, Direction = oppositeDirection };
             to.Doors.Add(d);
         }
 
@@ -138,23 +130,29 @@ namespace SimaDat.Bll
                 case "gym":
                     actions.Add(new ActionToImprove("Improve your strength", HeroSkills.Strength, 5, 1));
                     break;
+
                 case "pub":
                     actions.Add(new ActionToImprove("Improve charm", HeroSkills.Charm, 3, 1, 10));
                     break;
+
                 case "school":
                     actions.Add(new ActionToImprove("Improve IQ", HeroSkills.Iq, 4, 2));
                     break;
+
                 case "library":
                     actions.Add(new ActionToImprove("Improve IQ", HeroSkills.Iq, 4, 1));
                     break;
+
                 case "home":
                     actions.Add(new ActionToRest());
                     break;
+
                 case "dock":
                     var dw = new ActionToWork("Move boxes", 4, 10);
                     dw.SetBonus(HeroSkills.Strength, 1);
                     actions.Add(dw);
                     break;
+
                 case "bazaar":
                     var bw = new ActionToWork("Sell samshit", 5, 20);
                     bw.SetPenalty(HeroSkills.Iq, 1);
@@ -166,6 +164,7 @@ namespace SimaDat.Bll
                         actions.Add(new ActionToBuy(g));
                     }
                     break;
+
                 case "cafe":
                     var cw = new ActionToWork("Work in cafe", 6, 10);
                     cw.SetBonus(HeroSkills.Charm, 1);

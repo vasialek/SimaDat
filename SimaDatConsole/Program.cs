@@ -8,17 +8,16 @@ using System;
 
 namespace SimaDatConsole
 {
-	class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             bool isRunning = true;
             var menu = new Menu();
             var locationBll = BllFactory.Current.LocationBll;
             var heroBll = BllFactory.Current.HeroBll;
             var charactersBll = BllFactory.Current.CharactersBll;
-			var datingBll = BllFactory.Current.DatingBll;
-
+            var datingBll = BllFactory.Current.DatingBll;
 
             try
             {
@@ -117,7 +116,6 @@ namespace SimaDatConsole
                     return (int)anna.FriendshipLevel >= (int)FriendshipLevels.Familar;
                 });
 
-
                 var me = new Hero();
                 me.Name = "Lekha";
                 me.CurrentLocationId = home.LocationId;
@@ -130,9 +128,8 @@ namespace SimaDatConsole
                 }
 
                 var console = new SdConsole(me, locationBll, charactersBll);
-				var datingConsole = new DatingConsole(datingBll);
-				var testDatingLocation = new DatingLocation("Test dating place", 100);
-
+                var datingConsole = new DatingConsole(datingBll);
+                var testDatingLocation = new DatingLocation("Test dating place", 100);
 
                 menu.Add("Exit", () => { isRunning = false; }, ConsoleColor.Red);
                 menu.Add("Hero menu", () => { console.HeroMenu(); }, ConsoleColor.Green);
@@ -141,13 +138,12 @@ namespace SimaDatConsole
                 menu.Add("Improve hero", () => { console.ImproveHero(); });
                 menu.Add("Display locations", () => { console.DisplayLocations(); });
                 menu.Add("Display girls", () => { console.DisplayGirls(); });
-				menu.Add($"Date with ", () => { datingConsole.DoDating(testDatingLocation, me); });
+                menu.Add($"Date with ", () => { datingConsole.DoDating(testDatingLocation, me); });
 
                 do
                 {
                     menu.Display();
                 } while (isRunning);
-
             }
             catch (Exception ex)
             {

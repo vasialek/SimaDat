@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AvUtils
 {
-
     /// <summary>
     /// Class to display text-based menu in console application.
     /// <code>new Menu().Add("Print", () => { Console.WriteLine("Hello, menu"); }).Display();</code>
     /// </summary>
     public class Menu
     {
-        private IList<Option> Options { get; set; }
+        private IList<Option> Options { get; }
 
         public Menu()
         {
@@ -33,7 +30,7 @@ namespace AvUtils
                 }
                 else
                 {
-                    Console.WriteLine("{0,2}. {1}", i + 1, Options[i].Name); 
+                    Console.WriteLine("{0,2}. {1}", i + 1, Options[i].Name);
                 }
             }
             Console.WriteLine();
@@ -74,7 +71,6 @@ namespace AvUtils
 
     public static class Input
     {
-
         public static ConsoleKeyInfo ReadKey(string prompt = "Press any key to continue . . .")
         {
             Output.DisplayPrompt(prompt);
@@ -114,7 +110,7 @@ namespace AvUtils
                 }
 
                 input = Console.ReadLine();
-                if (String.IsNullOrEmpty(input) && defaultValue.HasValue)
+                if (string.IsNullOrEmpty(input) && defaultValue.HasValue)
                 {
                     return defaultValue.Value;
                 }
@@ -142,8 +138,8 @@ namespace AvUtils
             string s = null;
             do
             {
-                s = Input.ReadString(prompt);
-                if (String.IsNullOrEmpty(s) && defaultDate.HasValue)
+                s = ReadString(prompt);
+                if (string.IsNullOrEmpty(s) && defaultDate.HasValue)
                 {
                     return defaultDate.Value;
                 }
@@ -153,12 +149,11 @@ namespace AvUtils
 
         public static bool ReadBool(string prompt)
         {
-            bool? b = null; ;
-            string s;
+            bool? b = null;
 
             do
             {
-                s = Input.ReadString(prompt);
+                var s = ReadString(prompt);
                 switch (s.ToLower())
                 {
                     case "y":
@@ -166,6 +161,7 @@ namespace AvUtils
                     case "t":
                         b = true;
                         break;
+
                     case "n":
                     case "no":
                     case "f":
@@ -177,7 +173,6 @@ namespace AvUtils
             return b.Value;
         }
     }
-
 
     public static class Output
     {
@@ -202,7 +197,7 @@ namespace AvUtils
 
         public static void DisplayPrompt(string format, params object[] args)
         {
-            format = String.Concat(format.Trim(), " ");
+            format = $"{format.Trim()} ";
             Console.Write(format, args);
         }
 
@@ -215,9 +210,10 @@ namespace AvUtils
     public class Option
     {
         public string Name { get; private set; }
-        public Action Callback { get; private set; }
 
-        public ConsoleColor Color { get; set; } = ConsoleColor.White;
+        public Action Callback { get; }
+
+        public ConsoleColor Color { get; set; }
 
         public Option(string name, Action callback)
             : this(name, callback, ConsoleColor.White)
@@ -241,5 +237,4 @@ namespace AvUtils
             return Name;
         }
     }
-
 }

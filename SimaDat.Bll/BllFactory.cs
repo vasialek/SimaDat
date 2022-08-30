@@ -1,14 +1,8 @@
 ﻿using SimaDat.Models.Interfaces;
 using SimaData.Dal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SimaDat.Bll
 {
-
     public class BllFactory
     {
         private static BllFactory _bllFactory = null;
@@ -18,10 +12,10 @@ namespace SimaDat.Bll
         private ICharactersBll _charactersBll = null;
         private IShopBll _shopBll = null;
         private IProbabilityBll _possibilityBll = null;
-		private IDatingBll _datingBll = null;
-		private IRandomProvider _randomProvider = null;
+        private IDatingBll _datingBll = null;
+        private IRandomProvider _randomProvider = null;
 
-		public static BllFactory Current
+        public static BllFactory Current
         {
             get
             {
@@ -87,26 +81,26 @@ namespace SimaDat.Bll
             {
                 if (_possibilityBll == null)
                 {
-                    _possibilityBll = new ProbabilityBll();
+                    _possibilityBll = new ProbabilityBll(Current.RandomProvider);
                 }
                 return _possibilityBll;
             }
         }
 
-		public IDatingBll DatingBll
-		{
-			get
-			{
-				return _datingBll ?? (_datingBll = new DatingBll());
-			}
-		}
+        public IDatingBll DatingBll
+        {
+            get
+            {
+                return _datingBll ?? (_datingBll = new DatingBll());
+            }
+        }
 
-		public IRandomProvider RandomProvider
-		{
-			get
-			{
-				return _randomProvider ?? (_randomProvider = new RandomProvider());
-			}
-		}
-	}
+        public IRandomProvider RandomProvider
+        {
+            get
+            {
+                return _randomProvider ?? (_randomProvider = new RandomProvider());
+            }
+        }
+    }
 }

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SimaDat.Models.Enums;
+﻿using SimaDat.Models.Enums;
 using SimaDat.Models.Items;
+using System.Collections.Generic;
 
 namespace SimaDat.Models.Characters
 {
@@ -16,9 +12,6 @@ namespace SimaDat.Models.Characters
 
         public string Name { get; set; }
 
-        /// <summary>
-        /// Where are am I
-        /// </summary>
         public int CurrentLocationId { get; set; }
 
         public int Money { get; private set; }
@@ -43,9 +36,6 @@ namespace SimaDat.Models.Characters
             Gifts = new List<Gift>();
         }
 
-        /// <summary>
-        /// Resets TTL to max
-        /// </summary>
         public void ResetTtl()
         {
             Ttl = MySettings.MaxTtlForHero;
@@ -62,16 +52,17 @@ namespace SimaDat.Models.Characters
             {
                 case HeroSkills.None:
                     break;
+
                 case HeroSkills.Iq:
                     Iq = ModifyInRange(Iq, improvementPoints, 0, MySettings.MaxIqForHero);
                     break;
+
                 case HeroSkills.Strength:
                     Strength = ModifyInRange(Strength, improvementPoints, 0, MySettings.MaxStrengthForHero);
                     break;
+
                 case HeroSkills.Charm:
                     Charm = ModifyInRange(Charm, improvementPoints, 0, MySettings.MaxCharmForHero);
-                    break;
-                default:
                     break;
             }
         }

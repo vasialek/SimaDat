@@ -1,37 +1,34 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SimaDat.Models.Interfaces;
-using SimaDat.Models.Characters;
-using SimaDat.Models.Exceptions;
-using FluentAssertions;
-using SimaDat.Models;
+﻿using FluentAssertions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimaDat.Bll;
-using SimaData.Dal;
-using SimaDat.UnitTests.FakeClasses;
+using SimaDat.Models;
 using SimaDat.Models.Actions;
-using System.Linq;
+using SimaDat.Models.Characters;
 using SimaDat.Models.Enums;
+using SimaDat.Models.Exceptions;
+using SimaDat.Models.Interfaces;
+using SimaDat.UnitTests.FakeClasses;
+using SimaData.Dal;
+using System.Linq;
 
 namespace SimaDat.UnitTests
 {
-    /// <summary>
-    /// Summary description for HeroBllTest
-    /// </summary>
     [TestClass]
     public class HeroBllTest
     {
-        private Hero _hero = null;
-        private IHeroBll _heroBll = Bll.BllFactory.Current.HeroBll;
-        private ILocationBll _locationBll = new LocationBll(BllFactory.Current.CharactersBll, DalFactory.Current.LocationDal);
+        private Hero _hero;
+        private readonly IHeroBll _heroBll = BllFactory.Current.HeroBll;
+        private readonly ILocationBll _locationBll = new LocationBll(BllFactory.Current.CharactersBll, DalFactory.Current.LocationDal);
 
-        private Location _from = new Location(1, "From");
-        private Location _to = new Location(2, "To");
+        private readonly Location _from = new Location(1, "From");
+        private readonly Location _to = new Location(2, "To");
 
-        private ActionToImprove _improveIq = null;
-        private ActionToImprove _improveStrength = null;
-        private ActionToImprove _improveCharm = null;
-        private ActionToRest _sleepAction = null;
-        private ActionToWork _workAction = null;
-        private ActionToBuy _buyAction = null;
+        private ActionToImprove _improveIq;
+        private ActionToImprove _improveStrength;
+        private ActionToImprove _improveCharm;
+        private ActionToRest _sleepAction;
+        private ActionToWork _workAction;
+        private ActionToBuy _buyAction;
 
         [TestInitialize]
         public void TestInit()
@@ -54,7 +51,6 @@ namespace SimaDat.UnitTests
             _locationBll.CreateLocation(_from);
             _locationBll.CreateLocation(_to);
 
-            // Set Hero in from
             _hero.CurrentLocationId = _from.LocationId;
         }
 
@@ -69,36 +65,22 @@ namespace SimaDat.UnitTests
             _hero.CurrentLocationId.Should().Be(_to.LocationId);
         }
 
-
         [TestMethod]
         [ExpectedException(typeof(CouldNotMoveException))]
         public void MoveTo_Exception_WhenMovingWithoutDoor()
         {
-            Location from = new Location();
-            Location to = new Location();
+            var from = new Location();
+            var to = new Location();
             _hero.CurrentLocationId = from.LocationId;
 
             // Expecting exception, that movement is not possible w/o door
             _heroBll.MoveTo(_hero, from, to);
         }
 
-        //[TestMethod]
-        //[ExpectedException(typeof(NoTtlException))]
-        //public void MoveTo_Exception_WhenNoTtl()
-        //{
-        //    // Expecting exception that Hero could not move - 0 TTL
-        //    HeroProxy hero = new HeroProxy();
-        //    hero.SetTtl(0);
-        //    hero.CurrentLocationId = _from.LocationId;
-
-        //    _heroBll.MoveTo(hero, _from, _to);
-        //}
-
         [TestMethod]
         [ExpectedException(typeof(ObjectNotHereException))]
         public void MoveTo_Exception_WhenHeroIsNotInLocationFrom()
         {
-            // Set hero not in from location
             _hero.CurrentLocationId = _from.LocationId + 100;
 
             // Expecting exception moving from wrong location
@@ -108,7 +90,7 @@ namespace SimaDat.UnitTests
         [TestMethod]
         public void MoveTo_BadLocationIdFrom()
         {
-            bool isOk = false;
+            var isOk = false;
 
             try
             {
@@ -125,7 +107,7 @@ namespace SimaDat.UnitTests
         [TestMethod]
         public void MoveTo_BadLocationIdTo()
         {
-            bool isOk = false;
+            var isOk = false;
 
             try
             {
@@ -139,7 +121,7 @@ namespace SimaDat.UnitTests
             isOk.Should().BeTrue("should be error that location to move to is incorrect.");
         }
 
-        #endregion
+        #endregion Movement
 
         #region Movement with enter condition
 
@@ -148,7 +130,7 @@ namespace SimaDat.UnitTests
         public void MoveTo_EnterIsNotPossible()
         {
             // Never allow to enter
-            _to.SetEnterCondition("XEP BAM", delegate(Hero h) { return false; });
+            _to.SetEnterCondition("XEP BAM", h => false);
 
             _heroBll.MoveTo(_hero, _from, _to);
         }
@@ -156,10 +138,10 @@ namespace SimaDat.UnitTests
         [TestMethod]
         public void MoveTo_CouldNotEnterOnSaturday()
         {
-            bool isOk = false;
-            string violateMessage = "Closed on weekend";
+            var isOk = false;
+            var violateMessage = "Closed on weekend";
             // Could not enter after Friday
-            _to.SetEnterCondition(violateMessage, delegate (Hero h) { return h.Calendar.WeekDay < 6; });
+            _to.SetEnterCondition(violateMessage, h => h.Calendar.WeekDay < 6);
             // Set Hero day to Saturday
             while (_hero.Calendar.WeekDay < 6)
             {
@@ -185,22 +167,20 @@ namespace SimaDat.UnitTests
             var girl = new Girl("Laura");
             BllFactory.Current.CharactersBll.CreateGirl(girl);
             _to.OwnerId = girl.CharacterId;
-            _to.SetEnterCondition($"You should reach next level of friendship to enter home of {girl.Name}.", (Hero h) => {
-                //var owner = BllFactory.Current.LocationBll.GetOwnerOfLocation(_to.LocationId);
-                return ((int)girl.FriendshipLevel >= (int)FriendshipLevels.SawHimSomewhere);
-            });
+            _to.SetEnterCondition($"You should reach next level of friendship to enter home of {girl.Name}.",
+                h => ((int)girl.FriendshipLevel >= (int)FriendshipLevels.SawHimSomewhere));
 
             _heroBll.MoveTo(_hero, _from, _to);
         }
 
-        #endregion
+        #endregion Movement with enter condition
 
         #region Jump to
 
         [TestMethod]
         public void JumpTo_TtlDecreaseToOne()
         {
-            int v = _hero.Ttl;
+            var v = _hero.Ttl;
 
             _heroBll.JumpTo(_hero, _to);
 
@@ -224,7 +204,7 @@ namespace SimaDat.UnitTests
             _heroBll.JumpTo(_hero, _to);
         }
 
-        #endregion
+        #endregion Jump to
 
         #region Improvement
 
@@ -232,7 +212,7 @@ namespace SimaDat.UnitTests
         [ExpectedException(typeof(NoTtlException))]
         public void Improve_HeroShouldHaveTtl()
         {
-            HeroProxy hero = new HeroProxy();
+            var hero = new HeroProxy();
             hero.SetTtl(0);
 
             // Expecting exception when no TTL to improve
@@ -242,7 +222,6 @@ namespace SimaDat.UnitTests
         [TestMethod]
         public void Improve_TtlIsReducedAfterImprovement()
         {
-            // Restore TTL
             _heroBll.Sleep(_hero);
 
             _heroBll.Improve(_hero, _improveIq);
@@ -253,9 +232,8 @@ namespace SimaDat.UnitTests
         [TestMethod]
         public void Improve_IqShouldIncrease()
         {
-            // Restore TTL
             _heroBll.Sleep(_hero);
-            int v = _hero.Iq;
+            var v = _hero.Iq;
 
             _heroBll.Improve(_hero, _improveIq);
 
@@ -265,9 +243,8 @@ namespace SimaDat.UnitTests
         [TestMethod]
         public void Improve_StrengthShouldIncrease()
         {
-            // Restore TTL
             _heroBll.Sleep(_hero);
-            int v = _hero.Strength;
+            var v = _hero.Strength;
 
             _heroBll.Improve(_hero, _improveStrength);
 
@@ -278,9 +255,8 @@ namespace SimaDat.UnitTests
         [ExpectedException(typeof(NoMoneyException))]
         public void Improve_NoMoneyException_Charm()
         {
-            // Restore TTL
             _heroBll.Sleep(_hero);
-            int v = _hero.Charm;
+            var v = _hero.Charm;
 
             _heroBll.Improve(_hero, _improveCharm);
         }
@@ -288,11 +264,9 @@ namespace SimaDat.UnitTests
         [TestMethod]
         public void Improve_CharmShouldIncrease()
         {
-            // Restore TTL
             _heroBll.Sleep(_hero);
-            // Add enough money
             _hero.SpendMoney(-_improveCharm.MoneyToSpent);
-            int v = _hero.Charm;
+            var v = _hero.Charm;
 
             _heroBll.Improve(_hero, _improveCharm);
 
@@ -302,11 +276,9 @@ namespace SimaDat.UnitTests
         [TestMethod]
         public void Improve_MoneyShouldDecrease_Charm()
         {
-            // Restore TTL
             _heroBll.Sleep(_hero);
-            // Add enough money
             _hero.SpendMoney(-1000);
-            int v = _hero.Money;
+            var v = _hero.Money;
 
             _heroBll.Improve(_hero, _improveCharm);
 
@@ -314,7 +286,7 @@ namespace SimaDat.UnitTests
             _hero.Money.Should().Be(v - _improveCharm.MoneyToSpent);
         }
 
-        #endregion
+        #endregion Improvement
 
         #region Sleep
 
@@ -329,7 +301,7 @@ namespace SimaDat.UnitTests
         [TestMethod]
         public void Sleep_ChangeDay()
         {
-            int v = _hero.Calendar.Day;
+            var v = _hero.Calendar.Day;
 
             _heroBll.Sleep(_hero);
 
@@ -337,14 +309,14 @@ namespace SimaDat.UnitTests
             _hero.Calendar.Day.Should().BeGreaterThan(v);
         }
 
-        #endregion
+        #endregion Sleep
 
         #region Work
 
         [TestMethod]
         public void Work_DescreaseTtl()
         {
-            int v = _hero.Ttl;
+            var v = _hero.Ttl;
 
             _heroBll.Work(_hero, _workAction);
 
@@ -354,7 +326,7 @@ namespace SimaDat.UnitTests
         [TestMethod]
         public void Work_EarnMoney()
         {
-            int v = _hero.Money;
+            var v = _hero.Money;
 
             _heroBll.Work(_hero, _workAction);
 
@@ -370,8 +342,7 @@ namespace SimaDat.UnitTests
             _heroBll.Work(_hero, _workAction);
         }
 
-        #endregion
-
+        #endregion Work
 
         #region Penalty for work/job
 
@@ -379,21 +350,18 @@ namespace SimaDat.UnitTests
         public void Work_DecreaseIq_WhenPenaltyIs()
         {
             _hero.ModifySkill(HeroSkills.Iq, 100);
-            int v = _hero.Iq;
-            int penalty = 1;
-            _workAction.SetPenalty(HeroSkills.Iq, penalty);
+            _workAction.SetPenalty(HeroSkills.Iq, 1);
 
             _heroBll.Work(_hero, _workAction);
 
             // Expecting IQ to decrease by penalty
-            _hero.Iq.Should().Be(v - penalty);
+            _hero.Iq.Should().Be(99);
         }
 
         [TestMethod]
-        public void Work_NoDecreaseIq_WhenIqIsZerro()
+        public void Work_NoDecreaseIq_WhenIqIsZero()
         {
-            int penalty = 1000;
-            _workAction.SetPenalty(HeroSkills.Iq, penalty);
+            _workAction.SetPenalty(HeroSkills.Iq, 1000);
 
             _heroBll.Work(_hero, _workAction);
 
@@ -401,15 +369,15 @@ namespace SimaDat.UnitTests
             _hero.Iq.Should().BeGreaterOrEqualTo(0);
         }
 
-        #endregion
+        #endregion Penalty for work/job
 
         #region Bonus for job/work
 
         [TestMethod]
         public void Work_IncreaseCharm_WhenBonusIs()
         {
-            int bonus = 1;
-            int v = _hero.Charm;
+            var bonus = 1;
+            var v = _hero.Charm;
             _workAction.SetBonus(HeroSkills.Charm, bonus);
 
             _heroBll.Work(_hero, _workAction);
@@ -417,27 +385,31 @@ namespace SimaDat.UnitTests
             _hero.Charm.Should().Be(v + bonus);
         }
 
-        #endregion
+        #endregion Bonus for job/work
 
         #region Actions
 
         [TestMethod]
         public void ApplyAction_MoveHero()
         {
-            Location.Door d = _from.Doors.First();
-            var a = new ActionToMove($"Move to {d.Direction} for {d.LocationToGoId}", d.LocationToGoId);
+            var door = _from.Doors.First();
+            var act = new ActionToMove($"Move to {door.Direction} for {door.LocationToGoId}", door.LocationToGoId);
 
-            _heroBll.ApplyAction(_hero, a);
+            _heroBll.ApplyAction(_hero, act);
 
-            _hero.CurrentLocationId.Should().Be(d.LocationToGoId);
+            _hero.CurrentLocationId.Should().Be(door.LocationToGoId);
         }
 
         [TestMethod]
         public void ApplyAction_ImproveCharm_Ok()
         {
-            var a = new ActionToImprove("Improve charm", HeroSkills.Charm, 4, 10);
+            var expected = _hero.Charm + 10;
+            var act = new ActionToImprove("Improve charm", HeroSkills.Charm, 4, 10);
 
-            _heroBll.ApplyAction(_hero, a);
+            _heroBll.ApplyAction(_hero, act);
+
+            _hero.Charm.Should().Be(expected);
+            _hero.Ttl.Should().Be(MySettings.MaxTtlForHero - 4);
         }
 
         [TestMethod]
@@ -462,6 +434,6 @@ namespace SimaDat.UnitTests
             _hero.Gifts.Should().HaveCount(1);
         }
 
-        #endregion
+        #endregion Actions
     }
 }

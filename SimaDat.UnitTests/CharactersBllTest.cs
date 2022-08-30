@@ -1,13 +1,11 @@
-﻿using System;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SimaDat.Models.Interfaces;
 using SimaDat.Bll;
-using SimaDat.Models.Characters;
-using FluentAssertions;
-using System.Linq;
-using SimaDat.Models.Exceptions;
 using SimaDat.Models;
+using SimaDat.Models.Characters;
 using SimaDat.Models.Enums;
+using SimaDat.Models.Exceptions;
+using SimaDat.Models.Interfaces;
 using SimaDat.Models.Items;
 
 namespace SimaDat.UnitTests
@@ -15,12 +13,12 @@ namespace SimaDat.UnitTests
     [TestClass]
     public class CharactersBllTest
     {
-        private ICharactersBll _bll = null;
-        private Girl _laura = null;
-        private Girl _girlFamilar = null;
-        private Girl _girlFriend = null;
-        private Hero _me = null;
-        private Gift _gift = null;
+        private ICharactersBll _bll;
+        private Girl _laura;
+        private Girl _girlFamiliar;
+        private Girl _girlFriend;
+        private Hero _me;
+        private Gift _gift;
 
         [TestInitialize]
         public void TestInit()
@@ -44,8 +42,8 @@ namespace SimaDat.UnitTests
             };
 
             // Familar girl in the same location as Hero
-            _girlFamilar = new Girl("Familar girl", FriendshipLevels.Familar);
-            _girlFamilar.CurrentLocationId = _me.CurrentLocationId;
+            _girlFamiliar = new Girl("Familar girl", FriendshipLevels.Familar);
+            _girlFamiliar.CurrentLocationId = _me.CurrentLocationId;
 
             // Friend girl in the same location as Hero
             _girlFriend = new Girl("Friend girl", FriendshipLevels.Friend);
@@ -81,7 +79,7 @@ namespace SimaDat.UnitTests
             girls.Should().HaveCount(1);
         }
 
-        #endregion
+        #endregion Create girl
 
         #region Say hi
 
@@ -128,7 +126,7 @@ namespace SimaDat.UnitTests
             _laura.HeroLikes.Should().BeGreaterThan(heroLikes);
         }
 
-        #endregion
+        #endregion Say hi
 
         #region Talk with Girl
 
@@ -186,7 +184,7 @@ namespace SimaDat.UnitTests
             girl.HeroLikes.Should().BeGreaterThan(likes);
         }
 
-        #endregion
+        #endregion Talk with Girl
 
         #region Friendship levels
 
@@ -205,7 +203,7 @@ namespace SimaDat.UnitTests
             _laura.FriendshipLevel.Should().Be(FriendshipLevels.SawHimSomewhere);
         }
 
-        #endregion
+        #endregion Friendship levels
 
         #region Gifts for girl
 
@@ -247,9 +245,9 @@ namespace SimaDat.UnitTests
             _gift.FirendshipPoints = likesForFriend - likesForFamilar + 1;
             _me.Gifts.Add(_gift);
 
-            _bll.Present(_me, _girlFamilar, _gift.GiftTypeId);
+            _bll.Present(_me, _girlFamiliar, _gift.GiftTypeId);
 
-            _girlFamilar.FriendshipLevel.Should().Be(FriendshipLevels.Friend);
+            _girlFamiliar.FriendshipLevel.Should().Be(FriendshipLevels.Friend);
         }
 
         [TestMethod]
@@ -257,7 +255,7 @@ namespace SimaDat.UnitTests
         {
             _me.Gifts.Add(_gift);
 
-            _bll.Present(_me, _girlFamilar, _gift.GiftTypeId);
+            _bll.Present(_me, _girlFamiliar, _gift.GiftTypeId);
 
             // Gift is moved to girl
             _me.Gifts.Should().HaveCount(0);
@@ -269,7 +267,7 @@ namespace SimaDat.UnitTests
             _me.Gifts.Add(_gift);
             int v = _me.Ttl;
 
-            _bll.Present(_me, _girlFamilar, _gift.GiftTypeId);
+            _bll.Present(_me, _girlFamiliar, _gift.GiftTypeId);
 
             // TTL should be decreased
             _me.Ttl.Should().BeLessThan(v);
@@ -282,10 +280,10 @@ namespace SimaDat.UnitTests
             _me.Gifts.Add(_gift);
             _me.UseTtl(MySettings.MaxTtlForHero);
 
-            _bll.Present(_me, _girlFamilar, _gift.GiftTypeId);
+            _bll.Present(_me, _girlFamiliar, _gift.GiftTypeId);
         }
 
-        #endregion
+        #endregion Gifts for girl
 
         #region Ask dating
 
@@ -312,7 +310,7 @@ namespace SimaDat.UnitTests
         [ExpectedException(typeof(FriendshipLeveTooLowException))]
         public void AskDating_Exception_WhenGirlIsNotFriend()
         {
-            _bll.AskDating(_me, _girlFamilar);
+            _bll.AskDating(_me, _girlFamiliar);
         }
 
         [TestMethod]
@@ -326,6 +324,6 @@ namespace SimaDat.UnitTests
             _me.Ttl.Should().BeLessThan(v);
         }
 
-        #endregion
+        #endregion Ask dating
     }
 }

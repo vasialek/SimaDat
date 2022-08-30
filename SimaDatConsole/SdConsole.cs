@@ -10,32 +10,19 @@ using System.Text;
 
 namespace SimaDatConsole
 {
-	internal class SdConsole
+    internal class SdConsole
     {
-        private Hero _hero = null;
-        private ILocationBll _locationBll = null;
-        private ICharactersBll _charsBll = null;
-        private IHeroBll _heroBll = null;
-        private Dumper _dumper = new Dumper();
+        private readonly Hero _hero;
+        private readonly ILocationBll _locationBll;
+        private readonly ICharactersBll _charactersBll;
+        private readonly IHeroBll _heroBll;
+        private readonly Dumper _dumper = new Dumper();
 
         public SdConsole(Hero hero, ILocationBll locationBll, ICharactersBll charsBll)
         {
-            if (hero == null)
-            {
-                throw new ArgumentNullException(nameof(hero));
-            }
-            if (locationBll == null)
-            {
-                throw new ArgumentNullException(nameof(locationBll));
-            }
-            if (charsBll == null)
-            {
-                throw new ArgumentNullException(nameof(charsBll));
-            }
-
-            _hero = hero;
-            _locationBll = locationBll;
-            _charsBll = charsBll;
+            _hero = hero ?? throw new ArgumentNullException(nameof(hero));
+            _locationBll = locationBll ?? throw new ArgumentNullException(nameof(locationBll));
+            _charactersBll = charsBll ?? throw new ArgumentNullException(nameof(charsBll));
             _heroBll = SimaDat.Bll.BllFactory.Current.HeroBll;
         }
 
@@ -66,7 +53,7 @@ namespace SimaDatConsole
 
         public void DisplayGirls()
         {
-            var girls = _charsBll.GetAll();
+            var girls = _charactersBll.GetAll();
             for (int i = 0; i < girls?.Count; i++)
             {
                 Output.WriteLine(_dumper.Dump(girls[i]));
@@ -89,7 +76,8 @@ namespace SimaDatConsole
                     menu.Add("Back to main menu", () => { isRunning = false; }, ConsoleColor.DarkYellow);
                     foreach (var d in currentLocation.Doors)
                     {
-                        menu.Add($"Move to {d.Direction} to location #{d.LocationToGoId}", () => {
+                        menu.Add($"Move to {d.Direction} to location #{d.LocationToGoId}", () =>
+                        {
                             var locationToGo = _locationBll.GetLocationById(d.LocationToGoId);
                             _heroBll.MoveTo(_hero, currentLocation, locationToGo);
                         });
@@ -134,7 +122,7 @@ namespace SimaDatConsole
                     Output.WriteLine("You are in {0}", currentLocation.Name);
                     var actions = _locationBll.GetPossibleActions(currentLocation);
                     var skills = _locationBll.GetSkillsToImprove(currentLocation);
-                    var girls = _charsBll.FindInLocation(_hero.CurrentLocationId);
+                    var girls = _charactersBll.FindInLocation(_hero.CurrentLocationId);
 
                     var menu = new Menu();
 
@@ -149,7 +137,7 @@ namespace SimaDatConsole
                         foreach (var a in actions)
                         {
                             menu.Add(a.Name, () => { DoAction(a); });
-                        } 
+                        }
                     }
                     if (skills?.Count > 0)
                     {
@@ -159,20 +147,21 @@ namespace SimaDatConsole
                             {
                                 DoAction(s);
                             });
-                        } 
+                        }
                     }
                     if (girls?.Count > 0)
                     {
                         foreach (var g in girls)
                         {
                             menu.Add($"Girl {g.Name}, relations {g.FriendshipLevel}", () => { });
-                            menu.Add("    Say 'Hi'", () => { _charsBll.SayHi(_hero, g); });
-                            menu.Add("    Talk wit her", () => { _charsBll.Talk(_hero, g); });
-                            menu.Add($"    Present {GiftTypes.Flower}", () => { _charsBll.Present(_hero, g, GiftTypes.Flower); });
-                            menu.Add($"    Present {GiftTypes.TeddyBear}", () => { _charsBll.Present(_hero, g, GiftTypes.TeddyBear); });
-                            menu.Add($"    Present {GiftTypes.DiamondRing}", () => { _charsBll.Present(_hero, g, GiftTypes.DiamondRing); });
-                            menu.Add("    Ask dating", () => {
-                                if (_charsBll.AskDating(_hero, g))
+                            menu.Add("    Say 'Hi'", () => { _charactersBll.SayHi(_hero, g); });
+                            menu.Add("    Talk wit her", () => { _charactersBll.Talk(_hero, g); });
+                            menu.Add($"    Present {GiftTypes.Flower}", () => { _charactersBll.Present(_hero, g, GiftTypes.Flower); });
+                            menu.Add($"    Present {GiftTypes.TeddyBear}", () => { _charactersBll.Present(_hero, g, GiftTypes.TeddyBear); });
+                            menu.Add($"    Present {GiftTypes.DiamondRing}", () => { _charactersBll.Present(_hero, g, GiftTypes.DiamondRing); });
+                            menu.Add("    Ask dating", () =>
+                            {
+                                if (_charactersBll.AskDating(_hero, g))
                                 {
                                     msg = "You are dating";
                                 }
@@ -185,7 +174,6 @@ namespace SimaDatConsole
                     }
 
                     menu.Display();
-
                 }
                 catch (BadConditionException bcex)
                 {
@@ -229,7 +217,7 @@ namespace SimaDatConsole
                 }
                 else
                 {
-                    menu.Add(loc.Name, () => { _heroBll.JumpTo(_hero, loc);  });
+                    menu.Add(loc.Name, () => { _heroBll.JumpTo(_hero, loc); });
                 }
             }
 
@@ -262,7 +250,8 @@ namespace SimaDatConsole
                     {
                         foreach (var improve in improvementsAvailable)
                         {
-                            menu.Add($"{improve.Name} using {improve.TtlToUse} hours", () => {
+                            menu.Add($"{improve.Name} using {improve.TtlToUse} hours", () =>
+                            {
                                 //Bll.BllFactory.Current.HeroBll.Improve(_hero, improve as ActionToImprove);
                                 Output.WriteLine(ConsoleColor.Green, "You have improved {0}", improve);
                             });
@@ -270,7 +259,7 @@ namespace SimaDatConsole
                     }
                     else
                     {
-                        Output.WriteLine(ConsoleColor.Red, "No improvments are available her");
+                        Output.WriteLine(ConsoleColor.Red, "No improvments are available here");
                     }
 
                     menu.Display();

@@ -1,25 +1,24 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SimaData.Dal;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SimaDat.Bll;
 using SimaDat.Models;
 using SimaDat.Models.Characters;
 using SimaDat.Models.Interfaces;
-using SimaDat.Bll;
+using SimaData.Dal;
 
 namespace SimaDat.UnitTests
 {
     [TestClass]
     public class AdministrationWorkflowTests
     {
-        private Hero _hero = null;
-        private ILocationBll _locationBll = null;
-        private IHeroBll _heroBll = null;
+        private Hero _hero;
+        private ILocationBll _locationBll;
+        private IHeroBll _heroBll;
 
-        private Location _home = null;
-        private Location _square = null;
-        private Location _school = null;
-        private Location _pub = null;
-        private Location _gym = null;
+        private Location _home;
+        private Location _square;
+        private Location _school;
+        private Location _pub;
+        private Location _gym;
 
         [TestInitialize]
         public void Init()

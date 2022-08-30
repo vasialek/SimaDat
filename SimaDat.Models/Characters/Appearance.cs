@@ -1,9 +1,4 @@
 ﻿using SimaDat.Models.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SimaDat.Models.Characters
 {
@@ -19,10 +14,6 @@ namespace SimaDat.Models.Characters
 
         public int Hipp { get; set; }
 
-        public Appearance()
-        {
-        }
-
         public Appearance(int height, int bust, int waist, int hipp)
         {
             Height = height;
@@ -33,7 +24,7 @@ namespace SimaDat.Models.Characters
 
         public override string ToString()
         {
-            return String.Format("{0} cm. {1}-{2}-{3}. {4}", Height, Bust, Waist, Hipp, Hair);
+            return $"{Height} cm. {Bust}-{Waist}-{Hipp}. {Hair}";
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -17,18 +16,18 @@ namespace AvUtils
         {
             if (o == null)
             {
-                return String.Empty;
+                return string.Empty;
             }
 
-            if (o.GetType().IsPrimitive || o.GetType().Equals(typeof(String)))
+            if (o.GetType().IsPrimitive || o is string)
             {
                 return o.ToString();
             }
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             var properties = o.GetType().GetProperties();
-            string[] names = properties.Select(x => x.Name).ToArray();
+            var names = properties.Select(x => x.Name).ToArray();
             int maxNameLen = names.Select(x => x.Length).Max() + 1;
 
             // Do not count length of collections type name, i.e. System.Collections.Generic.List`1[VRAB.RS.DW.CoopPromotionExport.Definition.Models.DiscountCombinationModel
@@ -45,10 +44,10 @@ namespace AvUtils
             sb.AppendLine();
 
             // Title if any
-            if (String.IsNullOrEmpty(title) == false)
+            if (string.IsNullOrEmpty(title) == false)
             {
                 sb.AppendLine("-".PadRight(maxNameLen + maxValueLen + 6, '-'));
-                sb.Append("| ").Append(title.PadRight(maxNameLen + maxValueLen + 2, ' ')).Append(" |").AppendLine(); 
+                sb.Append("| ").Append(title.PadRight(maxNameLen + maxValueLen + 2, ' ')).Append(" |").AppendLine();
             }
 
             sb.AppendLine("-".PadRight(maxNameLen + maxValueLen + 6, '-'));
@@ -61,7 +60,6 @@ namespace AvUtils
             foreach (var p in properties)
             {
                 object v = p.GetValue(o);
-                //sb.Append("Is array: " + IsCollection(p));
 
                 sb.Append("| ");
                 sb.Append(p.Name.PadRight(maxNameLen));
@@ -70,7 +68,7 @@ namespace AvUtils
                 if (IsCollection(p))
                 {
                     var collection = v as ICollection;
-                    string collectionLegend = String.Format("{0} ({1})", _collectionLegend, collection == null ? "<NO>" : collection.Count.ToString());
+                    var collectionLegend = $"{_collectionLegend} ({(collection == null ? "<NO>" : collection.Count.ToString())})";
                     sb.Append(collectionLegend.PadLeft(maxValueLen));
                 }
                 else
@@ -98,9 +96,9 @@ namespace AvUtils
 
         public string Dump(object[] ar, string title, int limit)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
-            if (String.IsNullOrEmpty(title) == false)
+            if (string.IsNullOrEmpty(title) == false)
             {
                 sb.Append("*** ").Append(title).AppendLine();
             }
@@ -116,8 +114,8 @@ namespace AvUtils
         protected bool IsCollection(PropertyInfo pi)
         {
             // String is also IEnumerable, so skip it
-            return typeof(String).Equals(pi.PropertyType) == false 
-                && typeof(IEnumerable).IsAssignableFrom(pi.PropertyType);
+            return typeof(string) == pi.PropertyType == false
+                   && typeof(IEnumerable).IsAssignableFrom(pi.PropertyType);
         }
     }
 }

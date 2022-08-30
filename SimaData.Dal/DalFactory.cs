@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SimaData.Dal
+﻿namespace SimaData.Dal
 {
     public class DalFactory
     {
-        private static DalFactory _dalFactory = null;
+        private static DalFactory _dalFactory;
 
-        private ILocationDal _locationDal = null;
+        private ILocationDal _locationDal;
 
         public static DalFactory Current
         {

@@ -1,13 +1,10 @@
-﻿using SimaDat.Models.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using Newtonsoft.Json;
 using SimaDat.Models;
 using SimaDat.Models.Enums;
-using Newtonsoft.Json;
-using AutoMapper;
+using SimaDat.Models.Interfaces;
+using System;
+using System.Collections.Generic;
 
 namespace SimaDat.Bll
 {
@@ -24,7 +21,8 @@ namespace SimaDat.Bll
             loc.Doors.Clear();
             for (int i = 0; i < sl.doors?.Count; i++)
             {
-                loc.Doors.Add(new Location.Door {
+                loc.Doors.Add(new Location.Door
+                {
                     LocationToGoId = Convert.ToInt32(sl.doors[i][1]),
                     Direction = CodeToDirection(sl.doors[i][0])
                 });
@@ -42,7 +40,7 @@ namespace SimaDat.Bll
 
         public string Serialize(Location.Door door)
         {
-            return String.Format("[\"{0}\",\"{1}\"]", DirectionToCode(door.Direction), door.LocationToGoId);
+            return $"[\"{DirectionToCode(door.Direction)}\",\"{door.LocationToGoId}\"]";
         }
 
         public static string DirectionToCode(Directions d)
@@ -51,24 +49,34 @@ namespace SimaDat.Bll
             {
                 case Directions.North:
                     return "N";
+
                 case Directions.South:
                     return "S";
+
                 case Directions.East:
                     return "E";
+
                 case Directions.West:
                     return "W";
+
                 case Directions.NorthEast:
                     return "NE";
+
                 case Directions.NorthWest:
                     return "NW";
+
                 case Directions.SouthEast:
                     return "SE";
+
                 case Directions.SouthWest:
                     return "SW";
+
                 case Directions.Top:
                     return "T";
+
                 case Directions.Bottom:
                     return "B";
+
                 default:
                     throw new ArgumentOutOfRangeException($"Could not translate Direction `{d}` to code");
             }
@@ -80,22 +88,31 @@ namespace SimaDat.Bll
             {
                 case "N":
                     return Directions.North;
+
                 case "S":
                     return Directions.South;
+
                 case "E":
                     return Directions.East;
+
                 case "W":
                     return Directions.West;
+
                 case "NE":
                     return Directions.NorthEast;
+
                 case "NW":
                     return Directions.NorthWest;
+
                 case "SE":
                     return Directions.SouthEast;
+
                 case "SW":
                     return Directions.SouthWest;
+
                 case "T":
                     return Directions.Top;
+
                 case "B":
                     return Directions.Bottom;
             }

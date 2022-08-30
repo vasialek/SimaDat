@@ -1,20 +1,17 @@
-﻿using SimaDat.Models.Interfaces;
-using System;
+﻿using SimaDat.Models.Characters;
+using SimaDat.Models.Enums;
+using SimaDat.Models.Exceptions;
+using SimaDat.Models.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SimaDat.Models.Characters;
-using SimaDat.Models.Exceptions;
-using SimaDat.Models.Enums;
 
 namespace SimaDat.Bll
 {
     public class CharactersBll : ICharactersBll
     {
-        private IProbabilityBll _possibilityBll = null;
+        private readonly IProbabilityBll _possibilityBll;
 
-        private IList<Girl> _girls = new List<Girl>();
+        private readonly IList<Girl> _girls = new List<Girl>();
 
         public CharactersBll()
             : this(null)
@@ -64,17 +61,22 @@ namespace SimaDat.Bll
             hero.UseTtl(1);
             switch (girl.FriendshipLevel)
             {
-                case Models.Enums.FriendshipLevels.Stranger:
+                case FriendshipLevels.Stranger:
                     break;
-                case Models.Enums.FriendshipLevels.SawHimSomewhere:
+
+                case FriendshipLevels.SawHimSomewhere:
                     girl.LikeHero();
                     break;
-                case Models.Enums.FriendshipLevels.Familar:
+
+                case FriendshipLevels.Familar:
                     break;
-                case Models.Enums.FriendshipLevels.Friend:
+
+                case FriendshipLevels.Friend:
                     break;
-                case Models.Enums.FriendshipLevels.Lover:
+
+                case FriendshipLevels.Lover:
                     break;
+
                 default:
                     break;
             }

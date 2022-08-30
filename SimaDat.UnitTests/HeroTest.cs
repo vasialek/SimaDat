@@ -1,8 +1,7 @@
-﻿using System;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SimaDat.Models.Characters;
-using FluentAssertions;
 using SimaDat.Models;
+using SimaDat.Models.Characters;
 
 namespace SimaDat.UnitTests
 {
@@ -18,10 +17,8 @@ namespace SimaDat.UnitTests
             _me.ResetTtl();
         }
 
-        #region Check for min
-
         [TestMethod]
-        public void ModifySkill_IqNotLessThanZerro()
+        public void ModifySkill_IqNotLessThanZero()
         {
             _me.ModifySkill(Models.Enums.HeroSkills.Iq, -1000);
 
@@ -29,7 +26,7 @@ namespace SimaDat.UnitTests
         }
 
         [TestMethod]
-        public void ModifySkill_CharmNotLessThanZerro()
+        public void ModifySkill_CharmNotLessThanZero()
         {
             _me.ModifySkill(Models.Enums.HeroSkills.Charm, -1000);
 
@@ -37,16 +34,12 @@ namespace SimaDat.UnitTests
         }
 
         [TestMethod]
-        public void ModifySkill_StrengthNotLessThanZerro()
+        public void ModifySkill_StrengthNotLessThanZero()
         {
             _me.ModifySkill(Models.Enums.HeroSkills.Strength, -1000);
 
             _me.Strength.Should().BeGreaterOrEqualTo(0);
         }
-
-        #endregion
-
-        #region Check fro max
 
         [TestMethod]
         public void ModifySkill_IqShouldNotBeHigherThanMax()
@@ -71,8 +64,5 @@ namespace SimaDat.UnitTests
 
             _me.Strength.Should().BeLessOrEqualTo(MySettings.MaxStrengthForHero);
         }
-
-        #endregion
-
     }
 }

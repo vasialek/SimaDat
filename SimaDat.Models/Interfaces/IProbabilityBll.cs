@@ -3,10 +3,10 @@ using SimaDat.Models.Datings;
 
 namespace SimaDat.Models.Interfaces
 {
-	public interface IProbabilityBll
+    public interface IProbabilityBll
     {
-        bool RequestDating(Hero h, Girl g);
+        bool RequestDating(Hero hero, Girl girl);
 
-		bool Kiss(DatingLocation datingLocation);
-	}
+        bool Kiss(DatingLocation datingLocation);
+    }
 }

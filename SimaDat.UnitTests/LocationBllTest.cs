@@ -1,12 +1,12 @@
-﻿using System;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimaDat.Bll;
 using SimaDat.Models;
-using SimaDat.Models.Exceptions;
-using SimaData.Dal;
 using SimaDat.Models.Enums;
+using SimaDat.Models.Exceptions;
 using SimaDat.Models.Interfaces;
-using FluentAssertions;
+using SimaData.Dal;
+using System;
 using System.Linq;
 
 namespace SimaDat.UnitTests
@@ -14,11 +14,9 @@ namespace SimaDat.UnitTests
     [TestClass]
     public class LocationBllTest
     {
-        private ILocationBll _bll = null;
-        private Location _from = null;
-        private Location _to = null;
-
-
+        private ILocationBll _bll;
+        private Location _from;
+        private Location _to;
 
         [TestInitialize]
         public void TestInit()
@@ -36,44 +34,44 @@ namespace SimaDat.UnitTests
         [TestMethod]
         public void CouldMoveTo_NoWay()
         {
-            Location from = new Location();
-            Location to = new Location();
+            var from = new Location();
+            var to = new Location();
 
-            bool couldMove = _bll.CouldMoveTo(from, to);
+            var couldMove = _bll.CouldMoveTo(from, to);
             Assert.IsFalse(couldMove);
         }
 
         [TestMethod]
         public void Test_Create_First_Door()
         {
-            Location from = new Location();
-            Location to = new Location();
+            var from = new Location();
+            var to = new Location();
 
-            bool couldMove = _bll.CouldMoveTo(from, to);
+            var actual = _bll.CouldMoveTo(from, to);
 
             // No door created
-            Assert.IsFalse(couldMove);
+            Assert.IsFalse(actual);
 
             _bll.CreateDoorInLocation(from, to, Models.Enums.Directions.North);
 
             // Door is created
-            couldMove = _bll.CouldMoveTo(from, to);
-            Assert.IsTrue(couldMove);
+            actual = _bll.CouldMoveTo(from, to);
+            Assert.IsTrue(actual);
 
             // Test door is both way
-            couldMove = _bll.CouldMoveTo(to, from);
-            Assert.IsTrue(couldMove);
+            actual = _bll.CouldMoveTo(to, from);
+            Assert.IsTrue(actual);
         }
 
         [TestMethod]
         [ExpectedException(typeof(DirectionInUseException))]
         public void CreateDoorInLocation_DenySameDoor()
         {
-            Location from = new Location();
-            Location to = new Location();
+            var from = new Location();
+            var to = new Location();
 
-            _bll.CreateDoorInLocation(from, to, Models.Enums.Directions.North);
-            _bll.CreateDoorInLocation(from, to, Models.Enums.Directions.North);
+            _bll.CreateDoorInLocation(from, to, Directions.North);
+            _bll.CreateDoorInLocation(from, to, Directions.North);
         }
 
         # region Create and modify locations
@@ -99,7 +97,7 @@ namespace SimaDat.UnitTests
         [TestMethod]
         public void CreateLocation_DenySameLocationName()
         {
-            bool isOk = false;
+            var isOk = false;
             _bll.Clear();
 
             _bll.CreateLocation(new Location("SameLocation"));

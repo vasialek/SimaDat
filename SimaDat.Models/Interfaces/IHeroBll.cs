@@ -5,24 +5,18 @@ namespace SimaDat.Models.Interfaces
 {
     public interface IHeroBll
     {
-        void ApplyAction(Hero h, Actions.ActionToDo action);
+        void ApplyAction(Hero hero, ActionToDo action);
 
-        void MoveTo(Hero h, int fromId, int toId);
+        void MoveTo(Hero hero, int fromId, int toId);
 
-        void MoveTo(Hero h, Location from, Location to);
+        void MoveTo(Hero hero, Location from, Location to);
 
-        void Improve(Hero h, ActionToImprove skill);
+        void Improve(Hero hero, ActionToImprove skill);
 
-        void Work(Hero h, ActionToWork job);
+        void Work(Hero hero, ActionToWork job);
 
-        /// <summary>
-        /// Lets Hero to jump to any location. 1 TTL is used
-        /// </summary>
-        void JumpTo(Hero h, Location to);
+        void JumpTo(Hero hero, Location to);
 
-        /// <summary>
-        /// Should restore TTL to maximum
-        /// </summary>
-        void Sleep(Hero h);
+        void Sleep(Hero hero);
     }
 }

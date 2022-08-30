@@ -1,17 +1,16 @@
-﻿using System;
-using SimaDat.Models;
+﻿using SimaDat.Models;
+using SimaDat.Models.Actions;
 using SimaDat.Models.Characters;
 using SimaDat.Models.Exceptions;
 using SimaDat.Models.Interfaces;
-using SimaDat.Models.Actions;
+using System;
 
 namespace SimaDat.Bll
 {
-
     public class HeroBll : IHeroBll
     {
-        private ILocationBll _locationBll = null;
-        private IShopBll _shopBll = null;
+        private readonly ILocationBll _locationBll;
+        private readonly IShopBll _shopBll;
 
         public HeroBll(ILocationBll locationBll)
             : this(locationBll, null)
@@ -20,7 +19,7 @@ namespace SimaDat.Bll
 
         public HeroBll(ILocationBll locationBll, IShopBll shopBll)
         {
-            _locationBll = locationBll ?? throw new ArgumentNullException("locationBll");
+            _locationBll = locationBll ?? throw new ArgumentNullException(nameof(locationBll));
             _shopBll = shopBll ?? BllFactory.Current.ShopBll;
         }
 
@@ -148,7 +147,6 @@ namespace SimaDat.Bll
             h.UseTtl(1);
             h.CurrentLocationId = to.LocationId;
         }
-
 
         public void Sleep(Hero h)
         {

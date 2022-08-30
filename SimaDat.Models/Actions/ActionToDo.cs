@@ -1,10 +1,6 @@
 ﻿using SimaDat.Models.Enums;
 using SimaDat.Models.Items;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SimaDat.Models.Actions
 {
@@ -16,19 +12,13 @@ namespace SimaDat.Models.Actions
 
         public string Name { get; protected set; }
 
-        public virtual string ShortDescription
-        {
-            get
-            {
-                return String.Concat(Name, " takes ", TtlToUse, " hours");
-            }
-        }
+        public virtual string ShortDescription => $"{Name} takes {TtlToUse} hours";
 
         public ActionToDo(string name, int ttlToUse)
         {
             Name = name;
             TtlToUse = ttlToUse;
-       }
+        }
     }
 
     public class ActionToMove : ActionToDo
@@ -45,11 +35,11 @@ namespace SimaDat.Models.Actions
 
     public class ActionToImprove : ActionToDo
     {
-        public HeroSkills SkillToImprove { get; private set; }
+        public HeroSkills SkillToImprove { get; }
 
-        public int PointsToImprove { get; private set; }
+        public int PointsToImprove { get; }
 
-        public int MoneyToSpent { get; private set; }
+        public int MoneyToSpent { get; }
 
         public ActionToImprove(string name, HeroSkills skill, int ttlToUse, int pointsToImprove, int money = 0)
             : base(name, ttlToUse)
@@ -68,34 +58,28 @@ namespace SimaDat.Models.Actions
             DoesImpactHero = true;
         }
 
-        public override string ShortDescription
-        {
-            get
-            {
-                return "Sleep to restore TTL to max";
-            }
-        }
+        public override string ShortDescription => "Sleep to restore TTL to max";
     }
 
     public class ActionToWork : ActionToDo
     {
-        public int MoneyToEarn { get; private set; }
+        public int MoneyToEarn { get; }
 
         /// <summary>
         /// Hero could increase his skill (if != null)
         /// </summary>
-        public ActionToImprove Bonus { get; private set; } = null;
+        public ActionToImprove Bonus { get; private set; }
 
         /// <summary>
         /// Hero could decrease his sill in some cases
         /// </summary>
-        public ActionToImprove Penalty { get; private set; } = null;
+        public ActionToImprove Penalty { get; private set; }
 
         public override string ShortDescription
         {
             get
             {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
 
                 sb.AppendFormat("{0} for {1} hours to earn {2}", Name, TtlToUse, MoneyToEarn);
                 if (Penalty != null)
@@ -130,20 +114,14 @@ namespace SimaDat.Models.Actions
 
     public class ActionToBuy : ActionToDo
     {
-        public Gift Gift { get; private set; }
+        public Gift Gift { get; }
 
-        public override string ShortDescription
-        {
-            get
-            {
-                return String.Concat("Buy ", Gift.Name, " for price of ", Gift.Price);
-            }
-        }
+        public override string ShortDescription => $"Buy {Gift.Name} for price of {Gift.Price}";
 
-        public ActionToBuy(Gift g)
-            : base(g.Name, 0)
+        public ActionToBuy(Gift gift)
+            : base(gift.Name, 0)
         {
-            Gift = g;
+            Gift = gift;
         }
     }
 }

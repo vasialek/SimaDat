@@ -1,10 +1,9 @@
-﻿using System;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SimaDat.Models;
-using System.Collections.Generic;
-using SimaDat.Models.Interfaces;
 using SimaDat.Bll;
-using FluentAssertions;
+using SimaDat.Models;
+using SimaDat.Models.Interfaces;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SimaDat.UnitTests
@@ -12,9 +11,9 @@ namespace SimaDat.UnitTests
     [TestClass]
     public class SerializerBllTest
     {
-        private ISerializer _serializer = null;
-        private Location _locationHome = null;
-        private Location _locationPub = null;
+        private ISerializer _serializer;
+        private Location _locationHome;
+        private Location _locationPub;
 
         [TestInitialize]
         public void TestInit()
@@ -31,130 +30,131 @@ namespace SimaDat.UnitTests
         [TestMethod]
         public void DeserializeLocation_NotNull()
         {
-            string json = "{\"name\":\"Home\",\"id\":100,\"doors\":[[\"N\",\"555\"]]}";
+            var json = "{\"name\":\"Home\",\"id\":100,\"doors\":[[\"N\",\"555\"]]}";
 
-            var loc = _serializer.DeserializeLocation(json);
+            var location = _serializer.DeserializeLocation(json);
 
-            loc.Should().NotBeNull();
+            location.Should().NotBeNull();
         }
 
         [TestMethod]
         public void DeserializeLocation_CheckName()
         {
-            string json = "{\"name\":\"Home\",\"id\":100,\"doors\":[[\"N\",\"555\"]]}";
+            var json = "{\"name\":\"Home\",\"id\":100,\"doors\":[[\"N\",\"555\"]]}";
 
-            var loc = _serializer.DeserializeLocation(json);
+            var location = _serializer.DeserializeLocation(json);
 
-            loc.Name.Should().Be("Home");
+            location.Name.Should().Be("Home");
         }
+
         [TestMethod]
         public void DeserializeLocation_CheckDoorsNotNull()
         {
-            string json = "{\"name\":\"Home\",\"id\":100,\"doors\":[[\"N\",\"555\"]]}";
+            var json = "{\"name\":\"Home\",\"id\":100,\"doors\":[[\"N\",\"555\"]]}";
 
-            var loc = _serializer.DeserializeLocation(json);
+            var location = _serializer.DeserializeLocation(json);
 
-            loc.Doors.Should().NotBeNull();
+            location.Doors.Should().NotBeNull();
         }
 
         [TestMethod]
         public void DeserializeLocation_CheckDirection_ForDoor()
         {
-            string json = "{\"name\":\"Home\",\"id\":100,\"doors\":[[\"SE\",\"555\"]]}";
+            var json = "{\"name\":\"Home\",\"id\":100,\"doors\":[[\"SE\",\"555\"]]}";
 
-            var loc = _serializer.DeserializeLocation(json);
+            var location = _serializer.DeserializeLocation(json);
 
-            loc.Doors.Single().Direction.Should().Be(Models.Enums.Directions.SouthEast);
+            location.Doors.Single().Direction.Should().Be(Models.Enums.Directions.SouthEast);
         }
 
         [TestMethod]
         public void DeserializeLocation_CheckLocationToGoId_ForDoor()
         {
-            string json = "{\"name\":\"Home\",\"id\":100,\"doors\":[[\"N\",\"555\"]]}";
+            var json = "{\"name\":\"Home\",\"id\":100,\"doors\":[[\"N\",\"555\"]]}";
 
-            var loc = _serializer.DeserializeLocation(json);
+            var location = _serializer.DeserializeLocation(json);
 
-            loc.Doors.Single().LocationToGoId.Should().Be(555);
+            location.Doors.Single().LocationToGoId.Should().Be(555);
         }
 
-        #endregion
+        #endregion Deserialize Location
 
         #region Serialize Location
 
         [TestMethod]
         public void Serialize_NotNull_ForLocation()
         {
-            string s = _serializer.Serialize(_locationHome);
+            var actual = _serializer.Serialize(_locationHome);
 
-            s.Should().NotBeNull();
+            actual.Should().NotBeNull();
         }
 
         [TestMethod]
         public void Serialize_CheckName_ForLocation()
         {
-            string s = _serializer.Serialize(_locationHome);
+            var actual = _serializer.Serialize(_locationHome);
 
-            s.Should().Contain($"\"{_locationHome.Name}\"");
+            actual.Should().Contain($"\"{_locationHome.Name}\"");
         }
 
         [TestMethod]
         public void Serialize_CheckLocationId_ForLocation()
         {
-            string s = _serializer.Serialize(_locationHome);
+            var actual = _serializer.Serialize(_locationHome);
 
-            s.Should().Contain($"\"id\":{_locationHome.LocationId}");
+            actual.Should().Contain($"\"id\":{_locationHome.LocationId}");
         }
 
         [TestMethod]
         public void Serialize_CheckDoors_ForLocation()
         {
-            string s = _serializer.Serialize(_locationHome);
+            var actual = _serializer.Serialize(_locationHome);
 
-            s.Should().Contain("\"doors\":");
+            actual.Should().Contain("\"doors\":");
         }
 
         [TestMethod]
         public void Serialize_CheckDoorDirection_ForLocation()
         {
-            string s = _serializer.Serialize(_locationHome);
+            var actual = _serializer.Serialize(_locationHome);
 
-            var z =_locationHome.Doors.Select(x => new string[] { x.Direction.ToString(), x.LocationToGoId.ToString() }).ToList();
-            s.Should().Contain("[\"N\"");
+            var z = _locationHome.Doors.Select(x => new string[] { x.Direction.ToString(), x.LocationToGoId.ToString() }).ToList();
+            actual.Should().Contain("[\"N\"");
         }
 
         [TestMethod]
         public void Serialize_CheckDoorLocationToGoId_ForLocation()
         {
-            string s = _serializer.Serialize(_locationHome);
+            var actual = _serializer.Serialize(_locationHome);
 
             var z = _locationHome.Doors.Select(x => new string[] { x.Direction.ToString(), x.LocationToGoId.ToString() }).ToList();
-            s.Should().Contain(",\"555\"]");
+            actual.Should().Contain(",\"555\"]");
         }
 
-        #endregion
+        #endregion Serialize Location
 
         #region Serialize Door
 
         [TestMethod]
         public void Serialize_CheckDirection_ForDoor()
         {
-            Location.Door door = new Location.Door { Direction = Models.Enums.Directions.NorthWest, LocationToGoId = 666 };
+            var door = new Location.Door { Direction = Models.Enums.Directions.NorthWest, LocationToGoId = 666 };
 
-            string s = _serializer.Serialize(door);
+            var actual = _serializer.Serialize(door);
 
-            s.Should().Contain("\"NW\"");
+            actual.Should().Contain("\"NW\"");
         }
 
         [TestMethod]
         public void Serialize_CheckLocationId_ForDoor()
         {
-            Location.Door door = new Location.Door { Direction = Models.Enums.Directions.NorthWest, LocationToGoId = 666 };
+            var door = new Location.Door { Direction = Models.Enums.Directions.NorthWest, LocationToGoId = 666 };
 
-            string s = _serializer.Serialize(door);
+            var actual = _serializer.Serialize(door);
 
-            s.Should().Contain($"\"{door.LocationToGoId}\"");
+            actual.Should().Contain($"\"{door.LocationToGoId}\"");
         }
 
-        #endregion
+        #endregion Serialize Door
     }
 }

@@ -1,21 +1,20 @@
-﻿using System;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SimaDat.Models.Characters;
-using SimaDat.Models.Interfaces;
 using SimaDat.Bll;
+using SimaDat.Models.Characters;
 using SimaDat.Models.Exceptions;
-using System.Linq;
+using SimaDat.Models.Interfaces;
 using SimaDat.Models.Items;
 using System.Collections.Generic;
-using FluentAssertions;
+using System.Linq;
 
 namespace SimaDat.UnitTests
 {
     [TestClass]
     public class ShopBllTest
     {
-        private Hero _me = null;
-        private IShopBll _bll = null;
+        private Hero _me;
+        private IShopBll _bll;
 
         [TestInitialize]
         public void TestInit()
@@ -47,29 +46,29 @@ namespace SimaDat.UnitTests
         public void BuyGift_Ok()
         {
             // Ensure that no gifts and enough money to buy
-            var g = _bll.GetListOfGifts().First();
+            var gift = _bll.GetListOfGifts().First();
             _me.Gifts = new List<Gift>();
-            _me.SpendMoney(-g.Price);
+            _me.SpendMoney(-gift.Price);
 
-            _bll.BuyGift(_me, g.GiftId);
+            _bll.BuyGift(_me, gift.GiftId);
 
             // Should buy this gift
-            _me.Gifts.Single().GiftId.Should().Be(g.GiftId);
+            _me.Gifts.Single().GiftId.Should().Be(gift.GiftId);
         }
 
         [TestMethod]
         public void BuyGift_SpendMoney()
         {
             // Ensure that no gifts and enough money to buy
-            var g = _bll.GetListOfGifts().First();
+            var gift = _bll.GetListOfGifts().First();
             _me.Gifts = new List<Gift>();
-            _me.SpendMoney(-g.Price);
+            _me.SpendMoney(-gift.Price);
             int v = _me.Money;
 
-            _bll.BuyGift(_me, g.GiftId);
+            _bll.BuyGift(_me, gift.GiftId);
 
             // Money should be spent
-            _me.Money.Should().Be(v - g.Price);
+            _me.Money.Should().Be(v - gift.Price);
         }
     }
 }
