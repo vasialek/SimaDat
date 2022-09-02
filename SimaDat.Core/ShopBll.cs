@@ -3,10 +3,8 @@ using SimaDat.Models.Enums;
 using SimaDat.Models.Exceptions;
 using SimaDat.Models.Interfaces;
 using SimaDat.Models.Items;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace SimaDat.Bll
+namespace SimaDat.Core
 {
     public class ShopBll : IShopBll
     {

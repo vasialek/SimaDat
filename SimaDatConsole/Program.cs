@@ -1,10 +1,10 @@
 ﻿using AvUtils;
-using SimaDat.Bll;
+using SimaDat.Core;
 using SimaDat.Models;
 using SimaDat.Models.Characters;
 using SimaDat.Models.Datings;
 using SimaDat.Models.Enums;
-using System;
+using SimaDat.Models.Items;
 
 namespace SimaDatConsole
 {
@@ -124,7 +124,7 @@ namespace SimaDatConsole
                 // Gifts
                 for (int i = 0; i < 10; i++)
                 {
-                    me.Gifts.Add(new SimaDat.Models.Items.Gift { Name = "Test flower", GiftTypeId = GiftTypes.Flower, FirendshipPoints = 5 });
+                    me.Gifts.Add(new Gift { Name = "Test flower", GiftTypeId = GiftTypes.Flower, FirendshipPoints = 5 });
                 }
 
                 var console = new SdConsole(me, locationBll, charactersBll);

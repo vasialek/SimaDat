@@ -5,16 +5,13 @@ using SimaDat.Models.Enums;
 using SimaDat.Models.Exceptions;
 using SimaDat.Models.Interfaces;
 using SimaData.Dal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace SimaDat.Bll
+namespace SimaDat.Core
 {
     public class LocationBll : ILocationBll
     {
-        private readonly ICharactersBll _characterBll = null;
-        private readonly ILocationDal _locationDal = null;
+        private readonly ICharactersBll _characterBll;
+        private readonly ILocationDal _locationDal;
 
         public LocationBll(ICharactersBll characterBll, ILocationDal locationDal)
             : this(characterBll, locationDal, null)

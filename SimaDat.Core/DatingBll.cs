@@ -5,10 +5,8 @@ using SimaDat.Models.Datings;
 using SimaDat.Models.Enums;
 using SimaDat.Models.Exceptions;
 using SimaDat.Models.Interfaces;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace SimaDat.Bll
+namespace SimaDat.Core
 {
     public class DatingBll : IDatingBll
     {
@@ -92,7 +90,7 @@ namespace SimaDat.Bll
             }
 
             // Make her lover
-            int likesNeeded = Models.MySettings.Get().GetLikesForFriendships(FriendshipLevels.Lover) - Models.MySettings.Get().GetLikesForFriendships(datingLocation.Girl.FriendshipLevel);
+            int likesNeeded = MySettings.Get().GetLikesForFriendships(FriendshipLevels.Lover) - MySettings.Get().GetLikesForFriendships(datingLocation.Girl.FriendshipLevel);
             datingLocation.Girl.LikeHero(likesNeeded);
 
             // Mark success

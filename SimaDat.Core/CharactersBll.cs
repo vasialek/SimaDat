@@ -2,10 +2,8 @@
 using SimaDat.Models.Enums;
 using SimaDat.Models.Exceptions;
 using SimaDat.Models.Interfaces;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace SimaDat.Bll
+namespace SimaDat.Core
 {
     public class CharactersBll : ICharactersBll
     {
@@ -75,9 +73,6 @@ namespace SimaDat.Bll
                     break;
 
                 case FriendshipLevels.Lover:
-                    break;
-
-                default:
                     break;
             }
         }

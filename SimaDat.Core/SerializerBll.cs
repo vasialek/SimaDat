@@ -1,41 +1,20 @@
-﻿using AutoMapper;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using SimaDat.Models;
 using SimaDat.Models.Enums;
 using SimaDat.Models.Interfaces;
-using System;
-using System.Collections.Generic;
 
-namespace SimaDat.Bll
+namespace SimaDat.Core
 {
     public class SerializerBll : ISerializer
     {
-        public Location DeserializeLocation(string jsonLocation)
+        public Location DeserializeLocation(string json)
         {
-            AutoMapperInitializer.Initialize();
-            var sl = JsonConvert.DeserializeObject<SerializedLocation>(jsonLocation);
-
-            var loc = Mapper.Map<Location>(sl);
-
-            // Mapping of string[] => Door is bad, so do it manually
-            loc.Doors.Clear();
-            for (int i = 0; i < sl.doors?.Count; i++)
-            {
-                loc.Doors.Add(new Location.Door
-                {
-                    LocationToGoId = Convert.ToInt32(sl.doors[i][1]),
-                    Direction = CodeToDirection(sl.doors[i][0])
-                });
-            }
-
-            return loc;
+            return JsonConvert.DeserializeObject<Location>(json);
         }
 
-        public string Serialize(Location loc)
+        public string Serialize(Location location)
         {
-            AutoMapperInitializer.Initialize();
-            var sl = Mapper.Map<SerializedLocation>(loc);
-            return JsonConvert.SerializeObject(sl);
+            return JsonConvert.SerializeObject(JsonConvert.SerializeObject(location));
         }
 
         public string Serialize(Location.Door door)
@@ -118,12 +97,5 @@ namespace SimaDat.Bll
             }
             throw new ArgumentOutOfRangeException($"Could not translate direction `{directionCode}`");
         }
-    }
-
-    internal class SerializedLocation
-    {
-        public string name { get; set; }
-        public int id { get; set; }
-        public List<string[]> doors { get; set; }
     }
 }

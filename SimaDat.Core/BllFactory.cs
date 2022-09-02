@@ -1,19 +1,18 @@
 ﻿using SimaDat.Models.Interfaces;
 using SimaData.Dal;
 
-namespace SimaDat.Bll
+namespace SimaDat.Core
 {
     public class BllFactory
     {
-        private static BllFactory _bllFactory = null;
-
-        private ILocationBll _locationBll = null;
-        private IHeroBll _heroBll = null;
-        private ICharactersBll _charactersBll = null;
-        private IShopBll _shopBll = null;
-        private IProbabilityBll _possibilityBll = null;
-        private IDatingBll _datingBll = null;
-        private IRandomProvider _randomProvider = null;
+        private static BllFactory _bllFactory;
+        private ILocationBll _locationBll;
+        private IHeroBll _heroBll;
+        private ICharactersBll _charactersBll;
+        private IShopBll _shopBll;
+        private IProbabilityBll _possibilityBll;
+        private IDatingBll _datingBll;
+        private IRandomProvider _randomProvider;
 
         public static BllFactory Current
         {

@@ -1,7 +1,6 @@
 ﻿using SimaDat.Models.Interfaces;
-using System;
 
-namespace SimaDat.Bll
+namespace SimaDat.Core
 {
 	public class RandomProvider : IRandomProvider
 	{

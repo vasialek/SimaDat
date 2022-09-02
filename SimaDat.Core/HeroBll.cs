@@ -3,9 +3,8 @@ using SimaDat.Models.Actions;
 using SimaDat.Models.Characters;
 using SimaDat.Models.Exceptions;
 using SimaDat.Models.Interfaces;
-using System;
 
-namespace SimaDat.Bll
+namespace SimaDat.Core
 {
     public class HeroBll : IHeroBll
     {

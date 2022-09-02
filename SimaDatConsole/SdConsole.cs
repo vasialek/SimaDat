@@ -23,7 +23,7 @@ namespace SimaDatConsole
             _hero = hero ?? throw new ArgumentNullException(nameof(hero));
             _locationBll = locationBll ?? throw new ArgumentNullException(nameof(locationBll));
             _charactersBll = charsBll ?? throw new ArgumentNullException(nameof(charsBll));
-            _heroBll = SimaDat.Bll.BllFactory.Current.HeroBll;
+            _heroBll = SimaDat.Core.BllFactory.Current.HeroBll;
         }
 
         public void DisplayHero()

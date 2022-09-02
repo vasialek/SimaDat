@@ -5,7 +5,7 @@ using SimaDat.Models.Exceptions;
 using SimaDat.Models.Interfaces;
 using SimaDat.Shared;
 
-namespace SimaDat.Bll
+namespace SimaDat.Core
 {
     public class ProbabilityBll : IProbabilityBll
     {
